@@ -138,19 +138,6 @@ router.get('/', function (req, res) {
     });
 })
 
-router.get('/userTags', function (req, res){
-    UserModel.userTagSchema.find((err, userTags) => {
-        if (err) return res.json({
-            success: false,
-            error: err
-        });
-        return res.json({
-            success: true,
-            userObj: userTags
-        });
-    });
-})
-
 //add a tag to a user
 router.put('/addTag/:username', function (req, res) {
     var queryUsername = req.params.username;
