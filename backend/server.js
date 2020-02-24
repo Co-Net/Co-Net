@@ -1,13 +1,22 @@
-const mongoose = require('mongoose');
-const express = require('express');
-var cors = require('cors');
-const bodyParser = require('body-parser');
-const logger = require('morgan');
-const dotenv = require('dotenv');
-dotenv.config();
+const mongoose = require('mongoose'),
+  express = require('express'),
+  cors = require('cors'),
+  bodyParser = require('body-parser'),
+  logger = require('morgan'),
+  cookieParser = require('cookie-parser'),
+  passport = require('passport');
+require('dotenv').config();
+require('./api/auth/auth');
 
 const app = express();
-app.use(cors());
+app.use(cors(
+  {
+    credentials: true,
+    origin: `localhost:${process.env.PORT}`
+  }
+));
+
+app.use(cookieParser(process.env.JWT_SECRET));
 
 // Routers
 const userRouter = require('./api/routes/userRouter');
