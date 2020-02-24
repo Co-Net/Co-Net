@@ -86,6 +86,20 @@ router.post('/signup', function (req, res) {
     });
 })
 
+//Get a user 
+router.get('/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    UserModel.findOne({
+        username: queryUsername
+    }, function (err, obj) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.send(obj);
+    });
+})
+
 // Create a JWT token when signing in and saves it in a cookie
 router.post('/signin', passport.authenticate('local', {
     session: false
@@ -109,5 +123,86 @@ router.post('/signin', passport.authenticate('local', {
         });
     });
 })
+
+// Get all users
+router.get('/', function (req, res) {
+    UserModel.find((err, user) => {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            userObj: user
+        });
+    });
+})
+
+router.get('/userTags', function (req, res){
+    UserModel.userTagSchema.find((err, userTags) => {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            userObj: userTags
+        });
+    });
+})
+
+//add a tag to a user
+router.put('/addTag/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    var body = req.body;
+    var tag = body.name;
+    var tagObj = {
+        "name": tag
+    };
+    UserModel.findOneAndUpdate({
+        username: queryUsername
+    }, {
+        $push: {
+            userTags: tagObj
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            user: body
+        });
+    });
+})
+
+// Unfollow a user
+router.put('/removeUserTag/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    var body = req.body;
+    var tag = body.name;
+    var tagObj = {
+        "name": tag
+    };
+    UserModel.findOneAndUpdate({
+        username: queryUsername
+    }, {
+        $pull: {
+            userTags: tagObj
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            user: body
+        });
+    });
+})
+
+
 
 module.exports = router;

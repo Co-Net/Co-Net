@@ -20,6 +20,7 @@ app.use(cookieParser(process.env.JWT_SECRET));
 
 // Routers
 const userRouter = require('./api/routes/userRouter');
+const userTagRouter = require('./api/routes/userTagRouter');
 
 // this is our MongoDB database
 const dbRoute =
@@ -43,6 +44,7 @@ app.use(logger('dev'));
 
 // Routes
 app.use('/users', userRouter);
+app.use('/userTags', userTagRouter);
 
 // // this is our get method
 // // this method fetches all available data in our database
