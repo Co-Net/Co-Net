@@ -14,7 +14,7 @@ const routing = (
       <div>
         <Route exact path="/" component={App} />
         <Route path="/Register" component={Login} />
-        <Route path="Feed" component={Feed} />
+        <Route path="/Feed" component={Feed} />
       </div>
     </Router>
   );
