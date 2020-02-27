@@ -24,10 +24,16 @@ router.post('/signup', function (req, res) {
     // Start
     if (!username || !firstName || !lastName || !emailAddress || !password) {
         return res.json({
-            created: false,
-            error: 'INVALID INPUTS'
+            success: false,
+            message: 'MISSING INPUTS'
         });
     }
+
+    // Validate username
+
+    // validate password and confirmPassword
+
+    // valite email and confirmEmail
 
     UserModel.countDocuments({
         username: username
