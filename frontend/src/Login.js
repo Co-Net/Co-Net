@@ -117,7 +117,7 @@ export default function ServerModal(props) {
             variant="contained"
             color="primary first"
             className={classes.submit}
-            onClick = {() => history.push('/signModal')}
+            onClick = {() => history.push('/signup')}
           >
           Sign up with Email
           </Button>
