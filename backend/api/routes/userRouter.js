@@ -106,6 +106,19 @@ router.get('/:username', function (req, res) {
     });
 })
 
+router.delete('/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    UserModel.findOneAndDelete({
+        username: queryUsername
+    }, function (err, obj) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.send(obj);
+    });
+})
+
 // Create a JWT token when signing in and saves it in a cookie
 router.post('/signin', passport.authenticate('local', {
     session: false
@@ -195,7 +208,5 @@ router.put('/removeUserTag/:username', function (req, res) {
         });
     });
 })
-
-
 
 module.exports = router;
