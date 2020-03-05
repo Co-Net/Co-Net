@@ -111,6 +111,22 @@ router.get('/:username', function (req, res) {
     });
 })
 
-
+//Update a forum post
+router.put('/:id', function (req, res) {
+    var queryID = req.params.id;
+    var body = req.body;
+    ForumPostModel.findOneAndUpdate({
+        _id: queryID
+    }, body, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            post: body
+        });
+    });
+})
 
 module.exports = router;
