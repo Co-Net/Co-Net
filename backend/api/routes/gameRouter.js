@@ -117,7 +117,7 @@ router.put('/addGameTag/:name', function (req, res) {
 })
 
 // Unfollow a user
-router.put('/removeUserTag/:username', function (req, res) {
+router.put('/removeGameTag/:name', function (req, res) {
     var queryName = req.params.name;
     var body = req.body;
     var tag = body.name;
