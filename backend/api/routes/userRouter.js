@@ -209,4 +209,108 @@ router.put('/removeUserTag/:username', function (req, res) {
     });
 })
 
+//add a a freind to users friend list
+router.put('/addFriend/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    var body = req.body;
+    var friend = body.name;
+    var friendObj = {
+        "username": friend
+    };
+    UserModel.findOneAndUpdate({
+        username: queryUsername
+    }, {
+        $push: {
+            friends: friendObj
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            user: body
+        });
+    });
+})
+
+// remove a friend from friends list
+router.put('/removeFriend/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    var body = req.body;
+    var friend = body.name;
+    var friendObj = {
+        "name": friend
+    };
+    UserModel.findOneAndUpdate({
+        username: queryUsername
+    }, {
+        $pull: {
+            friends: friendObj
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            user: body
+        });
+    });
+})
+
+//add a game to game list
+router.put('/addGame/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    var body = req.body;
+    var game = body.name;
+    var gameobj = {
+        "name": game
+    };
+    UserModel.findOneAndUpdate({
+        username: queryUsername
+    }, {
+        $push: {
+            games: game
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            user: body
+        });
+    });
+})
+
+// 
+router.put('/removeGame/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    var body = req.body;
+    var game = body.name;
+    var gameobj = {
+        "name": game
+    };
+    UserModel.findOneAndUpdate({
+        username: queryUsername
+    }, {
+        $pull: {
+            games: game
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            user: body
+        });
+    });
+})
+
 module.exports = router;
