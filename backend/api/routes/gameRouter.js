@@ -62,6 +62,24 @@ router.delete('/:name', function (req, res) {
     });
 })
 
+//edit a game
+router.put('/:name', function (req, res) {
+    var queryName = req.params.name;
+    var body = req.body;
+    GameModel.findOneAndUpdate({
+        name: queryName
+    }, body, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            game: body
+        });
+    });
+})
+
 //Get a game 
 router.get('/:name', function (req, res) {
     var queryName = req.params.name;
