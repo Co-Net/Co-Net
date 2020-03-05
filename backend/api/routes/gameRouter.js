@@ -33,7 +33,7 @@ router.post('/createGame', function (req, res) {
         // Save the game
         game.name = name;
         game.numberOfPlayersSearching = 0;
-        user.save((err, game) => {
+        game.save((err, game) => {
             if (err) {
                 return res.send({
                     success: false,
