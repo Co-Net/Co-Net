@@ -9,7 +9,7 @@ const Schema = mongoose.Schema;
 const UserTagSchema = new Schema({name: String}); // need to add schema for postID
 const UsersGamesSchema = new Schema({name: String});
 const FriendSchema = new Schema({username: String});
-const PostIDSchema = new Schema({id: String})
+const PostIDSchema = new Schema({postID: String})
 
 const UserSchema = new Schema({
     firstName: {

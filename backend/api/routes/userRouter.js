@@ -335,15 +335,15 @@ router.put('/removeGame/:username', function (req, res) {
 router.put('/addPost/:username', function (req, res) {
     var queryUsername = req.params.username;
     var body = req.body;
-    var post = body.id;
+    var post = body.postID;
     var postobj = {
-        "id": post
+        "postID": post
     };
     UserModel.findOneAndUpdate({
         username: queryUsername
     }, {
         $push: {
-            posts: postobj
+            forumPosts: postobj
         }
     }, function (err) {
         if (err) return res.json({
@@ -361,15 +361,15 @@ router.put('/addPost/:username', function (req, res) {
 router.put('/removePost/:username', function (req, res) {
     var queryUsername = req.params.username;
     var body = req.body;
-    var post = body.id;
+    var post = body.postID;
     var postobj = {
-        "id": post
+        "postID": post
     };
     UserModel.findOneAndUpdate({
         username: queryUsername
     }, {
         $pull: {
-            posts: postobj
+            forumPosts: postobj
         }
     }, function (err) {
         if (err) return res.json({
