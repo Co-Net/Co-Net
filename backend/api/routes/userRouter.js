@@ -213,7 +213,7 @@ router.put('/removeUserTag/:username', function (req, res) {
 router.put('/addFriend/:username', function (req, res) {
     var queryUsername = req.params.username;
     var body = req.body;
-    var friend = body.name;
+    var friend = body.username;
     var friendObj = {
         "username": friend
     };
@@ -239,9 +239,9 @@ router.put('/addFriend/:username', function (req, res) {
 router.put('/removeFriend/:username', function (req, res) {
     var queryUsername = req.params.username;
     var body = req.body;
-    var friend = body.name;
+    var friend = body.username;
     var friendObj = {
-        "name": friend
+        "username": friend
     };
     UserModel.findOneAndUpdate({
         username: queryUsername
@@ -266,14 +266,14 @@ router.put('/addGame/:username', function (req, res) {
     var queryUsername = req.params.username;
     var body = req.body;
     var game = body.name;
-    var gameobj = {
+    var gameObj = {
         "name": game
     };
     UserModel.findOneAndUpdate({
         username: queryUsername
     }, {
         $push: {
-            games: game
+            games: gameObj
         }
     }, function (err) {
         if (err) return res.json({
@@ -292,14 +292,14 @@ router.put('/removeGame/:username', function (req, res) {
     var queryUsername = req.params.username;
     var body = req.body;
     var game = body.name;
-    var gameobj = {
+    var gameObj = {
         "name": game
     };
     UserModel.findOneAndUpdate({
         username: queryUsername
     }, {
         $pull: {
-            games: game
+            games: gameObj
         }
     }, function (err) {
         if (err) return res.json({
