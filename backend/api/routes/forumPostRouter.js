@@ -11,7 +11,6 @@ router.post('/createPostOrReply', function (req, res) {
         parentID
     } = req.body;
 
-    // Start
     if (!body || !game) {
         return res.json({
             success: false,
@@ -19,12 +18,11 @@ router.post('/createPostOrReply', function (req, res) {
         });
     }
 
-    // Save the new user
     post.title = title;
     post.body = body;
     post.game = game;
     post.parentID = parentID;
-    user.save((err, user) => {
+    post.save((err, post) => {
         if (err) {
             return res.send({
                 success: false,
@@ -33,10 +31,12 @@ router.post('/createPostOrReply', function (req, res) {
         }
         return res.send({
             success: true,
-            username: user,
-            message: 'Signed up'
+            title: post,
+            message: 'Post Created'
         });
     });
 })
+
+
 
 module.exports = router;
