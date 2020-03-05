@@ -143,6 +143,24 @@ router.post('/signin', passport.authenticate('local', {
     });
 })
 
+//edit a user
+router.put('/info/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    var body = req.body;
+    UserModel.findOneAndUpdate({
+        username: queryUsername
+    }, body, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            user: body
+        });
+    });
+})
+
 // Get all users
 router.get('/', function (req, res) {
     UserModel.find((err, user) => {
