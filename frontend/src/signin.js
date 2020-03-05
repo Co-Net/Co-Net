@@ -32,6 +32,8 @@ const useStyles = makeStyles(theme => ({
   },
   paper: {
     width: 400,
+    height: 400,
+
     backgroundColor: theme.palette.background.paper,
     border: '0.5px solid #a9a9a9',
     borderRadius: 10,
@@ -39,7 +41,6 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2, 4, 3),
     marginBottom: 200,
     marginRight: 400,
-    marginTop: 100,
   },
 }));
 
@@ -60,7 +61,7 @@ export default function ServerModal(props) {
         className={classes.modal}
         container={() => rootRef.current}
       >
-        <div className={classes.paper} style = {{padding: 45, marginTop: 200,}}>
+        <div className={classes.paper} style = {{padding: 45,}}>
 
           <p id="server-modal-description">
           <Typography align="center" id = "server-modal-title">
@@ -78,31 +79,8 @@ export default function ServerModal(props) {
         <form className={classes.form} noValidate>
           <Grid container spacing={4}>
             
-          <Grid item xs={12} sm={6}>
-          <TextField
-            autoComplete="fname"
-            name="firstName"
-            variant="outlined"
-            required
-            fullWidth
-            id="firstName"
-            label="First Name"
-            autoFocus
-
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-        <TextField
-          autoComplete="fname"
-          name="firstName"
-          variant="outlined"
-          required
-          fullWidth
-          id="firstName"
-          label="Last Name"
           
-        />
-      </Grid>
+       
       <Grid item xs={12}>
       <TextField
         autoComplete="fname"
@@ -123,33 +101,11 @@ export default function ServerModal(props) {
         required
         fullWidth
         id="firstName"
-        label="Confirm Email"
+        label="Password"
         
       />
     </Grid>
-    <Grid item xs={12} sm={6}>
-        <TextField
-          autoComplete="fname"
-          name="firstName"
-          variant="outlined"
-          required
-          fullWidth
-          id="firstName"
-          label="Password"
-          
-        />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-      <TextField
-        autoComplete="fname"
-        name="firstName"
-        variant="outlined"
-        required
-        fullWidth
-        id="firstName"
-        label="Confirm Password"
-      />
-    </Grid>
+  
     <Grid item xs={12} >
     <Button
     type="submit"
@@ -158,7 +114,7 @@ export default function ServerModal(props) {
     color="primary"
     className={classes.submit}
   >
-  Sign Up
+  Sign In
   </Button>
     </Grid>
           </Grid>

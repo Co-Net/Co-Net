@@ -9,6 +9,8 @@ import Feed from './Feed';
 import * as registerServiceWorker from './serviceWorker';
 import { Route, BrowserRouter as Router } from "react-router-dom";
 import signup from './signup';
+import signin from './signin';
+
 
 const routing = (
     <Router>
@@ -17,6 +19,9 @@ const routing = (
         <Route path="/Login" component={Login} />
         <Route path="/Feed" component={Feed} />
         <Route path="/signup" component={signup} />
+        <Route path="/signin" component={signin} />
+
+
 
       </div>
     </Router>

@@ -16,6 +16,10 @@ const useStyles = makeStyles(theme => ({
     transform: 'translateZ(0)',
     height: 768,
     flexGrow: 1,
+    backgroundImage: 'url(' + bgd + ')',
+    backgroundSize: 'cover',
+
+
   },
 
   modal: {
@@ -23,8 +27,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(1),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundImage: 'url(' + bgd + ')',
-    backgroundSize: 'cover',
+
     overflow: 'hidden',
 
   },
@@ -39,6 +42,14 @@ const useStyles = makeStyles(theme => ({
     marginBottom: 200,
     marginRight: 400,
   },
+
+  links:{
+    '&:hover': {
+      textDecoration: 'underline',
+      cursor: 'pointer',
+ },  
+    
+  }
 }));
 
 function onSignIn(e, history, pass, uname) {
@@ -130,7 +141,15 @@ export default function ServerModal(props) {
           <Typography display = "inline" component="h2" fontsize = {18} align="center" id = "server-modal-title">
           Already have an account?
         </Typography>
-        <Typography display = "inline" color = "primary" component="h2" fontsize = {18} align="center" id = "server-modal-title">
+        <Typography 
+        className = {classes.links}
+        display = "inline" 
+        color = "primary" 
+        component="h2" 
+        fontsize = {18} 
+        align="center" 
+        onClick = {() => history.push('/signin')}
+        id = "server-modal-title">
         {' '} Sign in. </Typography>
         </Grid></Grid>
        
