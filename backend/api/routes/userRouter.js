@@ -305,7 +305,7 @@ router.put('/addGame/:username', function (req, res) {
     });
 })
 
-// 
+//remove game from user game list
 router.put('/removeGame/:username', function (req, res) {
     var queryUsername = req.params.username;
     var body = req.body;
@@ -318,6 +318,58 @@ router.put('/removeGame/:username', function (req, res) {
     }, {
         $pull: {
             games: gameObj
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            user: body
+        });
+    });
+})
+
+//add a forum post ID to their list of posts
+router.put('/addPost/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    var body = req.body;
+    var post = body.id;
+    var postobj = {
+        "id": post
+    };
+    UserModel.findOneAndUpdate({
+        username: queryUsername
+    }, {
+        $push: {
+            posts: postobj
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            user: body
+        });
+    });
+})
+
+//remove a forum post ID to their list of posts
+router.put('/removePost/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    var body = req.body;
+    var post = body.id;
+    var postobj = {
+        "id": post
+    };
+    UserModel.findOneAndUpdate({
+        username: queryUsername
+    }, {
+        $pull: {
+            posts: postobj
         }
     }, function (err) {
         if (err) return res.json({
