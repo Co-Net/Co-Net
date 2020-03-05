@@ -2,8 +2,6 @@
 * Schema: User
 */
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-
 const Schema = mongoose.Schema;
 
 const GameTagSchema = new Schema({name: String});
@@ -15,7 +13,8 @@ const GameSchema = new Schema({
         required: [true, "Please enter the name of the game!"]
     },
     numberOfPlayersSearching:{
-        type: Number //this will be outputted and mutated based on the number of players that are looking to queue for this game
+        type: Number, //this will be outputted and mutated based on the number of players that are looking to queue for this game
+        default: 0
     },
     gameTags: [GameTagSchema]
 

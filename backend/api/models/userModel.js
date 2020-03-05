@@ -32,6 +32,11 @@ const UserSchema = new Schema({
         type: String,
         default: ''
     },
+    bio: {
+        type: String,
+        default: ''
+    },
+    
     userTags: [UserTagSchema]
 });
 
