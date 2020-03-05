@@ -129,4 +129,56 @@ router.put('/:id', function (req, res) {
     });
 })
 
+//add a a childID to post
+router.put('/addReply/:id', function (req, res) {
+    var queryID = req.params.id;
+    var body = req.body;
+    var child = body.id;
+    var childObj = {
+        "id": child
+    };
+    GameModel.findOneAndUpdate({
+        _id: queryID
+    }, {
+        $push: {
+            allReplyIDs: childObj
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            post: body
+        });
+    });
+})
+
+//remove a a childID to post
+router.put('/removeReply/:id', function (req, res) {
+    var queryID = req.params.id;
+    var body = req.body;
+    var child = body.id;
+    var childObj = {
+        "id": child
+    };
+    GameModel.findOneAndUpdate({
+        _id: queryID
+    }, {
+        $pull: {
+            allReplyIDs: childObj
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            post: body
+        });
+    });
+})
+
 module.exports = router;
