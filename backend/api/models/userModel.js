@@ -7,6 +7,8 @@ const bcrypt = require('bcryptjs');
 const Schema = mongoose.Schema;
 
 const UserTagSchema = new Schema({name: String});
+const UsersGamesSchema = new Schema({name: String});
+const FriendSchema = new Schema({username: String});
 
 
 const UserSchema = new Schema({
@@ -36,8 +38,9 @@ const UserSchema = new Schema({
         type: String,
         default: ''
     },
-    
-    userTags: [UserTagSchema]
+    userTags: [UserTagSchema],
+    friends: [FriendSchema],
+    games : [UsersGamesSchema]
 });
 
 UserSchema.methods.generateHash = function (password) {
