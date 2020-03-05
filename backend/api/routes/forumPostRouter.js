@@ -70,7 +70,7 @@ router.get('/', function (req, res) {
 })
 
 //Get a forum post by Title 
-router.get('/:title', function (req, res) {
+router.get('/title/:title', function (req, res) {
     var queryTitle = req.params.title;
     ForumPostModel.find({
         title: queryTitle
@@ -84,7 +84,7 @@ router.get('/:title', function (req, res) {
 })
 
 //Get forum post by game 
-router.get('/:game', function (req, res) {
+router.get('/game/:game', function (req, res) {
     var queryGame = req.params.game;
     ForumPostModel.find({
         game: queryGame
@@ -98,7 +98,7 @@ router.get('/:game', function (req, res) {
 })
 
 //Get forum posts by username
-router.get('/:username', function (req, res) {
+router.get('/user/:username', function (req, res) {
     var queryUsername = req.params.username;
     ForumPostModel.find({
         username: queryUsername
@@ -133,11 +133,11 @@ router.put('/:id', function (req, res) {
 router.put('/addReply/:id', function (req, res) {
     var queryID = req.params.id;
     var body = req.body;
-    var child = body.id;
+    var child = body.childID;
     var childObj = {
-        "id": child
+        "childID": child
     };
-    GameModel.findOneAndUpdate({
+    ForumPostModel.findOneAndUpdate({
         _id: queryID
     }, {
         $push: {
@@ -159,11 +159,11 @@ router.put('/addReply/:id', function (req, res) {
 router.put('/removeReply/:id', function (req, res) {
     var queryID = req.params.id;
     var body = req.body;
-    var child = body.id;
+    var child = body.childID;
     var childObj = {
-        "id": child
+        "childID": child
     };
-    GameModel.findOneAndUpdate({
+    ForumPostModel.findOneAndUpdate({
         _id: queryID
     }, {
         $pull: {

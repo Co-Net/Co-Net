@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const ReplyIDSchema = new Schema({id: String});
+const ReplyIDSchema = new Schema({childID: String});
 
 const ForumPostModelSchema = new Schema({
     parentID:{
