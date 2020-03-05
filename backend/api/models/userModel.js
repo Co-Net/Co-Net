@@ -9,6 +9,7 @@ const Schema = mongoose.Schema;
 const UserTagSchema = new Schema({name: String}); // need to add schema for postID
 const UsersGamesSchema = new Schema({name: String});
 const FriendSchema = new Schema({username: String});
+const PostIDSchema = new Schema({id: String})
 
 const UserSchema = new Schema({
     firstName: {
@@ -39,7 +40,8 @@ const UserSchema = new Schema({
     },
     userTags: [UserTagSchema],
     friends: [FriendSchema],
-    games : [UsersGamesSchema]
+    games: [UsersGamesSchema],
+    forumPosts: [PostIDSchema]
 });
 
 UserSchema.methods.generateHash = function (password) {
