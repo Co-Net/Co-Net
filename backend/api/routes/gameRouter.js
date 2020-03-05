@@ -78,7 +78,7 @@ router.get('/:name', function (req, res) {
 
 // Get all gmaes
 router.get('/', function (req, res) {
-    UserModel.find((err, game) => {
+    GameModel.find((err, game) => {
         if (err) return res.json({
             success: false,
             error: err
