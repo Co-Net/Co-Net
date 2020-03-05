@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const ForumPostModel = require('../models/forumPostModel');
 
+//create a post or reply
 router.post('/createPostOrReply', function (req, res) {
     let post = new ForumPostModel();
     const {
@@ -37,6 +38,20 @@ router.post('/createPostOrReply', function (req, res) {
     });
 })
 
+// Delete iPost by ID 
+router.delete('/:id', function (req, res) { //neded to figure out what happens when a parent is deleted
+    var queryID = req.params.id;
+
+    ForumPostModel.findOneAndDelete({
+        _id: queryID
+    }, function (err, obj){
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.send(obj);
+    });
+})
 
 
 module.exports = router;
