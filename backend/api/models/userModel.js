@@ -38,6 +38,9 @@ const UserSchema = new Schema({
         type: String,
         default: ''
     },
+    profilePhoto: {
+        type: String
+    },
     userTags: [UserTagSchema],
     friends: [FriendSchema],
     games: [UsersGamesSchema],

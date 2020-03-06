@@ -112,6 +112,12 @@ function onSignUp(e, history, fn, ln, em, cEm, pass, cPass, uname) {
           } else if (json.data.message === "MISSING INPUTS") {
             document.getElementById("errorMessage").innerText =
               "Please fill out all areas on the form before submitting.";
+          } else if (
+            json.data.message === 
+            "ILLEGAL USERNAME"
+          ) {
+            document.getElementById("errorMessage").innerText = 
+              "Username cannot contain any special characers";
           } else {
             document.getElementById("errorMessage").innerText =
               "Server error. Please try again later.";
