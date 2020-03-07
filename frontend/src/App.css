@@ -34,3 +34,10 @@ body{
 .link{
     color: black;
 }
+
+.profilePhoto{
+    background-image: url("background.jpeg");
+    color: black;
+    background-color: black;
+
+}

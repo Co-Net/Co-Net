@@ -1,0 +1,45 @@
+
+body{
+    padding:0px;
+    margin:0px;
+    }
+
+
+
+.profilePhoto{
+    background-image: url("background.jpeg");
+    height: 250px;
+
+}
+
+.large{
+    width: 15% !important;
+    height: unset !important;
+    margin-top: -6%;
+    display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.bgColor{
+    background-color: #F5F5F5;
+}
+
+.profileText{
+    color: #353535;
+}
+
+.profileBio{
+    width: 70%;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    color: #8A8A8A;
+}
+
+.editProfile{
+    position: absolute !important;
+    margin-left: 80% !important;
+    margin-top: -4% !important;
+    text-transform: none !important;
+
+}
