@@ -118,6 +118,12 @@ function onSignUp(e, history, fn, ln, em, cEm, pass, cPass, uname) {
           ) {
             document.getElementById("errorMessage").innerText = 
               "Username cannot contain any special characers";
+          } else if (
+            json.data.message === 
+            "SHORT PASSWORD"
+          ) {
+            document.getElementById("errorMessage").innerText = 
+              "Password must contain 8 or more characters.";
           } else {
             document.getElementById("errorMessage").innerText =
               "Server error. Please try again later.";

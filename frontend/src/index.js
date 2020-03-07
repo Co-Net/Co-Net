@@ -8,6 +8,7 @@ import Feed from './Feed';
 import * as registerServiceWorker from './serviceWorker';
 import { Route, BrowserRouter as Router } from "react-router-dom";
 import signup from './signup';
+import PicUpload from './PicUpload';
 
 const routing = (
     <Router>
@@ -15,6 +16,7 @@ const routing = (
         <Route exact path="/" component={Login} />
         <Route path="/Feed" component={Feed} />
         <Route path="/signup" component={signup} />
+        <Route path="/pic" component={PicUpload} />
       </div>
     </Router>
   );

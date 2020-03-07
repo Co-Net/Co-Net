@@ -39,7 +39,8 @@ const UserSchema = new Schema({
         default: ''
     },
     profilePhoto: {
-        type: String
+        type: String,
+        default: ''
     },
     userTags: [UserTagSchema],
     friends: [FriendSchema],

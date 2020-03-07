@@ -6,6 +6,18 @@ const router = express.Router();
 const UserModel = require('../models/userModel');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
+const multer = require('multer');
+const upload = multer({
+    dest: 'uploads/'
+}).single('file');
+const fs = require('fs');
+const cloudinary = require("cloudinary");
+
+cloudinary.config({
+    cloud_name: "co-net-pix",
+    api_key: "472288961331361",
+    api_secret: "VylP7m3EhxWbbzWEE8NBAcbcxKs"
+});
 
 // Create a user
 router.post('/signup', function (req, res) {
@@ -39,9 +51,12 @@ router.post('/signup', function (req, res) {
         });
     }
 
-    // validate password and confirmPassword
-
-    // valite email and confirmEmail
+    if (password.length < 8) {
+        return res.json({
+            created: false,
+            error: 'SHORT PASSWORD'
+        });
+    }
 
     UserModel.countDocuments({
         username: username
@@ -179,6 +194,45 @@ router.get('/', function (req, res) {
         return res.json({
             success: true,
             userObj: user
+        });
+    });
+})
+
+// Update a user's photo
+router.put('/photo/:username', function (req, res) {
+    upload(req, res, function (err) {
+        if (err instanceof multer.MulterError) {
+            return res.status(500).json(err)
+        } else if (err) {
+            return res.status(500).json(err)
+        }
+        var queryUsername = req.params.username;
+        UserModel.findOne({
+            username: queryUsername
+        }, function (err, obj) {
+            var body = obj;
+            cloudinary.uploader.upload(req.file.path, function (result) {
+                console.log(result);
+                body.profilePhoto = result.url;
+                UserModel.findOneAndUpdate({
+                    username: queryUsername
+                }, body, function (err) {
+                    if (err) return res.json({
+                        success: false,
+                        error: err
+                    });
+                    // Remove temp file
+                    fs.unlink(req.file.path, (err) => {
+                        if (err) {
+                            console.log(err);
+                        }
+                    });
+                    return res.json({
+                        success: true,
+                        user: body
+                    });
+                });
+            },  { folder: "user_photos" });
         });
     });
 })
