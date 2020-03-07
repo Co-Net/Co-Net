@@ -212,7 +212,6 @@ router.put('/photo/:username', function (req, res) {
         }, function (err, obj) {
             var body = obj;
             cloudinary.uploader.upload(req.file.path, function (result) {
-                console.log(result);
                 body.profilePhoto = result.url;
                 UserModel.findOneAndUpdate({
                     username: queryUsername
