@@ -17,7 +17,6 @@ app.use(cors(
 ));
 
 app.use(cookieParser(process.env.JWT_SECRET));
-app.disable('etag') // Temp Fix for logout issue
 
 // Routers
 const userRouter = require('./api/routes/userRouter');
