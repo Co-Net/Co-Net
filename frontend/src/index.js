@@ -9,6 +9,7 @@ import * as registerServiceWorker from './serviceWorker';
 import { Route, BrowserRouter as Router } from "react-router-dom";
 import signup from './signup';
 import PicUpload from './PicUpload';
+import testLogout from './TestLogout';
 
 const routing = (
     <Router>
@@ -17,6 +18,7 @@ const routing = (
         <Route path="/Feed" component={Feed} />
         <Route path="/signup" component={signup} />
         <Route path="/pic" component={PicUpload} />
+        <Route path="/testlogout" component={testLogout} />
       </div>
     </Router>
   );

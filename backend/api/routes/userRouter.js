@@ -115,6 +115,23 @@ router.post('/signup', function (req, res) {
     });
 })
 
+// Log out by deleting cookie
+router.get('/logout', function (req, res) {
+    // req.logOut();
+    res.cookie('jwt', '', {expires: new Date(0)});
+    // res.clearCookie('jwt');
+    return res.send({
+        loggedOut: true
+    });
+})
+
+// Get a blank user (used for failure redirect)
+router.get('/guest', function (req, res) {
+    return res.json({
+        username: ''
+    });
+})
+
 //Get a user 
 router.get('/:username', function (req, res) {
     var queryUsername = req.params.username;

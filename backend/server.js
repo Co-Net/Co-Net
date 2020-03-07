@@ -17,12 +17,14 @@ app.use(cors(
 ));
 
 app.use(cookieParser(process.env.JWT_SECRET));
+app.disable('etag') // Temp Fix for logout issue
 
 // Routers
 const userRouter = require('./api/routes/userRouter');
 const userTagRouter = require('./api/routes/userTagRouter');
 const gameRouter = require('./api/routes/gameRouter');
 const forumRouter = require('./api/routes/forumPostRouter');
+const secureRouter = require('./api/routes/secureRouter');
 // this is our MongoDB database
 const dbRoute =
   `mongodb+srv://${process.env.DB_CREDENTIALS}@cluster0-8hzh3.mongodb.net/${process.env.DATABASE_NAME}?retryWrites=true&w=majority`;
@@ -48,6 +50,7 @@ app.use('/users', userRouter);
 app.use('/userTags', userTagRouter);
 app.use('/games', gameRouter);
 app.use('/forum', forumRouter)
+app.use('/user', passport.authenticate('jwt', { session: false, failureRedirect: '/users/guest' }), secureRouter)
 
 // // this is our get method
 // // this method fetches all available data in our database
