@@ -39,7 +39,6 @@ function logoutUser() {
   axios
     .get("http://localhost:3001/users/logout", { withCredentials: true })
     .then(json => {
-      console.log(json);
       if (json.data.loggedOut) {
         alert("Logged out");
       }

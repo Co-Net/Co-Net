@@ -117,9 +117,7 @@ router.post('/signup', function (req, res) {
 
 // Log out by deleting cookie
 router.get('/logout', function (req, res) {
-    // req.logOut();
     res.cookie('jwt', '', {expires: new Date(0)});
-    // res.clearCookie('jwt');
     return res.send({
         loggedOut: true
     });
@@ -241,6 +239,9 @@ router.put('/photo/:username', function (req, res) {
                     fs.unlink(req.file.path, (err) => {
                         if (err) {
                             console.log(err);
+                            return res.json({
+                                success: false
+                            })
                         }
                     });
                     return res.json({
