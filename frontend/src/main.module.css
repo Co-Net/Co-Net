@@ -43,3 +43,56 @@ body{
     text-transform: none !important;
 
 }
+
+.photo{
+    height: 88px;
+}
+
+.forumCard{
+    padding: 7px !important;
+    
+}
+
+.gameName:hover{
+    text-Decoration: underline;
+    cursor: pointer;
+}
+
+.gameName{
+
+}
+
+.gameAndTitle{
+    margin-top: 10px;
+    margin-bottom: 20px;
+
+}
+
+.timeStamp{
+    color: #A4A4A4;
+    font-size: 12px !important;
+
+}
+
+.userName{
+    color: #535353;
+    font-size: 12px !important;
+}
+
+.forumTitle{
+    color: #A4A4A4;
+}
+
+.divider{
+    height: 58px !important;
+    margin: 17px !important;
+}
+
+.marginBottom{
+    margin-bottom: 10%;
+}
+
+.postSpacing{
+    margin-bottom: 10px;
+
+}

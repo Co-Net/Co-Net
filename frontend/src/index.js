@@ -11,6 +11,7 @@ import { Route, BrowserRouter as Router } from "react-router-dom";
 import signup from './signup';
 import signin from './signin';
 import Profile from './Profile';
+import Forum from './Forum';
 
 
 const routing = (
@@ -22,6 +23,8 @@ const routing = (
         <Route path="/signup" component={signup} />
         <Route path="/signin" component={signin} />
         <Route path="/Profile" component={Profile} />
+        <Route path="/Forum" component={Forum} />
+
 
 
 
