@@ -24,7 +24,7 @@ function loginUser() {
     .post(
       "http://localhost:3001/users/signin",
       {
-        username: "conetwoboi",
+        username: "conettwoboi@gmail.com",
         password: "password2"
       },
       { withCredentials: true }
@@ -52,7 +52,7 @@ function getCurrentUser() {
     .then(json => {
       if (json.data.username) {
         console.log("SUCCESS");
-        alert(json.data.username);
+        alert(json.data.username + " - " + json.data.email);
       } else {
         alert("Not Logged In");
         console.log("FAIL");

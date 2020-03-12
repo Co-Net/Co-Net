@@ -117,7 +117,9 @@ router.post('/signup', function (req, res) {
 
 // Log out by deleting cookie
 router.get('/logout', function (req, res) {
-    res.cookie('jwt', '', {expires: new Date(0)});
+    res.cookie('jwt', '', {
+        expires: new Date(0)
+    });
     return res.send({
         loggedOut: true
     });
@@ -162,10 +164,14 @@ router.post('/signin', passport.authenticate('local', {
     session: false
 }), function (req, res) {
     const body = {
-        username: req.user.username
+        email: req.user.emailAddress
     }
-    req.login(body, {session: false}, (error) => {
-        if (error) res.status(400).send({ error });
+    req.login(body, {
+        session: false
+    }, (error) => {
+        if (error) res.status(400).send({
+            error
+        });
         jwt.sign(JSON.stringify(body), process.env.JWT_SECRET, (err, token) => {
             if (err) return res.json(err);
             // Set cookie header
@@ -175,6 +181,7 @@ router.post('/signin', passport.authenticate('local', {
             });
             return res.send({
                 username: req.user.username,
+                email: req.user.emailAddress,
                 success: true
             });
         });
@@ -249,7 +256,9 @@ router.put('/photo/:username', function (req, res) {
                         user: body
                     });
                 });
-            },  { folder: "user_photos" });
+            }, {
+                folder: "user_photos"
+            });
         });
     });
 })

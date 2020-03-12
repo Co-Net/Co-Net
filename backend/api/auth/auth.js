@@ -6,16 +6,16 @@ const UserModel = require('../models/userModel');
 // Login Passport
 passport.use(new localStrategy({
     session: false
-}, (username, password, done) => {
+}, (user, password, done) => {
     UserModel.findOne({
-        username: username
+        emailAddress: user
     }, function (err, user) {
         if (err) {
             return done(err);
         }
         if (!user) {
             return done(null, false, {
-                message: 'Incorrect username.'
+                message: 'Incorrect email.'
             });
         }
         if (!user.validPassword(password)) {
@@ -39,7 +39,7 @@ opts.jwtFromRequest = cookieExtractor;
 opts.secretOrKey = process.env.JWT_SECRET;
 
 passport.use(new JWTStrategy(opts, function (user, done) {
-    UserModel.findOne({username: user.username}, function(err, user) {
+    UserModel.findOne({emailAddress: user.email}, function(err, user) {
         if (err) {
             return done(err, false);
         }

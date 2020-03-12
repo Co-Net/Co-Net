@@ -36,16 +36,7 @@ class Feed extends Component
     super(props);
 
     this.state = {
-      allPosts: [
-        {
-          dateTime: "loading",
-          description: "temp",
-          photo: "temp",
-          tags: [],
-          title: "loading",
-          username: "temp"
-        }
-      ],
+      username: "guest"
     }
   }
   
@@ -54,15 +45,14 @@ class Feed extends Component
   componentDidMount() {
     // Retreive user data
     axios
-      .get("http://localhost:6969/user/currentuser", { withCredentials: true })
+      .get("http://localhost:3001/user/currentuser", { withCredentials: true })
       .then(json => {
         if (!json.data.username) {
           this.props.history.push("/signModal");
         } else {
-          axios.get("http://localhost:6969/posts/")
-          .then(json => {
-            this.setState({ allPosts: json.data.postObj});
-          })
+          this.setState({
+            username: json.data.username
+          });
         }
       });
   }

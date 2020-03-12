@@ -17,7 +17,8 @@ router.get('/currentuser', (req, res) => {
     return res.json({});
   } else {
     return res.json({
-      username: req.user.username
+      username: req.user.username,
+      email: req.user.emailAddress
     });
   }
 });
