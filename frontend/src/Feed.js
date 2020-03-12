@@ -36,7 +36,7 @@ class Feed extends Component
     super(props);
 
     this.state = {
-      username: "guest"
+      username: "Destroyer392"
     }
   }
   
@@ -47,9 +47,7 @@ class Feed extends Component
     axios
       .get("http://localhost:3001/user/currentuser", { withCredentials: true })
       .then(json => {
-        if (!json.data.username) {
-          this.props.history.push("/signModal");
-        } else {
+        if (json.data.username) {
           this.setState({
             username: json.data.username
           });
@@ -131,7 +129,7 @@ class Feed extends Component
 
     return (
  <div>
-      <TopMenu history={this.props.history}></TopMenu>
+      <TopMenu history={this.props.history} username={this.state.username}></TopMenu>
       <div className = "content">
       <Grid container spacing={3}>
       <Grid item xs={6}>

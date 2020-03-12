@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Typography from '@material-ui/core/Typography';
 import logo from './logo.png';
@@ -91,6 +91,8 @@ export default function PrimarySearchAppBar(props) {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
+  const [username, setUsername] = useState("Destroyer392");
+
   const handleProfileMenuOpen = event => {
     setAnchorEl(event.currentTarget);
   };
@@ -152,7 +154,7 @@ export default function PrimarySearchAppBar(props) {
         <p>Notifications</p>
       </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
-      <Typography>Destroyer392</Typography>
+      <Typography>{username}</Typography>
         <IconButton
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
@@ -210,7 +212,7 @@ export default function PrimarySearchAppBar(props) {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-            <Typography className = "userName">Destroyer392</Typography>
+            <Typography className = "userName">{username}</Typography>
               <AccountCircle />
              
             </IconButton>
