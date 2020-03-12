@@ -10,21 +10,26 @@ import bgd from "./background.jpeg";
 import axios from "axios";
 import styles from "./App.css";
 
+
 const useStyles = makeStyles(theme => ({
   root: {
     transform: "translateZ(0)",
     height: 768,
-    flexGrow: 1
+    flexGrow: 1,
+    backgroundImage: 'url(' + bgd + ')',
+    backgroundSize: 'cover',
+
+
   },
 
   modal: {
     display: "flex",
     padding: theme.spacing(1),
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundImage: "url(" + bgd + ")",
-    backgroundSize: "cover",
-    overflow: "hidden"
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    overflow: 'hidden',
+
   },
   paper: {
     width: 400,
@@ -35,7 +40,15 @@ const useStyles = makeStyles(theme => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
     marginBottom: 200,
-    marginRight: 400
+    marginRight: 400,
+  },
+
+  links:{
+    '&:hover': {
+      textDecoration: 'underline',
+      cursor: 'pointer',
+ },  
+    
   }
 }));
 
@@ -102,62 +115,43 @@ export default function ServerModal(props) {
               </Grid>
               <Grid item xs={12}></Grid>
             </Grid>
-            <form className={classes.form} noValidate>
-              <Grid container spacing={4}>
-                <Grid item xs={12}>
-                  <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    className={classes.submit}
-                    onClick={e => onSignIn(e, history, password, username)}
-                  >
-                    Sign in with Steam
-                  </Button>
-                </Grid>
-                <Grid item xs={12}>
-                  <Button
-                    type="button"
-                    fullWidth
-                    variant="contained"
-                    color="primary first"
-                    className={classes.submit}
-                    onClick={() => history.push("/signup")}
-                  >
-                    Sign up with Email
-                  </Button>
-                </Grid>
-              </Grid>
-              <Grid container spacing={10}>
-                <Grid item xs={12}></Grid>
-                <Grid item xs={12} style={{ textAlign: "right" }}>
-                  <Typography
-                    display="inline"
-                    component="h2"
-                    fontsize={18}
-                    align="center"
-                    id="server-modal-title"
-                  >
-                    Already have an account?
-                  </Typography>
-                  <Typography
-                    display="inline"
-                    color="primary"
-                    component="h2"
-                    fontsize={18}
-                    align="center"
-                    id="server-modal-title"
-                  >
-                    {" "}
-                    Sign in.{" "}
-                  </Typography>
-                </Grid>
-              </Grid>
-            </form>
-            <Box mt={5}>
-              <copyright />
-            </Box>
+            <Grid item xs={12}>
+            <Button
+            type="button"
+            fullWidth
+            variant="contained"
+            color="primary first"
+            className={classes.submit}
+            onClick = {() => history.push('/signup')}
+          >
+          Sign up with Email
+          </Button>
+            </Grid>
+          </Grid>
+          <Grid container spacing = {10}>
+          <Grid item xs = {12}></Grid>
+          <Grid item xs ={12} style ={{textAlign: 'right'}}>
+         
+          <Typography display = "inline" component="h2" fontsize = {18} align="center" id = "server-modal-title">
+          Already have an account?
+        </Typography>
+        <Typography 
+        className = {classes.links}
+        display = "inline" 
+        color = "primary" 
+        component="h2" 
+        fontsize = {18} 
+        align="center" 
+        onClick = {() => history.push('/signin')}
+        id = "server-modal-title">
+        {' '} Sign in. </Typography>
+        </Grid></Grid>
+       
+
+        </form>
+      <Box mt={5}>
+        <copyright/>
+      </Box>
           </p>
         </div>
       </Modal>

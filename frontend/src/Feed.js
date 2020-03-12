@@ -141,7 +141,7 @@ class Feed extends Component
 
     return (
  <div>
-      <TopMenu></TopMenu>
+      <TopMenu history={this.props.history}></TopMenu>
       <div className = "content">
       <Grid container spacing={3}>
       <Grid item xs={6}>

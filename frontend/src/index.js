@@ -10,6 +10,10 @@ import { Route, BrowserRouter as Router } from "react-router-dom";
 import signup from './signup';
 import PicUpload from './PicUpload';
 import testLogout from './TestLogout';
+import signin from './signin';
+import Profile from './Profile';
+import Forum from './Forum';
+
 
 const routing = (
     <Router>
@@ -19,6 +23,14 @@ const routing = (
         <Route path="/signup" component={signup} />
         <Route path="/pic" component={PicUpload} />
         <Route path="/testlogout" component={testLogout} />
+        <Route path="/signin" component={signin} />
+        <Route path="/Profile" component={Profile} />
+        <Route path="/Forum" component={Forum} />
+
+
+
+
+
       </div>
     </Router>
   );

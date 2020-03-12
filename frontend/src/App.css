@@ -22,3 +22,22 @@ body{
 .paper-button {
     text-transform: none;
   }
+
+.bgImage{
+    transform: 'translateZ(0)';
+    height: 768px;
+    flex-grow: 1;
+    background-image: url("background.jpeg");
+  }
+
+
+.link{
+    color: black;
+}
+
+.profilePhoto{
+    background-image: url("background.jpeg");
+    color: black;
+    background-color: black;
+
+}
