@@ -7,23 +7,28 @@ import { createMuiTheme } from "@material-ui/core/styles";
 import styles from './main.module.css';
 import profilePic from './profilePic.png';
 import Typography from '@material-ui/core/Typography';
-import Menu from './ProfileMenu.js';
 import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import history from './history';
+import { withRouter } from "react-router-dom";
 
-class Profile extends Component
+
+
+
+class editProfile extends Component
 {
   constructor(props) {
     super(props);
+    const {history} = props;
     this.pushHistory = this.pushHistory.bind(this);
 
-  }
 
-  pushHistory(){
-    this.props.history.push('/editprofile')
-  
-   }
+  }
    
- 
+pushHistory(){
+  this.props.history.push('/Profile')
+
+ }
   render()
   {
     const theme = createMuiTheme({
@@ -84,15 +89,33 @@ class Profile extends Component
 
     }
 
+
     return (
+      
  <div>
       <TopMenu history={this.props.history}></TopMenu>
       <div className = {styles.bgColor}>
       <div className = {styles.profilePhoto}>     </div>
-        <Avatar src= {profilePic} className={styles.large} />
+      <div>
+      <Avatar src= {profilePic} className={styles.large} />
+      <input
+        accept="image/*"
+        style={{ display: 'none' }}
+        id="raised-button-file"
+        multiple
+        type="file"
+      />
+<label htmlFor="raised-button-file">
+  <Button variant="contained" color="secondary" className = {styles.editProfileButton}component="span" >
+    Edit
+  </Button>
+</label> 
+      
+      </div>
 
-      <Button onClick = {this.pushHistory} variant = "contained" color = "primary" size = 'large' className = {styles.editProfile}>
-      Edit Profile</Button>
+      <Button variant = "contained" color = "primary" size = 'large' className = {styles.editProfile} onClick = {this.pushHistory}>
+      Save Changes
+      </Button>
  
 
 
@@ -101,13 +124,19 @@ class Profile extends Component
     </div>
     <div className = {styles.bgColor}>
     <Typography className = {styles.profileText} variant =  'h5' style = {{paddingTop: 20}} align="center" >Destroyer392</Typography>
-    <Typography className = {styles.profileBio} variant =  'body1' style = {{paddingTop: 20}} align="center" >
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget rhoncus nunc, eget tempor purus. Praesent sollicitudin, ligula id porttitor faucibus, tortor mauris hendrerit augue, ut molestie ipsum arcu 
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget rhoncus nunc, eget tempor purus. Praesent sollicitudin, ligula id porttitor faucibus, tortor mauris hendrerit augue, ut molestie ipsum arcu 
-
-    </Typography>
-    <Menu style = {{marginTop: 200}} className = {styles.menu}></Menu>
-
+    <div className = {styles.bioDiv}>
+    <TextField
+      id="outlined-multiline-static"
+      className = {styles.bioEdit}
+      label="Edit Bio"
+      multiline
+      rows="4"
+      defaultValue="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget rhoncus nunc, eget tempor purus. Praesent sollicitudin, ligula id porttitor faucibus, tortor mauris hendrerit augue, ut molestie ipsum arcu 
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget rhoncus nunc, eget tempor purus. Praesent sollicitudin, ligula id porttitor faucibus, tortor mauris hendrerit augue, ut molestie ipsum arcu"
+      margin="normal"
+      variant="outlined"
+    />
+    </div>
 
     </div>
    
@@ -117,4 +146,4 @@ class Profile extends Component
   }
 }
 
-export default Profile;
+export default editProfile;

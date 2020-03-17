@@ -21,6 +21,16 @@ body{
   margin-right: auto;
 }
 
+.editProfileButton{
+    position: absolute !important;
+    top: 59%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+  
+  
+
 .bgColor{
     background-color: #F5F5F5;
 }
@@ -95,4 +105,12 @@ body{
 .postSpacing{
     margin-bottom: 10px;
 
+}
+
+.bioDiv{
+    text-align: center;
+}
+
+.bioEdit{
+    width: 70%;
 }

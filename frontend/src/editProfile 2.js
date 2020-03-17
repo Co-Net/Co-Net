@@ -10,18 +10,11 @@ import Typography from '@material-ui/core/Typography';
 import Menu from './ProfileMenu.js';
 import Button from '@material-ui/core/Button';
 
-class Profile extends Component
+class editProfile extends Component
 {
   constructor(props) {
     super(props);
-    this.pushHistory = this.pushHistory.bind(this);
-
   }
-
-  pushHistory(){
-    this.props.history.push('/editprofile')
-  
-   }
    
  
   render()
@@ -89,9 +82,9 @@ class Profile extends Component
       <TopMenu history={this.props.history}></TopMenu>
       <div className = {styles.bgColor}>
       <div className = {styles.profilePhoto}>     </div>
-        <Avatar src= {profilePic} className={styles.large} />
 
-      <Button onClick = {this.pushHistory} variant = "contained" color = "primary" size = 'large' className = {styles.editProfile}>
+      <Avatar src= {profilePic} className={styles.large} />
+      <Button variant = "contained" color = "primary" size = 'large' className = {styles.editProfile}>
       Edit Profile</Button>
  
 
@@ -117,4 +110,4 @@ class Profile extends Component
   }
 }
 
-export default Profile;
+export default editProfile;

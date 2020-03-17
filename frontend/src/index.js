@@ -12,10 +12,13 @@ import signup from './signup';
 import signin from './signin';
 import Profile from './Profile';
 import Forum from './Forum';
+import editProfile from './editProfile';
+import history from './history';
+
 
 
 const routing = (
-    <Router>
+    <Router history={history}>
       <div>
         <Route exact path="/" component={App} />
         <Route path="/Login" component={Login} />
@@ -24,6 +27,9 @@ const routing = (
         <Route path="/signin" component={signin} />
         <Route path="/Profile" component={Profile} />
         <Route path="/Forum" component={Forum} />
+        <Route path="/editProfile" component={editProfile} />
+
+
 
 
 
