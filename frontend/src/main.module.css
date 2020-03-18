@@ -114,3 +114,23 @@ body{
 .bioEdit{
     width: 70%;
 }
+
+.mediumSize{
+    width: 60px !important;
+    height: 60px !important;
+}
+
+.forumPostTitle{
+ 
+
+}
+
+.forumBody{
+    color: #535353;
+    font-size: 14px !important;
+    white-space: pre-line;
+}
+
+.commentNumber{
+    margin-top: 40px !important;
+}
