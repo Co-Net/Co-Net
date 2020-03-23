@@ -112,17 +112,11 @@ function onSignUp(e, history, fn, ln, em, cEm, pass, cPass, uname) {
           } else if (json.data.message === "MISSING INPUTS") {
             document.getElementById("errorMessage").innerText =
               "Please fill out all areas on the form before submitting.";
-          } else if (
-            json.data.message === 
-            "ILLEGAL USERNAME"
-          ) {
-            document.getElementById("errorMessage").innerText = 
+          } else if (json.data.message === "ILLEGAL USERNAME") {
+            document.getElementById("errorMessage").innerText =
               "Username cannot contain any special characers";
-          } else if (
-            json.data.message === 
-            "SHORT PASSWORD"
-          ) {
-            document.getElementById("errorMessage").innerText = 
+          } else if (json.data.message === "SHORT PASSWORD") {
+            document.getElementById("errorMessage").innerText =
               "Password must contain 8 or more characters.";
           } else {
             document.getElementById("errorMessage").innerText =
@@ -137,13 +131,13 @@ export default function ServerModal(props) {
   const { history } = props;
   const classes = useStyles();
   const rootRef = React.useRef(null);
-  const [username, setUserName] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [cEmail, setConfirmEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [cPassword, setConfirmPassword] = useState('');
+  const [username, setUserName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [cEmail, setConfirmEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [cPassword, setConfirmPassword] = useState("");
 
   return (
     <div className={classes.root} ref={rootRef}>
@@ -170,7 +164,8 @@ export default function ServerModal(props) {
                   align="center"
                   id="server-modal-title"
                 >
-                  Connecting Gamers Worldwide. <p id="errorMessage" className={classes.error}></p>
+                  Connecting Gamers Worldwide.{" "}
+                  <p id="errorMessage" className={classes.error}></p>
                 </Typography>
               </Grid>
               <Grid item xs={12}></Grid>
@@ -187,7 +182,7 @@ export default function ServerModal(props) {
                     id="firstName"
                     label="First Name"
                     value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
+                    onChange={e => setFirstName(e.target.value)}
                     autoFocus
                   />
                 </Grid>
@@ -201,7 +196,7 @@ export default function ServerModal(props) {
                     id="lastName"
                     label="Last Name"
                     value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
+                    onChange={e => setLastName(e.target.value)}
                     autoFocus
                   />
                 </Grid>
@@ -215,7 +210,7 @@ export default function ServerModal(props) {
                     id="username"
                     label="Username"
                     value={username}
-                    onChange={(e) => setUserName(e.target.value)}
+                    onChange={e => setUserName(e.target.value)}
                     autoFocus
                   />
                 </Grid>
@@ -229,7 +224,7 @@ export default function ServerModal(props) {
                     id="email"
                     label="Email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={e => setEmail(e.target.value)}
                     autoFocus
                   />
                 </Grid>
@@ -243,7 +238,7 @@ export default function ServerModal(props) {
                     id="cEmail"
                     label="Confirm Email"
                     value={cEmail}
-                    onChange={(e) => setConfirmEmail(e.target.value)}
+                    onChange={e => setConfirmEmail(e.target.value)}
                     autoFocus
                   />
                 </Grid>
@@ -258,7 +253,7 @@ export default function ServerModal(props) {
                     id="password"
                     label="Password"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={e => setPassword(e.target.value)}
                     autoFocus
                   />
                 </Grid>
@@ -273,7 +268,7 @@ export default function ServerModal(props) {
                     id="cPassword"
                     label="Confirm Password"
                     value={cPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    onChange={e => setConfirmPassword(e.target.value)}
                     autoFocus
                   />
                 </Grid>
@@ -283,7 +278,19 @@ export default function ServerModal(props) {
                     fullWidth
                     variant="contained"
                     color="primary first"
-                    onClick = {(e) => onSignUp(e, history, firstName, lastName, email, cEmail, password, cPassword, username)}
+                    onClick={e =>
+                      onSignUp(
+                        e,
+                        history,
+                        firstName,
+                        lastName,
+                        email,
+                        cEmail,
+                        password,
+                        cPassword,
+                        username
+                      )
+                    }
                   >
                     Sign Up
                   </Button>

@@ -47,14 +47,14 @@ router.post('/signup', function (req, res) {
     if (format.test(username)) {
         return res.json({
             created: false,
-            error: 'ILLEGAL USERNAME'
+            message: 'ILLEGAL USERNAME'
         });
     }
 
     if (password.length < 8) {
         return res.json({
             created: false,
-            error: 'SHORT PASSWORD'
+            message: 'SHORT PASSWORD'
         });
     }
 
