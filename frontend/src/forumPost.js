@@ -246,22 +246,12 @@ class forumPost extends Component
     <Typography className = {styles.userNameForum} display = "inline" >StrongLittleOne{bull}</Typography>
     <Typography  className = {styles.timeStamp} display = "inline" >26 Comments</Typography>
     
+    </div>    
     </div>
-        
-    
-    </div>
-    
-
       </CardContent>
       </Card>
 
-      
-
       </Grid>
-
-
-
-
       </Grid>
       
 

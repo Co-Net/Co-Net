@@ -9,7 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import logo from './logo.png';
 import bgd from './background.jpeg';
 import axios from 'axios';
-import styles from './App.css';
+import styles from './main.module.css';
 import TextField from '@material-ui/core/TextField';
 
 
@@ -26,7 +26,6 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(1),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundImage: 'url(' + bgd + ')',
     backgroundSize: 'cover',
     overflow: 'hidden',
 
@@ -51,7 +50,7 @@ export default function ServerModal(props) {
   const rootRef = React.useRef(null);
 
   return (
-    <div className={classes.root} ref={rootRef}>
+    <div className={styles.bgdImage} ref={rootRef}>
       <Modal
         disablePortal
         disableEnforceFocus
@@ -62,7 +61,7 @@ export default function ServerModal(props) {
         className={classes.modal}
         container={() => rootRef.current}
       >
-        <div className={classes.paper} style = {{padding: 45,}}>
+        <div className={classes.paper} style = {{padding: 45, marginTop: 167}}>
 
           <p id="server-modal-description">
           <Typography align="center" id = "server-modal-title">
