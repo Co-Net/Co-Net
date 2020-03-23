@@ -105,6 +105,11 @@ body{
     color: #A4A4A4;
 }
 
+.forumTitle:hover{
+    text-Decoration: underline;
+    cursor: pointer;
+}
+
 .divider{
     height: 58px !important;
     margin: 17px !important;
