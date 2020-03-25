@@ -1,21 +1,28 @@
-import Modal from "@material-ui/core/Modal";
-import React from "react";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
-import logo from "./logo.png";
-import bgd from "./background.jpeg";
-import styles from "./App.css";
+
+import Modal from '@material-ui/core/Modal';
+import React, { useState } from 'react';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import logo from './logo.png';
+import bgd from './background.jpeg';
+import axios from 'axios';
+import styles from './main.module.css';
+
 
 const useStyles = makeStyles(theme => ({
   root: {
     transform: "translateZ(0)",
     height: 768,
     flexGrow: 1,
-    backgroundImage: "url(" + bgd + ")",
-    backgroundSize: "cover"
+    backgroundImage: 'url(' + bgd + ')',
+    backgroundSize: 'cover',
+    flex: 1,
+    resizeMode: 'cover', 
+
+
   },
 
   modal: {
@@ -52,7 +59,7 @@ export default function ServerModal(props) {
   const rootRef = React.useRef(null);
 
   return (
-    <div className={classes.root} ref={rootRef}>
+    <div className={styles.bgdImage} ref={rootRef}>
       <Modal
         disablePortal
         disableEnforceFocus
@@ -63,7 +70,8 @@ export default function ServerModal(props) {
         className={classes.modal}
         container={() => rootRef.current}
       >
-        <div className={classes.paper} style={{ padding: 45 }}>
+        <div className={classes.paper} style = {{padding: 45, marginTop: 167}}>
+
           <p id="server-modal-description">
             <Typography align="center" id="server-modal-title">
               <img src={logo} alt="Logo" style={{ width: "100px" }} />

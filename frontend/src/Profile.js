@@ -14,7 +14,14 @@ class Profile extends Component
 {
   constructor(props) {
     super(props);
+    this.pushHistory = this.pushHistory.bind(this);
+
   }
+
+  pushHistory(){
+    this.props.history.push('/editprofile')
+  
+   }
    
  
   render()
@@ -82,9 +89,9 @@ class Profile extends Component
       <TopMenu history={this.props.history}></TopMenu>
       <div className = {styles.bgColor}>
       <div className = {styles.profilePhoto}>     </div>
+        <Avatar src= {profilePic} className={styles.large} />
 
-      <Avatar src= {profilePic} className={styles.large} />
-      <Button variant = "contained" color = "primary" size = 'large' className = {styles.editProfile}>
+      <Button onClick = {this.pushHistory} variant = "contained" color = "primary" size = 'large' className = {styles.editProfile}>
       Edit Profile</Button>
  
 

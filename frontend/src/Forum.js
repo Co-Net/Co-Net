@@ -40,6 +40,8 @@ class Forum extends Component
 {
   constructor(props) {
     super(props);
+    this.pushHistory = this.pushHistory.bind(this);
+
 
     this.state = {
       allPosts: [
@@ -53,8 +55,14 @@ class Forum extends Component
         }
       ],
     }
+    
   }
   
+
+  pushHistory(){
+    this.props.history.push('/forumPost')
+  
+   }
 
   
   componentDidMount() {
@@ -196,7 +204,7 @@ class Forum extends Component
     <Grid item xs={6}>
     <div className = {mainStyles.gameAndTitle}>
     <Typography 
-    
+    onClick = {this.pushHistory}
     display = "inline" 
     color = "primary" 
     component="h2" 
@@ -206,7 +214,7 @@ class Forum extends Component
 
     id = "server-modal-title">
     League of Legends: </Typography>
-    <Typography className = {mainStyles.forumTitle} display = "inline" component="h2" fontsize = {18} align="center" id = "server-modal-title">
+    <Typography onClick = {this.pushHistory}  className = {mainStyles.forumTitle} display = "inline" component="h2" fontsize = {18} align="center" id = "server-modal-title">
           LOOKING FOR DUO FOR RANKED
         </Typography>
         </div>

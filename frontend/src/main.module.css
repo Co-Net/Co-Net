@@ -21,6 +21,16 @@ body{
   margin-right: auto;
 }
 
+.editProfileButton{
+    position: absolute !important;
+    top: 59%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+  
+  
+
 .bgColor{
     background-color: #F5F5F5;
 }
@@ -79,8 +89,25 @@ body{
     font-size: 12px !important;
 }
 
+.userNameForum{
+    color: #535353;
+    font-size: 12px !important;
+}
+
+.userNameComment{
+    color: #0755ca;
+    font-size: 14px !important;
+    margin-right: 5px !important;
+}
+
+
 .forumTitle{
     color: #A4A4A4;
+}
+
+.forumTitle:hover{
+    text-Decoration: underline;
+    cursor: pointer;
 }
 
 .divider{
@@ -94,5 +121,139 @@ body{
 
 .postSpacing{
     margin-bottom: 10px;
+
+}
+
+.bioDiv{
+    text-align: center;
+}
+
+.bioEdit{
+    width: 70%;
+}
+
+.mediumSize{
+    width: 60px !important;
+    height: 60px !important;
+}
+
+.smallSize{
+    width: 40px !important;
+    height: 40px !important;
+}
+
+
+.forumPostTitle{
+ 
+
+}
+
+.forumBody{
+    color: #535353;
+    font-size: 14px !important;
+    white-space: pre-line;
+}
+
+.commentBody{
+    color: #535353;
+    font-size: 14px !important;
+    white-space: pre-line;
+    margin-top: 5px !important;
+}
+
+
+.commentNumber{
+    margin-top: 40px !important;
+}
+
+.commentCard{
+    padding: 0px !important;
+    margin-bottom: 10px !important;
+}
+
+.commentBox{
+    width: 100% !important;
+}
+
+.postComment{
+    float: right;
+    margin-top: 10px !important;
+
+}
+
+.relatedLinks{
+    color: #0755ca;
+    font-size: 14px !important;
+    white-space: pre-line;
+    margin-top: 5px !important;
+}
+
+.bullet{
+    display: inline-block;
+    margin: 0 2px;
+    transform: scale(0.8);
+}
+
+.relatedPosts{
+    margin-bottom: 10px;
+}
+
+.marginTop{
+    margin-top: 5px;
+}
+
+.postStats{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.statsText{
+    color: #535353;
+    font-size: 14px !important;
+}
+
+.statsNumber{
+    color: #A4A4A4;
+    font-size: 14px !important;
+
+}
+
+.upDownVote{
+    display: block !important;
+    font-size: 40px !important;
+}
+
+.avatarForum{
+    width: 60px !important;
+    height: 60px !important;
+    margin: auto;
+
+}
+
+.arrows{
+    margin: auto;
+    max-width: fit-content;
+}
+
+.voteNumber{
+    text-align: center;
+    font-size: 23px !important;
+    color:#2b76d4;
+}
+
+.mainPostSpacing{
+    margin-bottom: 10px;
+    padding-left: 5px !important;
+
+}
+
+.bgdImage{
+    background-image: url("background.jpeg");
+
+    background-color: #0755ca;
+    height: 100vh;
+    flex-grow: 1;
+
 
 }
