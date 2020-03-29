@@ -75,12 +75,13 @@ function onSignUp(e, history, fn, ln, em, cEm, pass, cPass, uname) {
         password: password
       })
       .then(json => {
+        console.log(json);
         if (json.data.success) {
           axios
             .post(
               `http://localhost:3001/users/signin`,
               {
-                username: username,
+                username: email,
                 password: password
               },
               {

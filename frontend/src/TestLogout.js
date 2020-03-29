@@ -30,7 +30,6 @@ function loginUser() {
       { withCredentials: true }
     )
     .then(json => {
-      console.log(json);
       if (json.data.success) alert("Signed in");
     });
 }
