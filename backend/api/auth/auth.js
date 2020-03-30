@@ -1,6 +1,7 @@
 const passport = require('passport');
 const localStrategy = require('passport-local').Strategy;
 const JWTStrategy = require('passport-jwt').Strategy;
+const SteamStrategy = require('passport-steam').Strategy;
 const UserModel = require('../models/userModel');
 
 // Login Passport
@@ -51,3 +52,15 @@ passport.use(new JWTStrategy(opts, function (user, done) {
         }
     })
 }));
+
+// Steam Strategy
+passport.use(new SteamStrategy({
+    returnURL: `http://localhost:3000/auth/steam/return`,
+    realm: `http://localhost:3000/`,
+    apiKey: `${process.env.STEAM_API_KEY}`
+  },
+  function(identifier, profile, done) {
+    console.log("steam");
+    return done(null, profile);
+  }
+));

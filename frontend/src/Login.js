@@ -1,28 +1,24 @@
-
-import Modal from '@material-ui/core/Modal';
-import React, { useState } from 'react';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import logo from './logo.png';
-import bgd from './background.jpeg';
-import axios from 'axios';
-import styles from './main.module.css';
-
+import Modal from "@material-ui/core/Modal";
+import React, { useState } from "react";
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
+import logo from "./logo.png";
+import bgd from "./background.jpeg";
+import axios from "axios";
+import styles from "./main.module.css";
 
 const useStyles = makeStyles(theme => ({
   root: {
     transform: "translateZ(0)",
     height: 768,
     flexGrow: 1,
-    backgroundImage: 'url(' + bgd + ')',
-    backgroundSize: 'cover',
+    backgroundImage: "url(" + bgd + ")",
+    backgroundSize: "cover",
     flex: 1,
-    resizeMode: 'cover', 
-
-
+    resizeMode: "cover"
   },
 
   modal: {
@@ -53,6 +49,17 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+function onSteamLogin(e) {
+  e.preventDefault();
+  console.log("Steam Clicked");
+  axios
+    .get("http://localhost:3000/auth/steam")
+    .then(json => {
+      console.log("steam login json");
+      console.log(json);
+    });
+}
+
 export default function ServerModal(props) {
   const { history } = props;
   const classes = useStyles();
@@ -70,8 +77,7 @@ export default function ServerModal(props) {
         className={classes.modal}
         container={() => rootRef.current}
       >
-        <div className={classes.paper} style = {{padding: 45, marginTop: 167}}>
-
+        <div className={classes.paper} style={{ padding: 45, marginTop: 167 }}>
           <p id="server-modal-description">
             <Typography align="center" id="server-modal-title">
               <img src={logo} alt="Logo" style={{ width: "100px" }} />
@@ -98,6 +104,7 @@ export default function ServerModal(props) {
                     variant="contained"
                     color="primary"
                     className={classes.submit}
+                    onClick={e => onSteamLogin(e)}
                   >
                     Sign in with Steam
                   </Button>

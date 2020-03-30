@@ -1,5 +1,5 @@
 /*
- * Parent Route: /tags
+ * Parent Route: /userTags
  */
 const express = require('express');
 const router = express.Router();
