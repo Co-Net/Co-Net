@@ -128,7 +128,7 @@ router.get('/logout', function (req, res) {
 // Get a blank user (used for failure redirect)
 router.get('/guest', function (req, res) {
     return res.json({
-        username: ''
+        username: 'Guest'
     });
 })
 

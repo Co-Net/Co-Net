@@ -18,7 +18,9 @@ router.get('/profile', (req, res, next) => {
 
 router.get('/currentuser', (req, res) => {
   if (req.user === undefined) {
-    return res.json({});
+    return res.json({
+      username: "Guest"
+    });
   } else {
     return res.json({
       username: req.user.username,

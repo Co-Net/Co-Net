@@ -34,30 +34,10 @@ class Feed extends Component
 {
   constructor(props) {
     super(props);
-
-    this.state = {
-      username: "Destroyer392"
-    }
   }
   
-
-  
-  componentDidMount() {
-    // Retreive user data
-    axios
-      .get("http://localhost:3001/user/currentuser", { withCredentials: true })
-      .then(json => {
-        if (json.data.username) {
-          this.setState({
-            username: json.data.username
-          });
-        }
-      });
-  }
-
   render()
   {
-    const {allPosts} = this.state;
     const theme = createMuiTheme({
       '@global' : {
         body: {
@@ -129,7 +109,7 @@ class Feed extends Component
 
     return (
  <div>
-      <TopMenu history={this.props.history} username={this.state.username}></TopMenu>
+      <TopMenu history={this.props.history}></TopMenu>
       <div className = "content">
       <Grid container spacing={3}>
       <Grid item xs={6}>

@@ -55,7 +55,7 @@ passport.use(new JWTStrategy(opts, function (user, done) {
 
 // Steam Strategy
 passport.use(new SteamStrategy({
-    returnURL: `http://localhost:3000/auth/steam/return`,
+    returnURL: `http://localhost:3000/feed`,
     realm: `http://localhost:3000/`,
     apiKey: `${process.env.STEAM_API_KEY}`
   },
