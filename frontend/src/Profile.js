@@ -13,7 +13,6 @@ import EditProfile from "./editProfile";
 class Profile extends Component {
   constructor(props) {
     super(props);
-    this.pushHistory = this.pushHistory.bind(this);
 
     this.handleBioChange = this.handleBioChange.bind(this);
     this.handleBioSave = this.handleBioSave.bind(this);
@@ -44,10 +43,6 @@ class Profile extends Component {
           this.setState({ lastName: json.data.lastName });
         }
       });
-  }
-
-  pushHistory() {
-    this.props.history.push("/editprofile");
   }
 
   handleBioChange(newBio) {
