@@ -24,7 +24,10 @@ router.get('/currentuser', (req, res) => {
   } else {
     return res.json({
       username: req.user.username,
-      email: req.user.emailAddress
+      email: req.user.emailAddress,
+      bio: req.user.bio,
+      firstName: req.user.firstName,
+      lastName: req.user.lastName
     });
   }
 });
