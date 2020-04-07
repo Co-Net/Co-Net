@@ -1,5 +1,5 @@
 import Modal from "@material-ui/core/Modal";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
@@ -10,7 +10,7 @@ import bgd from "./background.jpeg";
 import axios from "axios";
 import styles from "./main.module.css";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     transform: "translateZ(0)",
     height: 768,
@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
     backgroundImage: "url(" + bgd + ")",
     backgroundSize: "cover",
     flex: 1,
-    resizeMode: "cover"
+    resizeMode: "cover",
   },
 
   modal: {
@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center",
     justifyContent: "center",
 
-    overflow: "hidden"
+    overflow: "hidden",
   },
   paper: {
     width: 400,
@@ -38,32 +38,41 @@ const useStyles = makeStyles(theme => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
     marginBottom: 200,
-    marginRight: 400
+    marginRight: 400,
   },
 
   links: {
     "&:hover": {
       textDecoration: "underline",
-      cursor: "pointer"
-    }
-  }
+      cursor: "pointer",
+    },
+  },
 }));
 
 function onSteamLogin(e) {
   e.preventDefault();
   console.log("Steam Clicked");
-  axios
-    .get("http://localhost:3000/auth/steam")
-    .then(json => {
-      console.log("steam login json");
-      console.log(json);
-    });
+  axios.get("http://localhost:3000/auth/steam").then((json) => {
+    console.log("steam login json");
+    console.log(json);
+  });
 }
 
 export default function ServerModal(props) {
   const { history } = props;
   const classes = useStyles();
   const rootRef = React.useRef(null);
+
+  // componentDidMount
+  useEffect(() => {
+    axios
+      .get("http://localhost:3001/user/currentuser", { withCredentials: true })
+      .then((json) => {
+        if (json.data.username) {
+          history.push("/Feed");
+        }
+      });
+  });
 
   return (
     <div className={styles.bgdImage} ref={rootRef}>
@@ -104,7 +113,7 @@ export default function ServerModal(props) {
                     variant="contained"
                     color="primary"
                     className={classes.submit}
-                    onClick={e => onSteamLogin(e)}
+                    onClick={(e) => onSteamLogin(e)}
                   >
                     Sign in with Steam
                   </Button>

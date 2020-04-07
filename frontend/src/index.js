@@ -13,7 +13,6 @@ import testLogout from './TestLogout';
 import signin from './signin';
 import Profile from './Profile';
 import Forum from './Forum';
-import editProfile from './editProfile';
 import history from './history';
 import forumPost from './forumPost';
 
@@ -30,7 +29,6 @@ const routing = (
         <Route path="/signin" component={signin} />
         <Route path="/Profile" component={Profile} />
         <Route path="/Forum" component={Forum} />
-        <Route path="/editProfile" component={editProfile} />
         <Route path="/forumPost" component={forumPost} />
 
 
