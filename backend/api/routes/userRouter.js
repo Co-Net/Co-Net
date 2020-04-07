@@ -98,6 +98,7 @@ router.post('/signup', function (req, res) {
             user.username = username;
             user.firstName = firstName;
             user.lastName = lastName;
+            user.profilePhoto = "https://res.cloudinary.com/co-net-pix/image/upload/v1586238488/default_user_avatar.jpg";
             user.save((err, user) => {
                 if (err) {
                     return res.send({

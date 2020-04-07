@@ -3,7 +3,6 @@ import Avatar from "@material-ui/core/Avatar";
 import TopMenu from "./TopMenu";
 import { createMuiTheme } from "@material-ui/core/styles";
 import styles from "./main.module.css";
-import profilePic from "./profilePic.png";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -14,6 +13,11 @@ class EditProfile extends Component {
 
     this.onEdit = this.onEdit.bind(this);
     this.onSave = this.onSave.bind(this);
+    this.onPhotoChange = this.onPhotoChange.bind(this);
+
+    this.state = {
+      photo: this.props.photo
+    }
   }
 
   onEdit(e) {
@@ -22,6 +26,12 @@ class EditProfile extends Component {
 
   onSave() {
     this.props.onSave();
+  }
+
+  onPhotoChange(event) {
+    this.props.onPhotoChange(event, (newPhoto) => {
+      this.setState({ photo: newPhoto });
+    })
   }
 
   render() {
@@ -88,13 +98,14 @@ class EditProfile extends Component {
         <div className={styles.bgColor}>
           <div className={styles.profilePhoto}> </div>
           <div>
-            <Avatar src={profilePic} className={styles.large} />
+            <Avatar src={this.state.photo} className={styles.large} />
             <input
               accept="image/*"
               style={{ display: "none" }}
               id="raised-button-file"
               multiple
               type="file"
+              onChange={this.onPhotoChange}
             />
             <label htmlFor="raised-button-file">
               <Button
@@ -113,7 +124,7 @@ class EditProfile extends Component {
             color="primary"
             size="large"
             className={styles.editProfile}
-            onClick={() => this.onSave()}
+            onClick={this.onSave}
           >
             Save Changes
           </Button>

@@ -16,6 +16,7 @@ class Profile extends Component {
 
     this.handleBioChange = this.handleBioChange.bind(this);
     this.handleBioSave = this.handleBioSave.bind(this);
+    this.handlePhotoChange = this.handlePhotoChange.bind(this);
 
     this.state = {
       username: "",
@@ -23,6 +24,7 @@ class Profile extends Component {
       editing: false,
       firstName: "",
       lastName: "",
+      photo: ""
     };
 
     axios
@@ -42,6 +44,9 @@ class Profile extends Component {
         if (json.data.lastName) {
           this.setState({ lastName: json.data.lastName });
         }
+        if (json.data.profilePhoto) {
+          this.setState({ photo: json.data.profilePhoto });
+        }
       });
   }
 
@@ -56,10 +61,31 @@ class Profile extends Component {
         bio: this.state.bio,
       })
       .then((json) => {
-        if (json.data.success) console.log("Bio successfully updated");
+        if (json.data.success) {
+          console.log("Bio successfully updated");
+        }
         else console.log("An error has occurred while saving your bio.");
       });
     this.setState({ editing: false });
+  }
+
+  handlePhotoChange(event, callback) {
+    if (event.target.files.length > 0) {
+      const formData = new FormData();
+      formData.append("file", event.target.files[0]);
+      axios.put(`http://localhost:3001/users/photo/${this.state.username}`, formData).then((json) => {
+        if (json.data.success) {
+          // Photo uploaded successfully
+          console.log("PHOTO UPLOAD SUCCESS");
+          this.setState({ photo: json.data.user.profilePhoto });
+          callback(json.data.user.profilePhoto);
+        } else {
+          // Photo upload failed
+          console.log("PHOTO UPLOAD FAIL");
+          console.log(json)
+        }
+      });
+    }
   }
 
   render() {
@@ -123,7 +149,7 @@ class Profile extends Component {
           <TopMenu history={this.props.history}></TopMenu>
           <div className={styles.bgColor}>
             <div className={styles.profilePhoto}> </div>
-            <Avatar src={profilePic} className={styles.large} />
+            <Avatar src={this.state.photo} className={styles.large} />
 
             <Button
               onClick={() => this.setState({ editing: true })}
@@ -162,8 +188,10 @@ class Profile extends Component {
           firstName={this.state.firstName}
           lastName={this.state.lastName}
           bio={this.state.bio}
+          photo={this.state.photo}
           onEdit={this.handleBioChange}
           onSave={this.handleBioSave}
+          onPhotoChange={this.handlePhotoChange}
         ></EditProfile>
       );
     }
