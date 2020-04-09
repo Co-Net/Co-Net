@@ -18,8 +18,7 @@ const GameSchema = new Schema({
         default: 0
     },
     gameTags: [GameTagSchema],
-    gameCommentsAndRatings
+    gameCommentsAndRatings: [GameCommentSchema]
     //need to add game image
 });
-
 module.exports = mongoose.model('Game', GameSchema);

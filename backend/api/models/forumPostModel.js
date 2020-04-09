@@ -33,7 +33,6 @@ const ForumPostModelSchema = new Schema({
         type: Number,
         defualt: 0
     }
-
 })
 
 module.exports = mongoose.model('ForumPost', ForumPostModelSchema);
