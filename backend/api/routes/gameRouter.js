@@ -167,9 +167,11 @@ router.put('/removeGameTag/:name', function (req, res) {
 router.put('/addComment/:name', function (req, res) {
     var queryName = req.params.name;
     var body = req.body;
+    var username = body.username;
     var comment = body.comment;
     var rating = body.rating;
     var commentAndTagObj = {
+        "username": username,
         "comment": comment,
         "rating": rating
     };
@@ -195,10 +197,11 @@ router.put('/addComment/:name', function (req, res) {
 router.put('/removeComment/:name', function (req, res) {
     var queryName = req.params.name;
     var body = req.body;
-    var tag = body.name;
+    var username = body.username;
     var comment = body.comment;
     var rating = body.rating;
     var commentAndTagObj = {
+        "username": username,
         "comment": comment,
         "rating": rating
     };
