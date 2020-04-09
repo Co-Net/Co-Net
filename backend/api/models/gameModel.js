@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const GameTagSchema = new Schema({name: String});
-const GameCommentSchema = new Schema({comment: String, rating: number});
+const GameCommentSchema = new Schema({comment: String, rating: Number});
 
 
 const GameSchema = new Schema({
