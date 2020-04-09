@@ -51,7 +51,8 @@ const UserSchema = new Schema({
     userTags: [UserTagSchema],
     friends: [FriendSchema],
     games: [UsersGamesSchema],
-    forumPosts: [PostIDSchema]
+    forumPosts: [PostIDSchema],
+    playerReputation: [playerRepSchema]
 });
 
 UserSchema.methods.generateHash = function (password) {
