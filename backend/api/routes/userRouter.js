@@ -477,7 +477,7 @@ router.put('/addReputation/:username', function (req, res) {
     var queryUsername = req.params.username;
     var body = req.body;
     var un = body.username;
-    var rep = body.repuation;
+    var rep = body.reputation;
     var comment = body.comment;
     var repObj = {
         "username": un,
@@ -507,7 +507,7 @@ router.put('/removeReputation/:username', function (req, res) {
     var queryUsername = req.params.username;
     var body = req.body;
     var un = body.username;
-    var rep = body.repuation;
+    var rep = body.reputation;
     var comment = body.comment;
     var repObj = {
         "username": un,
