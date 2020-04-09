@@ -28,6 +28,10 @@ const ForumPostModelSchema = new Schema({
     username: { 
         type: String,
         require: [true, "Please enter the username of the user who created this post!"]
+    },
+    votes: {
+        type: Number,
+        defualt: 0
     }
 
 })
