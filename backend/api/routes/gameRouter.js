@@ -111,7 +111,7 @@ router.get('/', function (req, res) {
     });
 })
 
-//add a tag to a user
+//add a game tag
 router.put('/addGameTag/:name', function (req, res) {
     var queryName = req.params.name;
     var body = req.body;
@@ -137,7 +137,7 @@ router.put('/addGameTag/:name', function (req, res) {
     });
 })
 
-// Unfollow a user
+// remove a game tag
 router.put('/removeGameTag/:name', function (req, res) {
     var queryName = req.params.name;
     var body = req.body;
@@ -150,6 +150,63 @@ router.put('/removeGameTag/:name', function (req, res) {
     }, {
         $pull: {
             gameTags: tagObj
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            game: body
+        });
+    });
+})
+
+//remove a comment
+router.put('/addComment/:name', function (req, res) {
+    var queryName = req.params.name;
+    var body = req.body;
+    var comment = body.comment;
+    var rating = body.rating;
+    var commentAndTagObj = {
+        "comment": comment,
+        "rating": rating
+    };
+    GameModel.findOneAndUpdate({
+        name: queryName
+    }, {
+        $push: {
+            gameCommentsAndRatings: commentAndTagObj
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            game: body
+        });
+    });
+})
+
+// add a commment
+router.put('/removeComment/:name', function (req, res) {
+    var queryName = req.params.name;
+    var body = req.body;
+    var tag = body.name;
+    var comment = body.comment;
+    var rating = body.rating;
+    var commentAndTagObj = {
+        "comment": comment,
+        "rating": rating
+    };
+    GameModel.findOneAndUpdate({
+        name: queryName
+    }, {
+        $pull: {
+            gameCommentsAndRatings: commentAndTagObj
         }
     }, function (err) {
         if (err) return res.json({
