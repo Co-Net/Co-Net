@@ -472,4 +472,64 @@ router.put('/removePost/:username', function (req, res) {
     });
 })
 
+//add player reputation
+router.put('/addReputation/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    var body = req.body;
+    var un = body.username;
+    var rep = body.repuation;
+    var comment = body.comment;
+    var repObj = {
+        "username": un,
+        "reputation": rep,
+        "comment": comment
+    };
+    UserModel.findOneAndUpdate({
+        username: queryUsername
+    }, {
+        $push: {
+            playerReputation: repObj
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            user: body
+        });
+    });
+})
+
+//remove player reputation 
+router.put('/removeReputation/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    var body = req.body;
+    var un = body.username;
+    var rep = body.repuation;
+    var comment = body.comment;
+    var repObj = {
+        "username": un,
+        "reputation": rep,
+        "comment": comment
+    };
+    UserModel.findOneAndUpdate({
+        username: queryUsername
+    }, {
+        $pull: {
+            playerReputation: repObj
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            user: body
+        });
+    });
+})
+
 module.exports = router;
