@@ -77,5 +77,18 @@ router.post('/create', function (req, res) {
         });
     });
 })
+//delete a game tag
+router.delete("/:name", function(req, res){
+    var queryName = req.params.name;
+    UserTagModel.findOneAndDelete({
+        name: queryName
+    }, function (err, obj) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.send(obj);
+    });
+})
 
 module.exports = router;
