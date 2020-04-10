@@ -36,6 +36,7 @@ import mainStyles from './main.module.css';
 import Divider from '@material-ui/core/Divider';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import autoGame from './autoGame';
 
 
 
@@ -197,13 +198,7 @@ class createForumPost extends Component
     className = {mainStyles.titleInput}
     variant="outlined"
   />
-  <Autocomplete
-  {...gameList}
-  id="debug"
-  debug
-  renderInput={(params) => <TextField {...params} label="debug" margin="normal" />}
-/>
-
+  
 
     
     </div>
