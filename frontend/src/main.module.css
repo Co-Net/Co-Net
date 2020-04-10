@@ -257,3 +257,9 @@ body{
 
 
 }
+
+.titleInput{
+    width: 70%;
+    margin-top: 30px !important;
+    margin-left: 10px !important;
+}

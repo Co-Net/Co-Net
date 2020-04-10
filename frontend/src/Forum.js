@@ -33,6 +33,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import mainStyles from './main.module.css';
 import Divider from '@material-ui/core/Divider';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 
 
 
@@ -178,7 +179,10 @@ class Forum extends Component
       <Typography style = {titleStyle} align = 'Left' variant="h4" component="h2" >
       Forum</Typography>
       </Grid>
-      <Grid item xs = {6}>
+      <Grid item xs={3}>
+      <Button style = {{textTransform: "none", marginTop: 28, padding: 10, marginBottom: 10,}} color = "primary" variant = "contained" ><AddCircleIcon style = {{marginRight: 6,}}></AddCircleIcon>Create Post</Button>
+      </Grid>
+      <Grid item xs = {3}>
       <div style = {{}}>
 
 
