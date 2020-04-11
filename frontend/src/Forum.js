@@ -42,6 +42,7 @@ class Forum extends Component
   constructor(props) {
     super(props);
     this.pushHistory = this.pushHistory.bind(this);
+    this.createPost = this.createPost.bind(this);
 
 
     this.state = {
@@ -62,6 +63,10 @@ class Forum extends Component
 
   pushHistory(){
     this.props.history.push('/forumPost')
+  
+   }
+   createPost(){
+    this.props.history.push('/createForumPost')
   
    }
 
@@ -175,12 +180,13 @@ class Forum extends Component
       <TopMenu history={this.props.history}></TopMenu>
       <div className = "content">
       <Grid container spacing={3}>
-      <Grid item xs={6}>
+      <Grid item xs={5}>
       <Typography style = {titleStyle} align = 'Left' variant="h4" component="h2" >
       Forum</Typography>
       </Grid>
-      <Grid item xs={3}>
-      <Button style = {{textTransform: "none", marginTop: 28, padding: 10, marginBottom: 10,}} color = "primary" variant = "contained" ><AddCircleIcon style = {{marginRight: 6,}}></AddCircleIcon>Create Post</Button>
+      <Grid item xs={4}>
+      <Button onClick = {this.createPost}
+      style = {{textTransform: "none", marginTop: 28, padding: 10, marginBottom: 10,}} color = "primary" variant = "contained" ><AddCircleIcon style = {{marginRight: 6,}}></AddCircleIcon>Create Post</Button>
       </Grid>
       <Grid item xs = {3}>
       <div style = {{}}>

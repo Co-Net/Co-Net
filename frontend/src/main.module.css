@@ -263,3 +263,41 @@ body{
     margin-top: 30px !important;
     margin-left: 10px !important;
 }
+
+.autoGame{
+    width:70% !important; 
+    margin-top: 20px !important;
+    margin-left: 10px !important;
+}
+
+.bodyInput{
+    width: 90%;
+    margin-top: 30px !important;
+    margin-left: 10px !important;
+}
+.postButton{
+    text-Transform: none !important;
+    margin-Top: 20px !important;
+    padding: 10px !important;
+    margin-Bottom: 10px !important;
+    width: 170px !important;
+}
+.cancelButton{
+    text-Transform: none !important;
+    margin-Top: 20px !important;
+    padding: 10px !important;
+    margin-Bottom: 10px !important;
+    width: 170px !important;
+    margin-right: 10px !important;
+
+}
+
+.buttonMargins{
+    display: inline-flex;
+    float: right;
+    margin-right: 9% !important;
+}
+
+.editPostButton{
+    float: right;
+}

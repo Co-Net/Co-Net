@@ -16,7 +16,7 @@ import editProfile from './editProfile';
 import history from './history';
 import forumPost from './forumPost';
 import createForumPost from './createForumPost';
-
+import editForumPost from './editForumPost';
 
 
 const routing = (
@@ -32,6 +32,8 @@ const routing = (
         <Route path="/editProfile" component={editProfile} />
         <Route path="/forumPost" component={forumPost} />
         <Route path="/createForumPost" component={createForumPost} />
+        <Route path="/editForumPost" component={editForumPost} />
+
 
 
 

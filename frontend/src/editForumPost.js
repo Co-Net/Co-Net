@@ -44,7 +44,7 @@ import CheckIcon from '@material-ui/icons/Check';
 
 
 
-class createForumPost extends Component
+class editForumPost extends Component
 {
   constructor(props) {
     super(props);
@@ -70,7 +70,7 @@ class createForumPost extends Component
   
 
   pushHistory(){
-    this.props.history.push('/forum')
+    this.props.history.push('/forumPost')
   
    }
 
@@ -192,14 +192,14 @@ class createForumPost extends Component
       <Grid container spacing={3}>
       <Grid item xs={6}>
       <Typography style = {titleStyle} align = 'Left' variant="h4" component="h2" >
-      Create Forum Post</Typography>
+      Edit Forum Post</Typography>
       </Grid>
      
     </Grid>
     <TextField
     id="outlined-full-width"
     label="Title"
-    placeholder="Enter a post title"
+    defaultValue="Looking for Duo in Ranked, I'm Gold"
     margin="normal"
     InputLabelProps={{
       shrink: true,
@@ -215,7 +215,7 @@ class createForumPost extends Component
     label="What's your post about?"
     multiline
     rows="10"
-   placeholder = "Enter some details..."
+    defaultValue="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget rhoncus nunc, eget tempor purus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget rhoncus nunc, eget tempor purus.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget rhoncus nunc, eget tempor purus.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget rhoncus nunc, eget tempor purus.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget rhoncus nunc, eget tempor purus."
     variant="outlined"
     className = {mainStyles.bodyInput}
   ></TextField>
@@ -224,7 +224,7 @@ class createForumPost extends Component
    className = {mainStyles.cancelButton} variant = "contained" >Cancel</Button>
 
   <Button     onClick = {this.pushHistory}
-   className = {mainStyles.postButton} color = "primary" variant = "contained" ><CheckIcon style = {{marginRight: 6,}}></CheckIcon>Create Post</Button>
+   className = {mainStyles.postButton} color = "primary" variant = "contained" ><CheckIcon style = {{marginRight: 6,}}></CheckIcon>Save Changes</Button>
   </div>
   </div>
     </div>
@@ -234,4 +234,4 @@ class createForumPost extends Component
   }
 }
 
-export default createForumPost;
+export default editForumPost;

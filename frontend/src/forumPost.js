@@ -16,6 +16,7 @@ import CardContent from '@material-ui/core/CardContent';
 import TextField from '@material-ui/core/TextField';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import EditIcon from '@material-ui/icons/Edit';
 
 
 
@@ -25,6 +26,7 @@ class forumPost extends Component
 {
   constructor(props) {
     super(props);
+    
     this.pushHistory = this.pushHistory.bind(this);
     this.state = {
       clicks:0,
@@ -33,7 +35,7 @@ class forumPost extends Component
   }
 
   pushHistory(){
-    this.props.history.push('/editprofile')
+    this.props.history.push('/editForumPost')
   
    }
 
@@ -146,6 +148,8 @@ class forumPost extends Component
       
         </Grid>
         <Grid item xs ={10}>
+        <Button onClick = {this.pushHistory}
+        className = {styles.editPostButton} color = 'secondary' variant = 'contained'><EditIcon></EditIcon></Button>
 
         <Typography variant = 'h6' className = {styles.forumPostTitle} >Looking for Duo in Ranked, I'm Gold</Typography>
         <Typography className = {styles.userNameForum} display = "inline" >Destroyer392, </Typography>
