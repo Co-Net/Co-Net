@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@material-ui/lab": "^4.0.0-alpha.48",
+    "@material-ui/lab": "^4.0.0-alpha.49",
     "concurrently": "^4.0.1"
   },
   "devDependencies": {
