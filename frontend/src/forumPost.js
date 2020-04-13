@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import TopMenu from './TopMenu';

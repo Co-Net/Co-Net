@@ -36,6 +36,11 @@ import mainStyles from './main.module.css';
 import Divider from '@material-ui/core/Divider';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import AutoGame from './autoGame';
+import CreatableSelect from 'react-select/creatable';
+import Select from '@material-ui/core/Select';
+import CheckIcon from '@material-ui/icons/Check';
+
 
 
 
@@ -43,6 +48,7 @@ class createForumPost extends Component
 {
   constructor(props) {
     super(props);
+
     this.pushHistory = this.pushHistory.bind(this);
 
 
@@ -60,10 +66,11 @@ class createForumPost extends Component
     }
     
   }
+
   
 
   pushHistory(){
-    this.props.history.push('/forumPost')
+    this.props.history.push('/forum')
   
    }
 
@@ -83,6 +90,7 @@ class createForumPost extends Component
         }
       });
   }
+  
 
   render()
   {
@@ -163,6 +171,7 @@ class createForumPost extends Component
             },
           },
     }
+    
   
   /*const [anchorEl, setAnchorEl] = React.useState(null);
   const handleClick = event => {
@@ -174,9 +183,10 @@ class createForumPost extends Component
 
 
     return (
+      
  <div>
-      <TopMenu history={this.props.history}></TopMenu>
-      <div className = "content">
+ <TopMenu history={this.props.history}></TopMenu>
+   <div className = "content">
       <Grid container spacing={3}>
       <Grid item xs={6}>
       <Typography style = {titleStyle} align = 'Left' variant="h4" component="h2" >
@@ -186,8 +196,8 @@ class createForumPost extends Component
     </Grid>
     <TextField
     id="outlined-full-width"
-    label="Label"
-    placeholder="Placeholder"
+    label="Title"
+    placeholder="Enter a post title"
     margin="normal"
     InputLabelProps={{
       shrink: true,
@@ -195,15 +205,26 @@ class createForumPost extends Component
     className = {mainStyles.titleInput}
     variant="outlined"
   />
-  <Autocomplete
-  {...gameList}
-  id="debug"
-  debug
-  renderInput={(params) => <TextField {...params} label="debug" margin="normal" />}
-/>
+ 
+    <AutoGame></AutoGame>
+    <div style = {{marginRight: 20,}}>
+    <TextField
+    id="outlined-multiline-static"
+    label="What's your post about?"
+    multiline
+    rows="10"
+   placeholder = "Enter some details..."
+    variant="outlined"
+    className = {mainStyles.bodyInput}
+  ></TextField>
+  <div className = {mainStyles.buttonMargins}>
+  <Button     onClick = {this.pushHistory}
+   className = {mainStyles.cancelButton} variant = "contained" >Cancel</Button>
 
-
-    
+  <Button     onClick = {this.pushHistory}
+   className = {mainStyles.postButton} color = "primary" variant = "contained" ><CheckIcon style = {{marginRight: 6,}}></CheckIcon>Create Post</Button>
+  </div>
+  </div>
     </div>
     </div>
   
