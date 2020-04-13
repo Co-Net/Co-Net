@@ -115,6 +115,8 @@ export default function PrimarySearchAppBar(props) {
     handleMobileMenuClose();
     if (event === "profile") history.push("profile");
     if (event === "myaccount") history.push("myaccount");
+    if (event === "messages") history.push("messages");
+
     else if (event === "logout") history.push("");
   };
 
