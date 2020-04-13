@@ -363,3 +363,22 @@ body{
     margin-top: 6px !important;
     margin-right: 10px !important;
 }
+
+
+.friendUsername{
+    color: #0755ca;
+    font-size: 14px !important;
+    margin-right: 5px !important;
+}
+
+
+.friendUsername:hover{
+    text-Decoration: underline;
+    cursor: pointer;
+}
+
+.tabPanel{
+    width: 80%;
+    
+}
+
