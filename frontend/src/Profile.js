@@ -9,9 +9,6 @@ import Menu from "./ProfileMenu.js";
 import Button from "@material-ui/core/Button";
 import EditProfile from "./editProfile";
 import Status from './status.js';
-import Brightness1Icon from '@material-ui/icons/Brightness1';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import Thumbs from './thumbs';
 
 class Profile extends Component {
