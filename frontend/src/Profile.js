@@ -8,6 +8,11 @@ import Typography from "@material-ui/core/Typography";
 import Menu from "./ProfileMenu.js";
 import Button from "@material-ui/core/Button";
 import EditProfile from "./editProfile";
+import Status from './status.js';
+import Brightness1Icon from '@material-ui/icons/Brightness1';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Thumbs from './thumbs';
 
 class Profile extends Component {
   constructor(props) {
@@ -23,7 +28,7 @@ class Profile extends Component {
       editing: false,
       firstName: "",
       lastName: "",
-      photo: ""
+      photo: "",
     };
 
     axios
@@ -62,8 +67,7 @@ class Profile extends Component {
       .then((json) => {
         if (json.data.success) {
           console.log("Bio successfully updated");
-        }
-        else console.log("An error has occurred while saving your bio.");
+        } else console.log("An error has occurred while saving your bio.");
       });
     this.setState({ editing: false });
   }
@@ -72,18 +76,23 @@ class Profile extends Component {
     if (event.target.files.length > 0) {
       const formData = new FormData();
       formData.append("file", event.target.files[0]);
-      axios.put(`http://localhost:3001/users/photo/${this.state.username}`, formData).then((json) => {
-        if (json.data.success) {
-          // Photo uploaded successfully
-          console.log("PHOTO UPLOAD SUCCESS");
-          this.setState({ photo: json.data.user.profilePhoto });
-          callback(json.data.user.profilePhoto);
-        } else {
-          // Photo upload failed
-          console.log("PHOTO UPLOAD FAIL");
-          console.log(json)
-        }
-      });
+      axios
+        .put(
+          `http://localhost:3001/users/photo/${this.state.username}`,
+          formData
+        )
+        .then((json) => {
+          if (json.data.success) {
+            // Photo uploaded successfully
+            console.log("PHOTO UPLOAD SUCCESS");
+            this.setState({ photo: json.data.user.profilePhoto });
+            callback(json.data.user.profilePhoto);
+          } else {
+            // Photo upload failed
+            console.log("PHOTO UPLOAD FAIL");
+            console.log(json);
+          }
+        });
     }
   }
 
@@ -169,6 +178,10 @@ class Profile extends Component {
             >
               {this.state.firstName} {this.state.lastName}
             </Typography>
+            <div style={{ margin: 15 }} className={styles.center}>
+              <Thumbs></Thumbs>
+            </div>
+            <Status></Status>
             <Typography
               className={styles.profileBio}
               variant="body1"

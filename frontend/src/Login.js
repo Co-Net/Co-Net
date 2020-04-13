@@ -68,7 +68,7 @@ export default function ServerModal(props) {
     axios
       .get("http://localhost:3001/user/currentuser", { withCredentials: true })
       .then((json) => {
-        if (json.data.username) {
+        if (json.data.username !== "Guest") {
           history.push("/Feed");
         }
       });

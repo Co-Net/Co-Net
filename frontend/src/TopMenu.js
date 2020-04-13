@@ -193,7 +193,7 @@ export default function PrimarySearchAppBar(props) {
       >
         <Toolbar>
          
-          <a href='http://localhost:3000'><img src = {logo} alt = "Logo" style = {{width: '70px'}}/></a>  
+          <a href='http://localhost:3000/Feed'><img src = {logo} alt = "Logo" style = {{width: '70px'}}/></a>  
           
           <IconButton color="inherit">
             <Typography 
