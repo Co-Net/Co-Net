@@ -44,10 +44,38 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+function onSignIn(e, history, pass, em) {
+  e.preventDefault();
+  const password = pass;
+  const email = em;
+  // Post request to backend
+  axios
+    .post(
+      "http://localhost:3001/users/signin",
+      {
+        username: email,
+        password: password
+      },
+      {
+        withCredentials: true
+      }
+    )
+    .then(json => {
+      console.log(json.data);
+      if (json.data.success) {
+        history.push("/feed");
+      } else {
+        console.log("SIGN IN FAILED");
+      }
+    });
+}
+
 export default function ServerModal(props) {
   const {history} = props;
   const classes = useStyles();
   const rootRef = React.useRef(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   return (
     <div className={styles.bgdImage} ref={rootRef}>
@@ -83,26 +111,30 @@ export default function ServerModal(props) {
        
       <Grid item xs={12}>
       <TextField
-        autoComplete="fname"
-        name="firstName"
+        autoComplete="email"
+        name="email"
         variant="outlined"
         required
         fullWidth
-        id="firstName"
+        id="email"
         label="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
         
       />
     </Grid>
     <Grid item xs={12}>
       <TextField
-        autoComplete="fname"
-        name="firstName"
+        autoComplete="password"
+        name="password"
         variant="outlined"
         required
         fullWidth
-        id="firstName"
+        id="password"
         label="Password"
-        
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
       />
     </Grid>
   
@@ -113,6 +145,7 @@ export default function ServerModal(props) {
     variant="contained"
     color="primary"
     className={classes.submit}
+    onClick = {(e) => onSignIn(e, history, password, email)}
   >
   Sign In
   </Button>

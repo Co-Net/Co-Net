@@ -1,21 +1,22 @@
 const passport = require('passport');
 const localStrategy = require('passport-local').Strategy;
 const JWTStrategy = require('passport-jwt').Strategy;
+const SteamStrategy = require('passport-steam').Strategy;
 const UserModel = require('../models/userModel');
 
 // Login Passport
 passport.use(new localStrategy({
     session: false
-}, (username, password, done) => {
+}, (user, password, done) => {
     UserModel.findOne({
-        username: username
+        emailAddress: user
     }, function (err, user) {
         if (err) {
             return done(err);
         }
         if (!user) {
             return done(null, false, {
-                message: 'Incorrect username.'
+                message: 'Incorrect email.'
             });
         }
         if (!user.validPassword(password)) {
@@ -39,7 +40,7 @@ opts.jwtFromRequest = cookieExtractor;
 opts.secretOrKey = process.env.JWT_SECRET;
 
 passport.use(new JWTStrategy(opts, function (user, done) {
-    UserModel.findOne({username: user.username}, function(err, user) {
+    UserModel.findOne({emailAddress: user.email}, function(err, user) {
         if (err) {
             return done(err, false);
         }
@@ -51,3 +52,15 @@ passport.use(new JWTStrategy(opts, function (user, done) {
         }
     })
 }));
+
+// Steam Strategy
+passport.use(new SteamStrategy({
+    returnURL: `http://localhost:3000/feed`,
+    realm: `http://localhost:3000/`,
+    apiKey: `${process.env.STEAM_API_KEY}`
+  },
+  function(identifier, profile, done) {
+    console.log("steam");
+    return done(null, profile);
+  }
+));

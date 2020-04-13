@@ -34,42 +34,10 @@ class Feed extends Component
 {
   constructor(props) {
     super(props);
-
-    this.state = {
-      allPosts: [
-        {
-          dateTime: "loading",
-          description: "temp",
-          photo: "temp",
-          tags: [],
-          title: "loading",
-          username: "temp"
-        }
-      ],
-    }
   }
   
-
-  
-  componentDidMount() {
-    // Retreive user data
-    axios
-      .get("http://localhost:6969/user/currentuser", { withCredentials: true })
-      .then(json => {
-        if (!json.data.username) {
-          this.props.history.push("/signModal");
-        } else {
-          axios.get("http://localhost:6969/posts/")
-          .then(json => {
-            this.setState({ allPosts: json.data.postObj});
-          })
-        }
-      });
-  }
-
   render()
   {
-    const {allPosts} = this.state;
     const theme = createMuiTheme({
       '@global' : {
         body: {

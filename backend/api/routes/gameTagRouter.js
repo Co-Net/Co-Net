@@ -3,26 +3,26 @@
  */
 const express = require('express');
 const router = express.Router();
-const UserTagModel = require('../models/userTagModel');
+const GameTagModel = require('../models/gameTagModel');
 
 // Get all tags
 router.get('/', function (req, res) {
-    UserTagModel.find((err, tag) => {
+    GameTagModel.find((err, gameTag) => {
         if (err) return res.json({
             success: false,
             error: err
         });
         return res.json({
             success: true,
-            tagObj: tag
+            gameTagObj: gameTag
         });
     });
 })
 
 // Get a tag by name
-router.get('/name/:name', function (req, res) {
+router.get('/:name', function (req, res) {
     var queryName = req.params.name;
-    UserTagModel.findOne({
+    GameTagModel.findOne({
         name: queryName
     }, function (err, obj) {
         if (err) return res.json({
@@ -35,7 +35,7 @@ router.get('/name/:name', function (req, res) {
 
 // Create a tag
 router.post('/create', function (req, res) {
-    let tag = new UserTagModel();
+    let gameTag = new GameTagModel();
     const {
         name
     } = req.body;
@@ -47,7 +47,7 @@ router.post('/create', function (req, res) {
         });
     }
     //name = name.trim();
-    UserTagModel.countDocuments({
+    GameTagModel.countDocuments({
         name: name
     }, function (err, count) {
         if (err) {
@@ -61,8 +61,8 @@ router.post('/create', function (req, res) {
                 message: 'Error: Tag Name Already Exists, Please select from created tags.'
             });
         }
-        tag.name = name;
-        tag.save((err, tag) => {
+        gameTag.name = name;
+        gameTag.save((err, gameTag) => {
             if (err) {
                 return res.send({
                     success: false,
@@ -71,16 +71,17 @@ router.post('/create', function (req, res) {
             }
             return res.send({
                 success: true,
-                name: tag,
+                name: gameTag,
                 message: 'Tag Created'
             });
         });
     });
 })
+
 //delete a game tag
 router.delete("/:name", function(req, res){
     var queryName = req.params.name;
-    UserTagModel.findOneAndDelete({
+    GameTagModel.findOneAndDelete({
         name: queryName
     }, function (err, obj) {
         if (err) return res.json({

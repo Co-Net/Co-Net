@@ -6,6 +6,18 @@ const router = express.Router();
 const UserModel = require('../models/userModel');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
+const multer = require('multer');
+const upload = multer({
+    dest: 'uploads/'
+}).single('file');
+const fs = require('fs');
+const cloudinary = require("cloudinary");
+
+cloudinary.config({
+    cloud_name: "co-net-pix",
+    api_key: "472288961331361",
+    api_secret: "VylP7m3EhxWbbzWEE8NBAcbcxKs"
+});
 
 // Create a user
 router.post('/signup', function (req, res) {
@@ -24,8 +36,25 @@ router.post('/signup', function (req, res) {
     // Start
     if (!username || !firstName || !lastName || !emailAddress || !password) {
         return res.json({
+            success: false,
+            message: 'MISSING INPUTS'
+        });
+    }
+
+    // Validate username
+    // eslint-disable-next-line no-useless-escape
+    const format = /[ !@#$%^&*()+\-.=\[\]{};':"\\|,<>\/?]/;
+    if (format.test(username)) {
+        return res.json({
             created: false,
-            error: 'INVALID INPUTS'
+            message: 'ILLEGAL USERNAME'
+        });
+    }
+
+    if (password.length < 8) {
+        return res.json({
+            created: false,
+            message: 'SHORT PASSWORD'
         });
     }
 
@@ -69,6 +98,7 @@ router.post('/signup', function (req, res) {
             user.username = username;
             user.firstName = firstName;
             user.lastName = lastName;
+            user.profilePhoto = "https://res.cloudinary.com/co-net-pix/image/upload/v1586238488/default_user_avatar.jpg";
             user.save((err, user) => {
                 if (err) {
                     return res.send({
@@ -86,10 +116,40 @@ router.post('/signup', function (req, res) {
     });
 })
 
+// Log out by deleting cookie
+router.get('/logout', function (req, res) {
+    res.cookie('jwt', '', {
+        expires: new Date(0)
+    });
+    return res.send({
+        loggedOut: true
+    });
+})
+
+// Get a blank user (used for failure redirect)
+router.get('/guest', function (req, res) {
+    return res.json({
+        username: 'Guest'
+    });
+})
+
 //Get a user 
 router.get('/:username', function (req, res) {
     var queryUsername = req.params.username;
     UserModel.findOne({
+        username: queryUsername
+    }, function (err, obj) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.send(obj);
+    });
+})
+
+router.delete('/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    UserModel.findOneAndDelete({
         username: queryUsername
     }, function (err, obj) {
         if (err) return res.json({
@@ -105,10 +165,14 @@ router.post('/signin', passport.authenticate('local', {
     session: false
 }), function (req, res) {
     const body = {
-        username: req.user.username
+        email: req.user.emailAddress
     }
-    req.login(body, {session: false}, (error) => {
-        if (error) res.status(400).send({ error });
+    req.login(body, {
+        session: false
+    }, (error) => {
+        if (error) res.status(400).send({
+            error
+        });
         jwt.sign(JSON.stringify(body), process.env.JWT_SECRET, (err, token) => {
             if (err) return res.json(err);
             // Set cookie header
@@ -118,8 +182,27 @@ router.post('/signin', passport.authenticate('local', {
             });
             return res.send({
                 username: req.user.username,
+                email: req.user.emailAddress,
                 success: true
             });
+        });
+    });
+})
+
+//edit a user
+router.put('/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    var body = req.body;
+    UserModel.findOneAndUpdate({
+        username: queryUsername
+    }, body, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            user: body
         });
     });
 })
@@ -134,6 +217,49 @@ router.get('/', function (req, res) {
         return res.json({
             success: true,
             userObj: user
+        });
+    });
+})
+
+// Update a user's photo
+router.put('/photo/:username', function (req, res) {
+    upload(req, res, function (err) {
+        if (err instanceof multer.MulterError) {
+            return res.status(500).json(err)
+        } else if (err) {
+            return res.status(500).json(err)
+        }
+        var queryUsername = req.params.username;
+        UserModel.findOne({
+            username: queryUsername
+        }, function (err, obj) {
+            var body = obj;
+            cloudinary.uploader.upload(req.file.path, function (result) {
+                body.profilePhoto = result.url;
+                UserModel.findOneAndUpdate({
+                    username: queryUsername
+                }, body, function (err) {
+                    if (err) return res.json({
+                        success: false,
+                        error: err
+                    });
+                    // Remove temp file
+                    fs.unlink(req.file.path, (err) => {
+                        if (err) {
+                            console.log(err);
+                            return res.json({
+                                success: false
+                            })
+                        }
+                    });
+                    return res.json({
+                        success: true,
+                        user: body
+                    });
+                });
+            }, {
+                folder: "user_photos"
+            });
         });
     });
 })
@@ -190,6 +316,220 @@ router.put('/removeUserTag/:username', function (req, res) {
     });
 })
 
+//add a a freind to users friend list
+router.put('/addFriend/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    var body = req.body;
+    var friend = body.username;
+    var friendObj = {
+        "username": friend
+    };
+    UserModel.findOneAndUpdate({
+        username: queryUsername
+    }, {
+        $push: {
+            friends: friendObj
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            user: body
+        });
+    });
+})
 
+// remove a friend from friends list
+router.put('/removeFriend/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    var body = req.body;
+    var friend = body.username;
+    var friendObj = {
+        "username": friend
+    };
+    UserModel.findOneAndUpdate({
+        username: queryUsername
+    }, {
+        $pull: {
+            friends: friendObj
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            user: body
+        });
+    });
+})
+
+//add a game to game list
+router.put('/addGame/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    var body = req.body;
+    var game = body.name;
+    var gameObj = {
+        "name": game
+    };
+    UserModel.findOneAndUpdate({
+        username: queryUsername
+    }, {
+        $push: {
+            games: gameObj
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            user: body
+        });
+    });
+})
+
+//remove game from user game list
+router.put('/removeGame/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    var body = req.body;
+    var game = body.name;
+    var gameObj = {
+        "name": game
+    };
+    UserModel.findOneAndUpdate({
+        username: queryUsername
+    }, {
+        $pull: {
+            games: gameObj
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            user: body
+        });
+    });
+})
+
+//add a forum post ID to their list of posts
+router.put('/addPost/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    var body = req.body;
+    var post = body.postID;
+    var postobj = {
+        "postID": post
+    };
+    UserModel.findOneAndUpdate({
+        username: queryUsername
+    }, {
+        $push: {
+            forumPosts: postobj
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            user: body
+        });
+    });
+})
+
+//remove a forum post ID to their list of posts
+router.put('/removePost/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    var body = req.body;
+    var post = body.postID;
+    var postobj = {
+        "postID": post
+    };
+    UserModel.findOneAndUpdate({
+        username: queryUsername
+    }, {
+        $pull: {
+            forumPosts: postobj
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            user: body
+        });
+    });
+})
+
+//add player reputation
+router.put('/addReputation/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    var body = req.body;
+    var un = body.username;
+    var rep = body.reputation;
+    var comment = body.comment;
+    var repObj = {
+        "username": un,
+        "reputation": rep,
+        "comment": comment
+    };
+    UserModel.findOneAndUpdate({
+        username: queryUsername
+    }, {
+        $push: {
+            playerReputation: repObj
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            user: body
+        });
+    });
+})
+
+//remove player reputation 
+router.put('/removeReputation/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    var body = req.body;
+    var un = body.username;
+    var rep = body.reputation;
+    var comment = body.comment;
+    var repObj = {
+        "username": un,
+        "reputation": rep,
+        "comment": comment
+    };
+    UserModel.findOneAndUpdate({
+        username: queryUsername
+    }, {
+        $pull: {
+            playerReputation: repObj
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            user: body
+        });
+    });
+})
 
 module.exports = router;
