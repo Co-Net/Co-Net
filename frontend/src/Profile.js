@@ -9,6 +9,13 @@ import profilePic from './profilePic.png';
 import Typography from '@material-ui/core/Typography';
 import Menu from './ProfileMenu.js';
 import Button from '@material-ui/core/Button';
+import Status from './status.js';
+import Brightness1Icon from '@material-ui/icons/Brightness1';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Thumbs from './thumbs';
+
+
 
 class Profile extends Component
 {
@@ -101,6 +108,10 @@ class Profile extends Component
     </div>
     <div className = {styles.bgColor}>
     <Typography className = {styles.profileText} variant =  'h5' style = {{paddingTop: 20}} align="center" >Destroyer392</Typography>
+      <div style = {{margin: 15}} className = {styles.center}>
+      <Thumbs></Thumbs>
+      </div>
+    <Status></Status>
     <Typography className = {styles.profileBio} variant =  'body1' style = {{paddingTop: 20}} align="center" >
     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget rhoncus nunc, eget tempor purus. Praesent sollicitudin, ligula id porttitor faucibus, tortor mauris hendrerit augue, ut molestie ipsum arcu 
     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget rhoncus nunc, eget tempor purus. Praesent sollicitudin, ligula id porttitor faucibus, tortor mauris hendrerit augue, ut molestie ipsum arcu 

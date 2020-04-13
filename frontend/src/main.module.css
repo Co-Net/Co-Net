@@ -1,4 +1,3 @@
-
 body{
     padding:0px;
     margin:0px;
@@ -158,7 +157,7 @@ body{
     color: #535353;
     font-size: 14px !important;
     white-space: pre-line;
-    margin-top: 5px !important;
+    margin-top: 12px !important;
 }
 
 
@@ -300,4 +299,40 @@ body{
 
 .editPostButton{
     float: right;
+}
+
+.statusBar{
+    width: 12% !important;
+    margin-top: 20px !important;
+    margin-left: 10px !important;
+    text-align: center;
+}
+
+.statusDot{
+    vertical-align: bottom;
+    margin-right: 5px;
+    width: 17px !important;
+}
+
+.center{
+    text-align: center !important;
+
+}
+
+.thumbsUp{
+    vertical-align: bottom;
+    margin-left: 2%;
+    color: green;
+    display: inline;
+}
+
+.tUp{
+    color: green !important;
+    background-color: #c4e4a7cc !important;
+    margin-right: 5px !important;
+}   
+
+.tDown{
+    color: #ce0606 !important;
+    background-color: #f1b8afcc !important;
 }

@@ -8,6 +8,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Games from './Games.js';
+import ReviewTab from './reviewTab.js';
 
 
 
@@ -73,6 +74,8 @@ export default function ScrollableTabsButtonForce() {
           <Tab label="Games"  {...a11yProps(0)} />
           <Tab label="Activity"  {...a11yProps(1)} />
           <Tab label="Friends" {...a11yProps(2)} />
+          <Tab label="Reviews" {...a11yProps(3)} />
+
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
@@ -83,6 +86,9 @@ export default function ScrollableTabsButtonForce() {
       </TabPanel>
       <TabPanel value={value} index={2}>
         <Games title = "Your Friends"></Games>
+      </TabPanel>
+      <TabPanel value={value} index={3}>
+        <ReviewTab title = "User Reputation"></ReviewTab>
       </TabPanel>
     </div>
   );
