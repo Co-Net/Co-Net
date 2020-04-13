@@ -29,7 +29,7 @@ export default function AlertDialog() {
   };
 
   return (
-    <div>
+    <div style= {{display: 'inline',}}>
     <Button onClick={handleClickOpenUp} className = {styles.tUp} variant = 'contained'><ThumbUpIcon style = {{color: 'green', marginRight: 10}}></ThumbUpIcon>54</Button>
     <Button onClick={handleClickOpenDown} className = {styles.tDown} variant = 'contained'><ThumbDownIcon style = {{color: '#d6361d', marginRight: 10}}></ThumbDownIcon>72</Button>
       <Dialog
