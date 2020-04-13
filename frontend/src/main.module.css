@@ -336,3 +336,7 @@ body{
     color: #ce0606 !important;
     background-color: #f1b8afcc !important;
 }
+
+.settingsDiv{
+    margin-left: 2%;
+}

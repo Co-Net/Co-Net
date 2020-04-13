@@ -114,6 +114,7 @@ export default function PrimarySearchAppBar(props) {
     setAnchorEl(null);
     handleMobileMenuClose();
     if (event === "profile") history.push("profile");
+    if (event === "myaccount") history.push("myaccount");
     else if (event === "logout") history.push("");
   };
 
@@ -137,7 +138,7 @@ export default function PrimarySearchAppBar(props) {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={() => handleMenuClose("profile")}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={() => handleMenuClose("myaccount")}>My account</MenuItem>
       <MenuItem onClick={() => handleMenuClose("logout")}>Logout</MenuItem>
 
     </Menu>
