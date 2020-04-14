@@ -204,10 +204,15 @@ router.put('/:username', function (req, res) {
     UserModel.findOneAndUpdate({
         username: queryUsername
     }, body, function (err) {
-        if (err) return res.json({
-            success: false,
-            error: err
-        });
+        if (err) {
+            if (err.code == 11000) {
+                return res.json({
+                    success: false,
+                    error: err,
+                    message: "Username already exists"
+                });
+            }
+        }
         return res.json({
             success: true,
             user: body
