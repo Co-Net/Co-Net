@@ -10,6 +10,9 @@ import Button from "@material-ui/core/Button";
 import EditProfile from "./editProfile";
 import Status from './status.js';
 import Thumbs from './thumbs';
+import { Multiselect } from 'multiselect-react-dropdown';
+import Grid from '@material-ui/core/Grid';
+
 
 class Profile extends Component {
   constructor(props) {
@@ -26,6 +29,15 @@ class Profile extends Component {
       firstName: "",
       lastName: "",
       photo: "",
+      options:[
+        { key: "Option 1", },
+        { key: "Option 2", },
+        { key: "Option 3", },
+        { key: "Option 4", },
+        { key: "Option 5", },
+        { key: "Option 6", },
+        { key: "Option 7", }
+      ],
     };
 
     axios
@@ -147,6 +159,26 @@ class Profile extends Component {
       marginTop: 5,
       marginLeft: 8,
     };
+    this.style = {
+      multiselectContainer: { 
+        textAlign: 'center',
+      },
+      chips: {
+      },
+      searchBox: {
+        border: "none",
+        fontSize: '15px',
+        fontFamily: 'Segoe UI',
+
+      },
+      inputField: { 
+        fontSize: '15px',
+
+
+    },
+      multiselectContainer: {
+      }
+    };
 
     if (!this.state.editing) {
       return (
@@ -154,6 +186,7 @@ class Profile extends Component {
           <TopMenu history={this.props.history}></TopMenu>
           <div className={styles.bgColor}>
             <div className={styles.profilePhoto}> </div>
+            <Typography className = {styles.timeZone}>GMT-7 Monday, April 13, 2020, 2:27 PM</Typography>
             <Avatar src={this.state.photo} className={styles.large} />
 
             <Button
@@ -175,10 +208,11 @@ class Profile extends Component {
             >
               {this.state.firstName} {this.state.lastName}
             </Typography>
+            <Typography className = {styles.user}>@Destroyer392</Typography>
             <div style={{ margin: 15 }} className={styles.center}>
               <Thumbs></Thumbs>
+              <Status></Status>
             </div>
-            <Status></Status>
             <Typography
               className={styles.profileBio}
               variant="body1"
@@ -187,6 +221,26 @@ class Profile extends Component {
             >
               {this.state.bio}
             </Typography>
+            <div className = {styles.tags}>
+            <Grid style = {{marginTop: 10}} container spacing = {1}>
+            <Grid item xs ={2}>
+            <Typography className = {styles.tagTitle}>Tags:</Typography>
+
+            </Grid>
+            <Grid item xs ={10}>
+            <Multiselect
+            options={this.state.options}
+            displayValue="key"
+            style={this.style}
+ 
+          /> 
+
+            </Grid>
+
+            </Grid>
+      
+           
+            </div>
             <Menu style={{ marginTop: 200 }} className={styles.menu}></Menu>
           </div>
         </div>

@@ -123,6 +123,7 @@ export default function PrimarySearchAppBar(props) {
           }
         });
     }
+    else if (event === "myaccount") history.push("myaccount");
   };
 
   const handleMobileMenuOpen = (event) => {
@@ -145,7 +146,7 @@ export default function PrimarySearchAppBar(props) {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={() => handleMenuClose("profile")}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={() => handleMenuClose("myaccount")}>My account</MenuItem>
       <MenuItem onClick={() => handleMenuClose("logout")}>Logout</MenuItem>
     </Menu>
   );

@@ -26,7 +26,7 @@ export default function SimpleSelect() {
   };
 
   return (
-    <div className = {mainStyles.center}>
+    <div className = {mainStyles.centerBio}>
     
   
       <FormControl className = {mainStyles.statusBar}

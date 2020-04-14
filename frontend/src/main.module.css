@@ -319,6 +319,12 @@ body{
 
 }
 
+.centerBio{
+    display: inline;
+    vertical-align: bottom;
+    text-align: center !important;
+}
+
 .thumbsUp{
     vertical-align: bottom;
     margin-left: 2%;
@@ -335,4 +341,25 @@ body{
 .tDown{
     color: #ce0606 !important;
     background-color: #f1b8afcc !important;
+}
+
+.settingsDiv{
+    margin-left: 2%;
+}
+
+.user{
+    text-align: center;
+    color: gray;
+}
+
+.timeZone{
+    position: absolute;
+    color: gray;
+    margin: 2% !important;
+}
+
+.tagTitle{
+    text-align:right;
+    margin-top: 6px !important;
+    margin-right: 10px !important;
 }
