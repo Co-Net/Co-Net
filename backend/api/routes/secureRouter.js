@@ -29,7 +29,7 @@ router.get('/currentuser', (req, res) => {
       bio: req.user.bio,
       firstName: req.user.firstName,
       lastName: req.user.lastName,
-      profilePhoto: req.user.profilePhoto
+      profilePhoto: req.user.profilePhoto,
     });
   }
 });

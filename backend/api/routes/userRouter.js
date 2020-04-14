@@ -161,33 +161,41 @@ router.delete('/:username', function (req, res) {
 })
 
 // Create a JWT token when signing in and saves it in a cookie
-router.post('/signin', passport.authenticate('local', {
-    session: false
-}), function (req, res) {
-    const body = {
-        email: req.user.emailAddress
-    }
-    req.login(body, {
+router.post('/signin', function (req, res, next) {
+    passport.authenticate('local', {
         session: false
-    }, (error) => {
-        if (error) res.status(400).send({
-            error
-        });
-        jwt.sign(JSON.stringify(body), process.env.JWT_SECRET, (err, token) => {
-            if (err) return res.json(err);
-            // Set cookie header
-            res.cookie('jwt', token, {
-                httpOnly: true,
-                sameSite: true
+    }, function (err, user, info) {
+        if (err) return next(err);
+        if (!user) return res.send({
+            message: info.message,
+            success: false
+        })
+        // console.log(user);
+        const body = {
+            email: user.emailAddress
+        }
+        req.login(body, {
+            session: false
+        }, (error) => {
+            if (error) res.status(400).send({
+                error
             });
-            return res.send({
-                username: req.user.username,
-                email: req.user.emailAddress,
-                success: true
+            jwt.sign(JSON.stringify(body), process.env.JWT_SECRET, (err, token) => {
+                if (err) return res.json(err);
+                // Set cookie header
+                res.cookie('jwt', token, {
+                    httpOnly: true,
+                    sameSite: true
+                });
+                return res.send({
+                    username: user.username,
+                    email: user.emailAddress,
+                    success: true
+                });
             });
         });
-    });
-})
+    })(req, res, next);
+});
 
 //edit a user
 router.put('/:username', function (req, res) {

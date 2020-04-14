@@ -42,6 +42,9 @@ const useStyles = makeStyles(theme => ({
     marginBottom: 200,
     marginRight: 400,
   },
+  error: {
+    backgroundColor: "#FFCCCC"
+  }
 }));
 
 function onSignIn(e, history, pass, em) {
@@ -61,11 +64,12 @@ function onSignIn(e, history, pass, em) {
       }
     )
     .then(json => {
-      console.log(json.data);
+      // console.log(json.data);
       if (json.data.success) {
         history.push("/feed");
       } else {
         console.log("SIGN IN FAILED");
+        document.getElementById("errorMessage").innerText = json.data.message;
       }
     });
 }
@@ -100,6 +104,7 @@ export default function ServerModal(props) {
             <Grid item xs={12}>
         <Typography component="h2" fontsize = {18} align="center" id = "server-modal-title">
           Connecting Gamers Worldwide. <p></p>
+          <p id="errorMessage" className={classes.error}></p>
         </Typography>
         </Grid>
         <Grid item xs={12}></Grid>
