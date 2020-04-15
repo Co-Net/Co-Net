@@ -582,10 +582,11 @@ router.put('/removeMailFromInbox/:username', function (req, res) {
     var body = req.body;
     var sentBy = body.sentBy;
     var message = body.message;
+    var read = body.read;
     var messageObj = {
         "sentBy": sentBy,
         "message": message,
-        "read": false,
+        "read": read,
         "sentTo" : queryUsername
 
     };
@@ -616,7 +617,7 @@ router.put('/addMailToOutbox/:username', function (req, res) {
     var messageObj = {
         "sentBy": sentBy,
         "message": message,
-        "read": false,
+        "read": true,
         "sentTo" : queryUsername
 
     };
@@ -647,7 +648,7 @@ router.put('/removeMailFromOutbox/:username', function (req, res) {
     var messageObj = {
         "sentBy": sentBy,
         "message": message,
-        "read": false,
+        "read": true,
         "sentTo" : queryUsername
 
     };
