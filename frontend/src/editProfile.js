@@ -6,6 +6,7 @@ import styles from "./main.module.css";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
+import TimeZonePicker from "react-timezone";
 
 class EditProfile extends Component {
   constructor(props) {
@@ -14,10 +15,11 @@ class EditProfile extends Component {
     this.onEdit = this.onEdit.bind(this);
     this.onSave = this.onSave.bind(this);
     this.onPhotoChange = this.onPhotoChange.bind(this);
+    this.onTimeZoneChange = this.onTimeZoneChange.bind(this);
 
     this.state = {
-      photo: this.props.photo
-    }
+      photo: this.props.photo,
+    };
   }
 
   onEdit(e) {
@@ -28,10 +30,14 @@ class EditProfile extends Component {
     this.props.onSave();
   }
 
+  onTimeZoneChange(timezone) {
+    this.props.onTimeZoneChange(timezone);
+  }
+
   onPhotoChange(event) {
     this.props.onPhotoChange(event, (newPhoto) => {
       this.setState({ photo: newPhoto });
-    })
+    });
   }
 
   render() {
@@ -91,12 +97,23 @@ class EditProfile extends Component {
     const bio = this.props.bio;
     const firstName = this.props.firstName;
     const lastName = this.props.lastName;
+    const timeZone = this.props.timeZone;
 
     return (
       <div>
         <TopMenu history={this.props.history}></TopMenu>
         <div className={styles.bgColor}>
           <div className={styles.profilePhoto}> </div>
+          <Typography>
+            Change Timezone:
+            <TimeZonePicker
+              value={timeZone}
+              onChange={this.onTimeZoneChange}
+              inputProps={{
+                placeholder: "Select Timezone...",
+              }}
+            />
+          </Typography>
           <div>
             <Avatar src={this.state.photo} className={styles.large} />
             <input
