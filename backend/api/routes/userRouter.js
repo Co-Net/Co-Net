@@ -580,15 +580,8 @@ router.put('/addMailToInbox/:username', function (req, res) {
 router.put('/removeMailFromInbox/:username', function (req, res) {
     var queryUsername = req.params.username;
     var body = req.body;
-    var sentBy = body.sentBy;
-    var message = body.message;
-    var read = body.read;
     var messageObj = {
-        "sentBy": sentBy,
-        "message": message,
-        "read": read,
-        "sentTo" : queryUsername
-
+        "_id" : body.id
     };
     UserModel.findOneAndUpdate({
         username: queryUsername
@@ -643,14 +636,8 @@ router.put('/addMailToOutbox/:username', function (req, res) {
 router.put('/removeMailFromOutbox/:username', function (req, res) {
     var queryUsername = req.params.username;
     var body = req.body;
-    var sentBy = body.sentBy;
-    var message = body.message;
     var messageObj = {
-        "sentBy": sentBy,
-        "message": message,
-        "read": true,
-        "sentTo" : queryUsername
-
+        "_id": body.id
     };
     UserModel.findOneAndUpdate({
         username: queryUsername
