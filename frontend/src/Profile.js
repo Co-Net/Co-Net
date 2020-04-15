@@ -208,7 +208,7 @@ class Profile extends Component {
             >
               {this.state.firstName} {this.state.lastName}
             </Typography>
-            <Typography className = {styles.user}>@Destroyer392</Typography>
+            <Typography className = {styles.user}>{this.state.username}</Typography>
             <div style={{ margin: 15 }} className={styles.center}>
               <Thumbs></Thumbs>
               <Status></Status>
