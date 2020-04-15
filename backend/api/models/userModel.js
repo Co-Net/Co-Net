@@ -15,7 +15,11 @@ const playerRepSchema = new Schema({
     reputation: String, //this will hold a value of + or -'
     comment: String //not required but is an option for other users 
 });
-
+const message = new Schema({
+    sentBy: String,
+    sentTo: String,
+    message: String
+});
 
 const UserSchema = new Schema({
     firstName: {
@@ -52,7 +56,9 @@ const UserSchema = new Schema({
     friends: [FriendSchema],
     games: [UsersGamesSchema],
     forumPosts: [PostIDSchema],
-    playerReputation: [playerRepSchema]
+    playerReputation: [playerRepSchema],
+    inbox: [message],
+    outbox: [message]
 });
 
 UserSchema.methods.generateHash = function (password) {
