@@ -53,6 +53,10 @@ const UserSchema = new Schema({
         type: String,
         default: ''
     },
+    timeZone: {
+        type: String,
+        default: '(GMT-08:00) Pacific Time - Los Angeles'
+    },
     userTags: [UserTagSchema],
     friends: [FriendSchema],
     games: [UsersGamesSchema],

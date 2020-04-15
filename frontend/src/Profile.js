@@ -8,11 +8,10 @@ import Typography from "@material-ui/core/Typography";
 import Menu from "./ProfileMenu.js";
 import Button from "@material-ui/core/Button";
 import EditProfile from "./editProfile";
-import Status from './status.js';
-import Thumbs from './thumbs';
-import { Multiselect } from 'multiselect-react-dropdown';
-import Grid from '@material-ui/core/Grid';
-
+import Status from "./status.js";
+import Thumbs from "./thumbs";
+import { Multiselect } from "multiselect-react-dropdown";
+import Grid from "@material-ui/core/Grid";
 
 class Profile extends Component {
   constructor(props) {
@@ -21,6 +20,7 @@ class Profile extends Component {
     this.handleBioChange = this.handleBioChange.bind(this);
     this.handleBioSave = this.handleBioSave.bind(this);
     this.handlePhotoChange = this.handlePhotoChange.bind(this);
+    this.handleTimeZoneChange = this.handleTimeZoneChange.bind(this);
 
     this.state = {
       username: "",
@@ -29,14 +29,15 @@ class Profile extends Component {
       firstName: "",
       lastName: "",
       photo: "",
-      options:[
-        { key: "Option 1", },
-        { key: "Option 2", },
-        { key: "Option 3", },
-        { key: "Option 4", },
-        { key: "Option 5", },
-        { key: "Option 6", },
-        { key: "Option 7", }
+      timeZone: "",
+      options: [
+        { key: "Option 1" },
+        { key: "Option 2" },
+        { key: "Option 3" },
+        { key: "Option 4" },
+        { key: "Option 5" },
+        { key: "Option 6" },
+        { key: "Option 7" },
       ],
     };
 
@@ -60,6 +61,9 @@ class Profile extends Component {
         if (json.data.profilePhoto) {
           this.setState({ photo: json.data.profilePhoto });
         }
+        if (json.data.timeZone) {
+          this.setState({ timeZone: json.data.timeZone });
+        }
       });
   }
 
@@ -72,6 +76,7 @@ class Profile extends Component {
     axios
       .put(`http://localhost:3001/users/${this.state.username}`, {
         bio: this.state.bio,
+        timeZone: this.state.timeZone,
       })
       .then((json) => {
         if (json.data.success) {
@@ -79,6 +84,10 @@ class Profile extends Component {
         } else console.log("An error has occurred while saving your bio.");
       });
     this.setState({ editing: false });
+  }
+
+  handleTimeZoneChange(newTimeZone) {
+    this.setState({ timeZone: newTimeZone });
   }
 
   handlePhotoChange(event, callback) {
@@ -160,24 +169,19 @@ class Profile extends Component {
       marginLeft: 8,
     };
     this.style = {
-      multiselectContainer: { 
-        textAlign: 'center',
+      multiselectContainer: {
+        textAlign: "center",
       },
-      chips: {
-      },
+      chips: {},
       searchBox: {
         border: "none",
-        fontSize: '15px',
-        fontFamily: 'Segoe UI',
-
+        fontSize: "15px",
+        fontFamily: "Segoe UI",
       },
-      inputField: { 
-        fontSize: '15px',
-
-
-    },
-      multiselectContainer: {
-      }
+      inputField: {
+        fontSize: "15px",
+      },
+      multiselectContainer: {},
     };
 
     if (!this.state.editing) {
@@ -186,7 +190,9 @@ class Profile extends Component {
           <TopMenu history={this.props.history}></TopMenu>
           <div className={styles.bgColor}>
             <div className={styles.profilePhoto}> </div>
-            <Typography className = {styles.timeZone}>GMT-7 Monday, April 13, 2020, 2:27 PM</Typography>
+            <Typography className={styles.timeZone}>
+              Time Zone: {this.state.timeZone}
+            </Typography>
             <Avatar src={this.state.photo} className={styles.large} />
 
             <Button
@@ -208,7 +214,9 @@ class Profile extends Component {
             >
               {this.state.firstName} {this.state.lastName}
             </Typography>
-            <Typography className = {styles.user}>@Destroyer392</Typography>
+            <Typography className={styles.user}>
+              {this.state.username}
+            </Typography>
             <div style={{ margin: 15 }} className={styles.center}>
               <Thumbs></Thumbs>
               <Status></Status>
@@ -221,40 +229,37 @@ class Profile extends Component {
             >
               {this.state.bio}
             </Typography>
-            <div className = {styles.tags}>
-            <Grid style = {{marginTop: 10}} container spacing = {1}>
-            <Grid item xs ={2}>
-            <Typography className = {styles.tagTitle}>Tags:</Typography>
-
-            </Grid>
-            <Grid item xs ={10}>
-            <Multiselect
-            options={this.state.options}
-            displayValue="key"
-            style={this.style}
- 
-          /> 
-
-            </Grid>
-
-            </Grid>
-      
-           
+            <div className={styles.tags}>
+              <Grid style={{ marginTop: 10 }} container spacing={1}>
+                <Grid item xs={2}>
+                  <Typography className={styles.tagTitle}>Tags:</Typography>
+                </Grid>
+                <Grid item xs={10}>
+                  <Multiselect
+                    options={this.state.options}
+                    displayValue="key"
+                    style={this.style}
+                  />
+                </Grid>
+              </Grid>
             </div>
             <Menu style={{ marginTop: 200 }} className={styles.menu}></Menu>
           </div>
         </div>
       );
     } else {
+      // IF EDITING
       return (
         <EditProfile
           firstName={this.state.firstName}
           lastName={this.state.lastName}
           bio={this.state.bio}
+          timeZone={this.state.timeZone}
           photo={this.state.photo}
           onEdit={this.handleBioChange}
           onSave={this.handleBioSave}
           onPhotoChange={this.handlePhotoChange}
+          onTimeZoneChange={this.handleTimeZoneChange}
         ></EditProfile>
       );
     }

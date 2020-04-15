@@ -30,6 +30,7 @@ router.get('/currentuser', (req, res) => {
       firstName: req.user.firstName,
       lastName: req.user.lastName,
       profilePhoto: req.user.profilePhoto,
+      timeZone: req.user.timeZone
     });
   }
 });
