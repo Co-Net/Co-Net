@@ -16,9 +16,10 @@ const playerRepSchema = new Schema({
     comment: String //not required but is an option for other users 
 });
 const message = new Schema({
-    sentBy: String,
-    sentTo: String,
-    message: String
+    sentBy: String, //the person that the message is sent by
+    sentTo: String, //the person that the message is sent to 
+    message: String, //the message body
+    read: Boolean //boolean that marks the mail as read if the user has read it
 });
 
 const UserSchema = new Schema({

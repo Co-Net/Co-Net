@@ -545,4 +545,66 @@ router.put('/removeReputation/:username', function (req, res) {
     });
 })
 
+//add message to inbox
+router.put('/addMailToInbox/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    var body = req.body;
+    var sentBy = body.sentBy;
+    var message = body.message;
+    var messageObj = {
+        "sentBy": sentBy,
+        "message": message,
+        "read": false,
+        "sentTo" : queryUsername
+
+    };
+    UserModel.findOneAndUpdate({
+        username: queryUsername
+    }, {
+        $push: {
+            inbox: messageObj
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            user: body
+        });
+    });
+})
+
+//remove message from inbox  
+router.put('/removeMailFromInbox/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    var body = req.body;
+    var sentBy = body.sentBy;
+    var message = body.message;
+    var messageObj = {
+        "sentBy": sentBy,
+        "message": message,
+        "read": false,
+        "sentTo" : queryUsername
+
+    };
+    UserModel.findOneAndUpdate({
+        username: queryUsername
+    }, {
+        $pull: {
+            inbox: messageObj
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            user: body
+        });
+    });
+})
+
 module.exports = router;
