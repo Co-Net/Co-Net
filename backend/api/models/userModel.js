@@ -57,6 +57,10 @@ const UserSchema = new Schema({
         type: String,
         default: '(GMT-08:00) Pacific Time - Los Angeles'
     },
+    status:{
+        type: String,
+        default: 'Offline'
+    },
     userTags: [UserTagSchema],
     friends: [FriendSchema],
     games: [UsersGamesSchema],
