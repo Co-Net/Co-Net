@@ -605,13 +605,13 @@ router.put('/removeMailFromInbox/:username', function (req, res) {
 router.put('/addMailToOutbox/:username', function (req, res) {
     var queryUsername = req.params.username;
     var body = req.body;
-    var sentBy = body.sentBy;
+    var sentTo = body.sentTo;
     var message = body.message;
     var messageObj = {
-        "sentBy": sentBy,
+        "sentTo": sentTo,
         "message": message,
         "read": true,
-        "sentTo" : queryUsername
+        "sentBy" : queryUsername
 
     };
     UserModel.findOneAndUpdate({
