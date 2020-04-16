@@ -31,6 +31,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 import mainStyles from './main.module.css';
 import Player from './player.js';
 import { Multiselect } from 'multiselect-react-dropdown';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
 
 
 
@@ -107,6 +110,13 @@ class Game extends Component
 
     }
 
+    const about = {
+        color: "black",
+        marginTop: 5,
+        marginLeft: 8,
+  
+      }
+
     this.style = {
         multiselectContainer: { 
             marginBottom: '40px',
@@ -156,7 +166,7 @@ class Game extends Component
       
           
       </Grid>
-      <Grid item xs = {8}>
+      <Grid item xs = {4}>
       <Typography variant = 'h3' className = {mainStyles.gametitleBig} >League of Legends</Typography>
       <div style = {{display: "inline-flex"}}>
       <Brightness1Icon style={{ color: "#26AD00", marginTop: "4"}}></Brightness1Icon>
@@ -165,6 +175,20 @@ class Game extends Component
       <Typography className = {mainStyles.gameTags} style = {gameDesc}>Tags: multiplayer, moba, fantasy, strategy</Typography>
 
       
+      </Grid>
+      <Grid item xs = {4}>
+      <Card className = {mainStyles.postSpacing}>
+      <CardContent className = {mainStyles.forumCard}>
+      <Typography variant = 'h6' style = {about}>About:</Typography>
+      <Typography style = {gameDesc}>Released 10/27/2009</Typography>
+      <Typography style = {gameDesc}>League of Legends is a multiplayer online battle arena video game developed and published by Riot Games for Microsoft Windows and macOS. Inspired by the Warcraft III: The Frozen Throne mod Defense of the Ancients, the game follows a freemium model and is supported by microtransactions.</Typography>
+      <Typography style = {gameDesc}><a href = "http://leagueoflegends.com/">http://leagueoflegends.com/</a></Typography>
+
+
+
+        </CardContent>
+        </Card>
+
       </Grid>
      
       
