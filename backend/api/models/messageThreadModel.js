@@ -17,7 +17,7 @@ const MessageThreadSchema = new Schema({
         type: String,
         required: [true, "The username of the second user us required"]
     },
-    sharedMessages: [messaage]
+    sharedMessages: [message]
 
 });
 

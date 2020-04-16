@@ -55,6 +55,6 @@ app.use('/forum', forumRouter);
 app.use('/user', passport.authenticate('jwt', { session: false, failureRedirect: '/users/guest' }), secureRouter);
 app.use('/auth', steamRouter);
 app.use('/gameTags', gameTagRouter);
-app.user('/messageThread', messageThreadRouter);
+app.use('/messageThread', messageThreadRouter);
 // launch our backend into a port
 app.listen(process.env.PORT, () => console.log(`CO-NET LISTENING ON PORT ${process.env.PORT}`));
