@@ -39,55 +39,90 @@ class Profile extends Component {
       feedback: "",
       positiveRep: [],
       negativeRep: [],
+      currentUser: "",
     };
   }
 
   componentDidMount() {
-    // Own Profile
-    var route;
-    if (this.props.ownProfile) {
-      route = "http://localhost:3001/user/currentuser";
-    } else {
-      route = `http://localhost:3001/users/${this.props.match.params.username}`;
-    }
+    // Get own username first
+    var route = "http://localhost:3001/user/currentuser";
     axios
       .get(route, {
         withCredentials: true,
       })
       .then((json) => {
         if (json.data.username) {
-          this.setState({ username: json.data.username });
+          this.setState({ currentUser: json.data.username });
         }
-        if (json.data.bio) {
-          this.setState({ bio: json.data.bio });
-        }
-        if (json.data.firstName) {
-          this.setState({ firstName: json.data.firstName });
-        }
-        if (json.data.lastName) {
-          this.setState({ lastName: json.data.lastName });
-        }
-        if (json.data.profilePhoto) {
-          this.setState({ photo: json.data.profilePhoto });
-        }
-        if (json.data.timeZone) {
-          this.setState({ timeZone: json.data.timeZone });
-        }
-        if (json.data.userTags) {
-          this.setState({ userTags: json.data.userTags });
-        }
-        if (json.data.positiveRep) {
-          this.setState({ positiveRep: json.data.positiveRep.length });
-        }
-        if (json.data.negativeRep) {
-          this.setState({ negativeRep: json.data.negativeRep.length });
+        // If own profile, get rest of data
+        if (this.props.ownProfile) {
+          if (json.data.username) {
+            this.setState({ username: json.data.username });
+          }
+          if (json.data.bio) {
+            this.setState({ bio: json.data.bio });
+          }
+          if (json.data.firstName) {
+            this.setState({ firstName: json.data.firstName });
+          }
+          if (json.data.lastName) {
+            this.setState({ lastName: json.data.lastName });
+          }
+          if (json.data.profilePhoto) {
+            this.setState({ photo: json.data.profilePhoto });
+          }
+          if (json.data.timeZone) {
+            this.setState({ timeZone: json.data.timeZone });
+          }
+          if (json.data.userTags) {
+            this.setState({ userTags: json.data.userTags });
+          }
+          if (json.data.positiveRep) {
+            this.setState({ positiveRep: json.data.positiveRep.length });
+          }
+          if (json.data.negativeRep) {
+            this.setState({ negativeRep: json.data.negativeRep.length });
+          }
+        } else {
+            // If not own profile, get the other user's data
+            route = `http://localhost:3001/users/${this.props.match.params.username}`;
+            axios
+              .get(route)
+              .then((json) => {
+                if (json.data.username) {
+                  this.setState({ username: json.data.username });
+                }
+                if (json.data.bio) {
+                  this.setState({ bio: json.data.bio });
+                }
+                if (json.data.firstName) {
+                  this.setState({ firstName: json.data.firstName });
+                }
+                if (json.data.lastName) {
+                  this.setState({ lastName: json.data.lastName });
+                }
+                if (json.data.profilePhoto) {
+                  this.setState({ photo: json.data.profilePhoto });
+                }
+                if (json.data.timeZone) {
+                  this.setState({ timeZone: json.data.timeZone });
+                }
+                if (json.data.userTags) {
+                  this.setState({ userTags: json.data.userTags });
+                }
+                if (json.data.positiveRep) {
+                  this.setState({ positiveRep: json.data.positiveRep.length });
+                }
+                if (json.data.negativeRep) {
+                  this.setState({ negativeRep: json.data.negativeRep.length });
+                }
+              });
         }
       });
-
-    axios.get("http://localhost:3001/userTags/").then((json) => {
-      // Get Tag Object Array and set it
-      this.setState({ allTags: json.data.tagObj });
-    });
+      axios.get("http://localhost:3001/userTags/").then((json) => {
+        // Get Tag Object Array and set it
+        this.setState({ allTags: json.data.tagObj });
+      });
   }
 
   handleBioChange(newBio) {
@@ -144,11 +179,12 @@ class Profile extends Component {
   }
 
   handleFeedbackPost(repType) {
+    console.log(this.state.username);
     axios
       .put(
         `http://localhost:3001/users/addReputation/${this.props.match.params.username}`,
         {
-          username: this.state.username,
+          username: this.state.currentUser,
           reputation: repType,
           comment: this.state.feedback,
         }
@@ -289,7 +325,7 @@ class Profile extends Component {
       // Allow edit
       setStatusE = <Status></Status>;
 
-      // Disable clicking
+      // Clicking will open the reviews page tab
       feedbackE = (
         <div style={{ margin: 15 }} className={styles.center}>
           <Thumbs
@@ -335,7 +371,6 @@ class Profile extends Component {
       // Show Tags, don't allow edit, use new style
       setTagsE = (
         <Grid item xs={10}>
-          
           <Multiselect
             options={allTags}
             displayValue="name"
@@ -390,7 +425,11 @@ class Profile extends Component {
                 {setTagsE}
               </Grid>
             </div>
-            <Menu style={{ marginTop: 200 }} className={styles.menu}></Menu>
+            <Menu
+              style={{ marginTop: 200 }}
+              className={styles.menu}
+              username={this.state.username}
+            ></Menu>
           </div>
         </div>
       );
