@@ -273,6 +273,7 @@ class Profile extends Component {
     var setTagsE;
     var feedbackE;
     if (this.props.ownProfile) {
+      // Allow edit
       editProfileE = (
         <Button
           onClick={() => this.setState({ editing: true })}
@@ -284,7 +285,11 @@ class Profile extends Component {
           Edit Profile
         </Button>
       );
+
+      // Allow edit
       setStatusE = <Status></Status>;
+
+      // Disable clicking
       feedbackE = (
         <div style={{ margin: 15 }} className={styles.center}>
           <Thumbs
@@ -296,6 +301,8 @@ class Profile extends Component {
           {setStatusE}
         </div>
       );
+
+      // Allow edit
       setTagsE = (
         <Grid item xs={10}>
           <Multiselect
@@ -309,7 +316,10 @@ class Profile extends Component {
         </Grid>
       );
     } else {
+      // Should only show status, don't allow edit
       setStatusE = <Status></Status>;
+
+      // Clicking on feedback will show window to leave feedback or edit feedback
       feedbackE = (
         <div style={{ margin: 15 }} className={styles.center}>
           <Thumbs
@@ -321,8 +331,11 @@ class Profile extends Component {
           {setStatusE}
         </div>
       );
+
+      // Show Tags, don't allow edit, use new style
       setTagsE = (
         <Grid item xs={10}>
+          
           <Multiselect
             options={allTags}
             displayValue="name"
