@@ -492,48 +492,47 @@ router.put('/addReputation/:username', function (req, res) {
     var un = body.username; // author
     var rep = body.reputation;
     var comment = body.comment;
-    var positive = (rep === '+') ? true : false;
     var repObj = {
         "username": un,
+        "rep": rep,
         "comment": comment
     };
     // If positive rep, add to positive rep array
-    if (positive) {
-        UserModel.findOneAndUpdate({
-            username: queryUsername
-        }, {
-            $push: {
-                positiveRep: repObj
-            }
-        }, function (err) {
-            if (err) return res.json({
-                success: false,
-                error: err
-            });
-            return res.json({
-                success: true,
-                user: body
-            });
+    UserModel.findOneAndUpdate({
+        username: queryUsername
+    }, {
+        $push: {
+            playerRep: repObj
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
         });
-    } else {
-        UserModel.findOneAndUpdate({
-            username: queryUsername
-        }, {
-            $push: {
-                negativeRep: repObj
-            }
-        }, function (err) {
-            if (err) return res.json({
-                success: false,
-                error: err
-            });
-            return res.json({
-                success: true,
-                user: body
-            });
+        return res.json({
+            success: true,
+            user: body
         });
-    }
+    });
+})
 
+// remove all player rep
+router.put('/removeAllReputation/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    UserModel.findOneAndUpdate({
+        username: queryUsername
+    }, {
+        playerRep: []
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            message: "All rep removed"
+        });
+    });
 })
 
 //remove player reputation 
@@ -543,46 +542,27 @@ router.put('/removeReputation/:username', function (req, res) {
     var un = body.username;
     var rep = body.reputation;
     var comment = body.comment;
-    var positive = (rep === '+') ? true : false;
     var repObj = {
         "username": un,
+        "rep": rep,
         "comment": comment
     };
-    if (positive) {
-        UserModel.findOneAndUpdate({
-            username: queryUsername
-        }, {
-            $pull: {
-                positiveRep: repObj
-            }
-        }, function (err) {
-            if (err) return res.json({
-                success: false,
-                error: err
-            });
-            return res.json({
-                success: true,
-                user: body
-            });
+    UserModel.findOneAndUpdate({
+        username: queryUsername
+    }, {
+        $pull: {
+            playerRep: repObj
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
         });
-    } else {
-        UserModel.findOneAndUpdate({
-            username: queryUsername
-        }, {
-            $pull: {
-                negativeRep: repObj
-            }
-        }, function (err) {
-            if (err) return res.json({
-                success: false,
-                error: err
-            });
-            return res.json({
-                success: true,
-                user: body
-            });
+        return res.json({
+            success: true,
+            user: body
         });
-    }
+    });
 })
 
 //add message to inbox

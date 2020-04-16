@@ -18,13 +18,18 @@ const UserTagSchema = new Schema({name: String}); // need to add schema for post
 const UsersGamesSchema = new Schema({name: String});
 const FriendSchema = new Schema({username: String});
 const PostIDSchema = new Schema({postID: String});
-const playerPositiveRepSchema = new Schema({
-    username: String, //required field, username of the person posting on the current players profile
-    comment: String //not required but is an option for other users 
-});
-const playerNegativeRepSchema = new Schema({
-    username: String, //required field, username of the person posting on the current players profile
-    comment: String //not required but is an option for other users 
+// const playerPositiveRepSchema = new Schema({
+//     username: String, //required field, username of the person posting on the current players profile
+//     comment: String //not required but is an option for other users 
+// });
+// const playerNegativeRepSchema = new Schema({
+//     username: String, //required field, username of the person posting on the current players profile
+//     comment: String //not required but is an option for other users 
+// });
+const PlayerRepSchema = new Schema({
+    username: String,
+    rep: String,
+    comment: String
 });
 const message = new Schema({
     sentBy: String, //the person that the message is sent by
@@ -76,8 +81,9 @@ const UserSchema = new Schema({
     friends: [FriendSchema],
     games: [UsersGamesSchema],
     forumPosts: [PostIDSchema],
-    positiveRep: [playerPositiveRepSchema],
-    negativeRep: [playerNegativeRepSchema],
+    // positiveRep: [playerPositiveRepSchema],
+    // negativeRep: [playerNegativeRepSchema],
+    playerRep: [PlayerRepSchema],
     inbox: [message],
     outbox: [message]
 });

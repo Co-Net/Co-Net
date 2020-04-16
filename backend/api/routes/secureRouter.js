@@ -32,8 +32,7 @@ router.get('/currentuser', (req, res) => {
       profilePhoto: req.user.profilePhoto,
       timeZone: req.user.timeZone,
       userTags: req.user.userTags,
-      positiveRep: req.user.positiveRep,
-      negativeRep: req.user.negativeRep
+      playerRep: req.user.playerRep
     });
   }
 });
