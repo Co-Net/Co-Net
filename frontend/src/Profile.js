@@ -25,6 +25,7 @@ class Profile extends Component {
     this.onTagRemove = this.onTagRemove.bind(this);
     this.handleFeedbackPost = this.handleFeedbackPost.bind(this);
     this.handleFeedbackEdit = this.handleFeedbackEdit.bind(this);
+    this.separateRep = this.separateRep.bind(this);
 
     this.state = {
       username: "",
@@ -37,8 +38,9 @@ class Profile extends Component {
       allTags: [],
       userTags: [],
       feedback: "",
-      positiveRep: [],
-      negativeRep: [],
+      positiveRep: 0,
+      negativeRep: 0,
+      allRep: [],
       currentUser: "",
     };
   }
@@ -77,11 +79,9 @@ class Profile extends Component {
           if (json.data.userTags) {
             this.setState({ userTags: json.data.userTags });
           }
-          if (json.data.positiveRep) {
-            this.setState({ positiveRep: json.data.positiveRep.length });
-          }
-          if (json.data.negativeRep) {
-            this.setState({ negativeRep: json.data.negativeRep.length });
+          if (json.data.playerRep) {
+            this.setState({ allRep: json.data.playerRep });
+            this.separateRep(json.data.playerRep);
           }
         } else {
             // If not own profile, get the other user's data
@@ -110,19 +110,32 @@ class Profile extends Component {
                 if (json.data.userTags) {
                   this.setState({ userTags: json.data.userTags });
                 }
-                if (json.data.positiveRep) {
-                  this.setState({ positiveRep: json.data.positiveRep.length });
-                }
-                if (json.data.negativeRep) {
-                  this.setState({ negativeRep: json.data.negativeRep.length });
+                if (json.data.playerRep) {
+                  this.setState({ allRep: json.data.playerRep });
+                  this.separateRep(json.data.playerRep);
                 }
               });
         }
       });
+
       axios.get("http://localhost:3001/userTags/").then((json) => {
         // Get Tag Object Array and set it
         this.setState({ allTags: json.data.tagObj });
       });
+  }
+
+  separateRep(playerRep) {
+    var positiveRepCount= this.state.positiveRep;
+    var negativeRepCount = this.state.negativeRep;
+    playerRep.forEach((review) => {
+      if (review.rep === '+') {
+        positiveRepCount++;
+      } else {
+        negativeRepCount++;
+      }
+    });
+    this.setState({ positiveRep: positiveRepCount });
+    this.setState({ negativeRep: negativeRepCount });
   }
 
   handleBioChange(newBio) {
@@ -179,7 +192,6 @@ class Profile extends Component {
   }
 
   handleFeedbackPost(repType) {
-    console.log(this.state.username);
     axios
       .put(
         `http://localhost:3001/users/addReputation/${this.props.match.params.username}`,
@@ -429,6 +441,7 @@ class Profile extends Component {
               style={{ marginTop: 200 }}
               className={styles.menu}
               username={this.state.username}
+              allRep={this.state.allRep}
             ></Menu>
           </div>
         </div>

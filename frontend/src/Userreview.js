@@ -12,6 +12,7 @@ import Card from "@material-ui/core/Card";
 import Grid from "@material-ui/core/Grid";
 import CardContent from "@material-ui/core/CardContent";
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
+import ThumbDownIcon from "@material-ui/icons/ThumbDown";
 
 class forumComment extends Component {
   constructor(props) {
@@ -44,6 +45,8 @@ class forumComment extends Component {
       marginTop: 3,
     };
 
+    var thumbsIcon = (this.props.rep === '+') ? <ThumbUpIcon className={styles.thumbsUp}></ThumbUpIcon> : <ThumbDownIcon className={styles.thumbsDown}></ThumbDownIcon>;
+
     return (
       <Grid container spacing={8}>
         <Grid item></Grid>
@@ -54,18 +57,14 @@ class forumComment extends Component {
             </Grid>
             <Grid item xs={10}>
               <Typography className={styles.userNameComment} display="inline">
-                HelloHydra{" "}
+                {this.props.author}{" "}
               </Typography>
               <Typography className={styles.timeStamp} display="inline">
                 2 hours ago
               </Typography>
-              <ThumbUpIcon className={styles.thumbsUp}></ThumbUpIcon>
+              {thumbsIcon}
               <Typography variant="body1" className={styles.commentBody}>
-                Don't play with this person! They rage and use hacks. They love
-                to blame the team for their own mistakes and uses lots of
-                profanity. Unskilled, negative attitude, avoid at all costs!!
-                >:( I lost my promos because of this dude!! Ughhhhhh so
-                annoyed......
+                {this.props.comment}
               </Typography>
             </Grid>
           </Grid>

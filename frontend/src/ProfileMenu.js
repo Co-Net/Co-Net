@@ -88,7 +88,7 @@ export default function ScrollableTabsButtonForce(props) {
         <Games title = "Your Friends"></Games>
       </TabPanel>
       <TabPanel value={value} index={3}>
-        <ReviewTab title = "User Reputation" user = {props.username}></ReviewTab>
+        <ReviewTab title = "User Reputation" allRep = {props.allRep} username = {props.username}></ReviewTab>
       </TabPanel>
     </div>
   );
