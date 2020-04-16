@@ -19,6 +19,7 @@ import createForumPost from './createForumPost';
 import editForumPost from './editForumPost';
 import AccountSettings from './AccountSettings';
 import Messages from './messages';
+import Game from './game';
 
 
 const routing = (
@@ -37,6 +38,8 @@ const routing = (
         <Route path="/editForumPost" component={editForumPost} />
         <Route path="/myaccount" component={AccountSettings} />
         <Route path="/messages" component={Messages} />
+        <Route path="/game" component={Game} />
+
 
 
 

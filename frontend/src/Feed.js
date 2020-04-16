@@ -28,13 +28,23 @@ import Brightness1Icon from '@material-ui/icons/Brightness1';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import mainStyles from './main.module.css';
+
 
 
 class Feed extends Component
 {
   constructor(props) {
     super(props);
+    this.pushHistory = this.pushHistory.bind(this);
+
   }
+
+
+  pushHistory(){
+    this.props.history.push('/game')
+  
+   }
   
   render()
   {
@@ -134,7 +144,8 @@ class Feed extends Component
       <Grid item xs={4}>
    
       <img className = "photos" src={leaguePhoto} />
-      <Typography style = {gameTitle}>League of Legends</Typography>
+      <Typography className = {mainStyles.gametitle} style = {gameTitle} onClick = {this.pushHistory}
+      >League of Legends</Typography>
       <div style = {{display: "inline-flex"}}>
       <Brightness1Icon style={{ color: "#26AD00", marginTop: "4"}}></Brightness1Icon>
       <Typography style = {gameDesc}>1492 players looking now</Typography>
@@ -144,7 +155,8 @@ class Feed extends Component
       <Grid item xs={4}>
    
           <img className = "photos" src={leaguePhoto} />
-          <Typography style = {gameTitle}>League of Legends</Typography>
+          <Typography className = {mainStyles.gametitle} style = {gameTitle} onClick = {this.pushHistory}
+          >League of Legends</Typography>
           <div style = {{display: "inline-flex"}}>
           <Brightness1Icon style={{ color: "#26AD00", marginTop: "4"}}></Brightness1Icon>
           <Typography style = {gameDesc}>1492 players looking now</Typography>
@@ -153,8 +165,9 @@ class Feed extends Component
       </Grid>
       <Grid item xs={4}>
       <img className = "photos" src={leaguePhoto} />
-      <Typography style = {gameTitle}>League of Legends</Typography>
-      <div style = {{display: "inline-flex"}}>
+      <Typography className = {mainStyles.gametitle} style = {gameTitle} onClick = {this.pushHistory}
+      >League of Legends</Typography>
+       <div style = {{display: "inline-flex"}}>
       <Brightness1Icon style={{ color: "#26AD00", marginTop: "4"}}></Brightness1Icon>
       <Typography style = {gameDesc}>1492 players looking now</Typography>
       </div>
@@ -162,17 +175,8 @@ class Feed extends Component
       <Grid item xs={4}>
    
       <img className = "photos" src={leaguePhoto} />
-      <Typography style = {gameTitle}>League of Legends</Typography>
-      <div style = {{display: "inline-flex"}}>
-      <Brightness1Icon style={{ color: "#26AD00", marginTop: "4"}}></Brightness1Icon>
-      <Typography style = {gameDesc}>1492 players looking now</Typography>
-      </div>
-          
-      </Grid>
-      <Grid item xs={4}>
-   
-      <img className = "photos" src={leaguePhoto} />
-      <Typography style = {gameTitle}>League of Legends</Typography>
+      <Typography className = {mainStyles.gametitle} style = {gameTitle} onClick = {this.pushHistory}
+      >League of Legends</Typography>
       <div style = {{display: "inline-flex"}}>
       <Brightness1Icon style={{ color: "#26AD00", marginTop: "4"}}></Brightness1Icon>
       <Typography style = {gameDesc}>1492 players looking now</Typography>
@@ -182,7 +186,19 @@ class Feed extends Component
       <Grid item xs={4}>
    
       <img className = "photos" src={leaguePhoto} />
-      <Typography style = {gameTitle}>League of Legends</Typography>
+      <Typography className = {mainStyles.gametitle} style = {gameTitle} onClick = {this.pushHistory}
+      >League of Legends</Typography>
+       <div style = {{display: "inline-flex"}}>
+      <Brightness1Icon style={{ color: "#26AD00", marginTop: "4"}}></Brightness1Icon>
+      <Typography style = {gameDesc}>1492 players looking now</Typography>
+      </div>
+          
+      </Grid>
+      <Grid item xs={4}>
+   
+      <img className = "photos" src={leaguePhoto} />
+      <Typography className = {mainStyles.gametitle} style = {gameTitle} onClick = {this.pushHistory}
+      >League of Legends</Typography>
       <div style = {{display: "inline-flex"}}>
       <Brightness1Icon style={{ color: "#26AD00", marginTop: "4"}}></Brightness1Icon>
       <Typography style = {gameDesc}>1492 players looking now</Typography>
