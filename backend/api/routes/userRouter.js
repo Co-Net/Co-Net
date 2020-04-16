@@ -497,22 +497,40 @@ router.put('/addReputation/:username', function (req, res) {
         "rep": rep,
         "comment": comment
     };
-    UserModel.findOneAndUpdate({
-        username: queryUsername
-    }, {
-        $push: {
-            playerRep: repObj
-        }
-    }, { new: true }, function (err, doc) {
+
+    // Check if feedback already posted by user
+    UserModel.findOne({ username: queryUsername }, 'playerRep', function(err, doc) {
         if (err) return res.json({
             success: false,
             error: err
         });
-        return res.json({
-            success: true,
-            user: doc
+        const result = doc.playerRep.filter(user => user.username === un);
+        if (result.length > 0) {
+            // Add logic to update existing feedback
+            return res.json({
+                success: false,
+                message: "User already left feedback",
+                feedback: result
+            });
+        }
+        
+        UserModel.findOneAndUpdate({
+            username: queryUsername
+        }, {
+            $push: {
+                playerRep: repObj
+            }
+        }, { new: true }, function (err, doc) {
+            if (err) return res.json({
+                success: false,
+                error: err
+            });
+            return res.json({
+                success: true,
+                user: doc
+            });
         });
-    });
+    })
 })
 
 // remove all player rep
