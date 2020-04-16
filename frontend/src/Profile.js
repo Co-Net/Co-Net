@@ -206,9 +206,12 @@ class Profile extends Component {
           console.log(
             `Feedback for ${this.state.username} successfully posted`
           );
-          if (repType === "+")
+          if (repType === "+") {
             this.setState({ positiveRep: this.state.positiveRep + 1 });
-          else this.setState({ negativeRep: this.state.negativeRep + 1 });
+          } else {
+            this.setState({ negativeRep: this.state.negativeRep + 1 });
+          }
+          this.setState({ allRep: json.data.user.playerRep });
         } else console.log("An error has occurred while posting your feedback");
       });
   }

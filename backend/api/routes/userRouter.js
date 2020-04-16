@@ -503,14 +503,14 @@ router.put('/addReputation/:username', function (req, res) {
         $push: {
             playerRep: repObj
         }
-    }, function (err) {
+    }, { new: true }, function (err, doc) {
         if (err) return res.json({
             success: false,
             error: err
         });
         return res.json({
             success: true,
-            user: body
+            user: doc
         });
     });
 })
