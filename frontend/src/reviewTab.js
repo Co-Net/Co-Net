@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from "react";
+import React from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -46,28 +46,6 @@ export default function ReviewTab(props) {
     marginTop: 5,
     marginLeft: 8,
   };
-
-  // const [reviews, setReviews] = useState([]);
-  // var reviewList;
-
-  // useEffect(() => {
-  //   axios
-  //   .get(`http://localhost:3001/users/${props.username}`)
-  //   .then((json) => {
-  //     // setReviews(json.data.allRep);
-  //     // Generate review list
-  //     json.data.allRep.forEach(review => {
-  //       const rep = review.rep;
-  //       const author = review.username;
-  //       const comment = review.comment;
-  //       // console.log(rep);
-  //       // console.log(author);
-  //       // console.log(comment);
-  //       reviews.unshift(<Review author={author} rep={rep} comment={comment}></Review>);
-  //       setReviews(reviews);
-  //     })
-  //   });
-  // }, []);
 
   var reviewList = [];
   var key = 1;

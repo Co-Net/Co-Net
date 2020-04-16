@@ -12,7 +12,6 @@ import Status from "./status.js";
 import Thumbs from "./thumbs";
 import { Multiselect } from "multiselect-react-dropdown";
 import Grid from "@material-ui/core/Grid";
-
 class Profile extends Component {
   constructor(props) {
     super(props);
@@ -25,7 +24,7 @@ class Profile extends Component {
     this.onTagRemove = this.onTagRemove.bind(this);
     this.handleFeedbackPost = this.handleFeedbackPost.bind(this);
     this.handleFeedbackEdit = this.handleFeedbackEdit.bind(this);
-    this.separateRep = this.separateRep.bind(this);
+    this.analyzeRep = this.analyzeRep.bind(this);
 
     this.state = {
       username: "",
@@ -37,11 +36,11 @@ class Profile extends Component {
       timeZone: "",
       allTags: [],
       userTags: [],
-      feedback: "",
       positiveRep: 0,
       negativeRep: 0,
       allRep: [],
       currentUser: "",
+      pastFeedback: {}
     };
   }
 
@@ -81,7 +80,7 @@ class Profile extends Component {
           }
           if (json.data.playerRep) {
             this.setState({ allRep: json.data.playerRep });
-            this.separateRep(json.data.playerRep);
+            this.analyzeRep(json.data.playerRep);
           }
         } else {
             // If not own profile, get the other user's data
@@ -112,7 +111,7 @@ class Profile extends Component {
                 }
                 if (json.data.playerRep) {
                   this.setState({ allRep: json.data.playerRep });
-                  this.separateRep(json.data.playerRep);
+                  this.analyzeRep(json.data.playerRep);
                 }
               });
         }
@@ -124,7 +123,9 @@ class Profile extends Component {
       });
   }
 
-  separateRep(playerRep) {
+  // Split rep into positive and negative
+  // Check if user already left feedback on profile
+  analyzeRep(playerRep) {
     var positiveRepCount= this.state.positiveRep;
     var negativeRepCount = this.state.negativeRep;
     playerRep.forEach((review) => {
@@ -132,6 +133,9 @@ class Profile extends Component {
         positiveRepCount++;
       } else {
         negativeRepCount++;
+      }
+      if (review.username === this.state.currentUser) {
+        this.setState({ pastFeedback: review });
       }
     });
     this.setState({ positiveRep: positiveRepCount });
@@ -186,8 +190,14 @@ class Profile extends Component {
   }
 
   handleFeedbackEdit(newFeedback) {
+    var tmp = {
+      _id: this.state.pastFeedback._id,
+      username: this.state.pastFeedback.username,
+      rep: this.state.pastFeedback.rep,
+      comment: newFeedback
+    }
     this.setState({
-      feedback: newFeedback,
+      pastFeedback: tmp
     });
   }
 
@@ -198,7 +208,7 @@ class Profile extends Component {
         {
           username: this.state.currentUser,
           reputation: repType,
-          comment: this.state.feedback,
+          comment: this.state.pastFeedback.comment,
         }
       )
       .then((json) => {
@@ -212,7 +222,9 @@ class Profile extends Component {
             this.setState({ negativeRep: this.state.negativeRep + 1 });
           }
           this.setState({ allRep: json.data.user.playerRep });
-        } else console.log("An error has occurred while posting your feedback");
+        } else {
+          console.log("An error has occurred while posting your feedback");
+        }
       });
   }
 
@@ -378,6 +390,7 @@ class Profile extends Component {
             negative={negativeRep}
             onFeedbackPost={this.handleFeedbackPost}
             onFeedbackEdit={this.handleFeedbackEdit}
+            feedback={this.state.pastFeedback}
           ></Thumbs>
           {setStatusE}
         </div>
