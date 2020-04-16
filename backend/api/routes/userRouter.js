@@ -497,7 +497,6 @@ router.put('/addReputation/:username', function (req, res) {
         "rep": rep,
         "comment": comment
     };
-    // If positive rep, add to positive rep array
     UserModel.findOneAndUpdate({
         username: queryUsername
     }, {
