@@ -145,18 +145,23 @@ class Profile extends Component {
 
   handleFeedbackPost(repType) {
     axios
-      .put(`http://localhost:3001/users/addReputation/${this.props.match.params.username}`, {
-        username: this.state.username,
-        reputation: repType,
-        comment: this.state.feedback,
-      })
+      .put(
+        `http://localhost:3001/users/addReputation/${this.props.match.params.username}`,
+        {
+          username: this.state.username,
+          reputation: repType,
+          comment: this.state.feedback,
+        }
+      )
       .then((json) => {
         if (json.data.success) {
-          console.log(`Feedback for ${this.state.username} successfully posted`);
-          if (repType === '+') this.setState({positiveRep: this.state.positiveRep + 1});
-          else this.setState({negativeRep: this.state.negativeRep + 1});
-        } else
-          console.log("An error has occurred while posting your feedback");
+          console.log(
+            `Feedback for ${this.state.username} successfully posted`
+          );
+          if (repType === "+")
+            this.setState({ positiveRep: this.state.positiveRep + 1 });
+          else this.setState({ negativeRep: this.state.negativeRep + 1 });
+        } else console.log("An error has occurred while posting your feedback");
       });
   }
 
@@ -262,6 +267,74 @@ class Profile extends Component {
 
     const { allTags, userTags, positiveRep, negativeRep } = this.state;
 
+    // Conditional Rendering
+    var editProfileE;
+    var setStatusE;
+    var setTagsE;
+    var feedbackE;
+    if (this.props.ownProfile) {
+      editProfileE = (
+        <Button
+          onClick={() => this.setState({ editing: true })}
+          variant="contained"
+          color="primary"
+          size="large"
+          className={styles.editProfile}
+        >
+          Edit Profile
+        </Button>
+      );
+      setStatusE = <Status></Status>;
+      feedbackE = (
+        <div style={{ margin: 15 }} className={styles.center}>
+          <Thumbs
+            positive={positiveRep}
+            negative={negativeRep}
+            onFeedbackPost={this.handleFeedbackPost}
+            onFeedbackEdit={this.handleFeedbackEdit}
+          ></Thumbs>
+          {setStatusE}
+        </div>
+      );
+      setTagsE = (
+        <Grid item xs={10}>
+          <Multiselect
+            options={allTags}
+            displayValue="name"
+            selectedValues={userTags}
+            onSelect={this.onTagSelect}
+            onRemove={this.onTagRemove}
+            style={this.style}
+          />
+        </Grid>
+      );
+    } else {
+      setStatusE = <Status></Status>;
+      feedbackE = (
+        <div style={{ margin: 15 }} className={styles.center}>
+          <Thumbs
+            positive={positiveRep}
+            negative={negativeRep}
+            onFeedbackPost={this.handleFeedbackPost}
+            onFeedbackEdit={this.handleFeedbackEdit}
+          ></Thumbs>
+          {setStatusE}
+        </div>
+      );
+      setTagsE = (
+        <Grid item xs={10}>
+          <Multiselect
+            options={allTags}
+            displayValue="name"
+            selectedValues={userTags}
+            onSelect={this.onTagSelect}
+            onRemove={this.onTagRemove}
+            style={this.style}
+          />
+        </Grid>
+      );
+    }
+
     if (!this.state.editing) {
       return (
         <div>
@@ -273,15 +346,7 @@ class Profile extends Component {
             </Typography>
             <Avatar src={this.state.photo} className={styles.large} />
 
-            <Button
-              onClick={() => this.setState({ editing: true })}
-              variant="contained"
-              color="primary"
-              size="large"
-              className={styles.editProfile}
-            >
-              Edit Profile
-            </Button>
+            {editProfileE}
           </div>
           <div className={styles.bgColor}>
             <Typography
@@ -295,15 +360,7 @@ class Profile extends Component {
             <Typography className={styles.user}>
               {this.state.username}
             </Typography>
-            <div style={{ margin: 15 }} className={styles.center}>
-              <Thumbs
-                positive={positiveRep}
-                negative={negativeRep}
-                onFeedbackPost={this.handleFeedbackPost}
-                onFeedbackEdit={this.handleFeedbackEdit}
-              ></Thumbs>
-              <Status></Status>
-            </div>
+            {feedbackE}
             <Typography
               className={styles.profileBio}
               variant="body1"
@@ -317,16 +374,7 @@ class Profile extends Component {
                 <Grid item xs={2}>
                   <Typography className={styles.tagTitle}>Tags:</Typography>
                 </Grid>
-                <Grid item xs={10}>
-                  <Multiselect
-                    options={allTags}
-                    displayValue="name"
-                    selectedValues={userTags}
-                    onSelect={this.onTagSelect}
-                    onRemove={this.onTagRemove}
-                    style={this.style}
-                  />
-                </Grid>
+                {setTagsE}
               </Grid>
             </div>
             <Menu style={{ marginTop: 200 }} className={styles.menu}></Menu>
