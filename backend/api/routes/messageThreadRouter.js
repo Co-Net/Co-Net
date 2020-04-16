@@ -83,4 +83,57 @@ router.delete("/:id", function(req, res){
     });
 })
 
+//add message to thread
+router.put('/addMessageToThread/:id', function (req, res) {
+    var queryID = req.params.id;
+    var body = req.body;
+    var message = body.message;
+    var messageObj = {
+        "message": message,
+        "read": false,
+        "timeSent": new Date()
+    };
+    MessageThreadModel.findOneAndUpdate({
+        _id: queryID
+    }, {
+        $push: {
+            messages: messageObj
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            messageThread: body
+        });
+    });
+})
+
+//remove message from outbox  
+router.put('/removeMessageFromThread/:id', function (req, res) {
+    var queryID = req.params.id;
+    var body = req.body;
+    var messageObj = {
+        "_id": body.id
+    };
+    UserModel.findOneAndUpdate({
+        username: queryUsername
+    }, {
+        $pull: {
+            messages: messageObj
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            messageThread: body
+        });
+    });
+})
+
 module.exports = router;
