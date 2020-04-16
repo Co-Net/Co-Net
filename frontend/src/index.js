@@ -19,7 +19,6 @@ import createForumPost from './createForumPost';
 import editForumPost from './editForumPost';
 import AccountSettings from './AccountSettings';
 
-
 const routing = (
     <Router history={history}>
       <div>
@@ -29,7 +28,8 @@ const routing = (
         <Route path="/pic" component={PicUpload} />
         <Route path="/testlogout" component={testLogout} />
         <Route path="/signin" component={signin} />
-        <Route path="/Profile" component={Profile} />
+        <Route exact path="/Profile" render={(props) => <Profile {...props} ownProfile={true}/>} />
+        <Route exact path="/Profile/:username" render={(props) => <Profile {...props} ownProfile={false}/>} />
         <Route path="/Forum" component={Forum} />
         <Route path="/forumPost" component={forumPost} />
         <Route path="/createForumPost" component={createForumPost} />

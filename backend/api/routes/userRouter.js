@@ -487,32 +487,53 @@ router.put('/removePost/:username', function (req, res) {
 
 //add player reputation
 router.put('/addReputation/:username', function (req, res) {
-    var queryUsername = req.params.username;
+    var queryUsername = req.params.username; // receiver
     var body = req.body;
-    var un = body.username;
+    var un = body.username; // author
     var rep = body.reputation;
     var comment = body.comment;
+    var positive = (rep === '+') ? true : false;
     var repObj = {
         "username": un,
-        "reputation": rep,
         "comment": comment
     };
-    UserModel.findOneAndUpdate({
-        username: queryUsername
-    }, {
-        $push: {
-            playerReputation: repObj
-        }
-    }, function (err) {
-        if (err) return res.json({
-            success: false,
-            error: err
+    // If positive rep, add to positive rep array
+    if (positive) {
+        UserModel.findOneAndUpdate({
+            username: queryUsername
+        }, {
+            $push: {
+                positiveRep: repObj
+            }
+        }, function (err) {
+            if (err) return res.json({
+                success: false,
+                error: err
+            });
+            return res.json({
+                success: true,
+                user: body
+            });
         });
-        return res.json({
-            success: true,
-            user: body
+    } else {
+        UserModel.findOneAndUpdate({
+            username: queryUsername
+        }, {
+            $push: {
+                negativeRep: repObj
+            }
+        }, function (err) {
+            if (err) return res.json({
+                success: false,
+                error: err
+            });
+            return res.json({
+                success: true,
+                user: body
+            });
         });
-    });
+    }
+
 })
 
 //remove player reputation 
@@ -522,27 +543,46 @@ router.put('/removeReputation/:username', function (req, res) {
     var un = body.username;
     var rep = body.reputation;
     var comment = body.comment;
+    var positive = (rep === '+') ? true : false;
     var repObj = {
         "username": un,
-        "reputation": rep,
         "comment": comment
     };
-    UserModel.findOneAndUpdate({
-        username: queryUsername
-    }, {
-        $pull: {
-            playerReputation: repObj
-        }
-    }, function (err) {
-        if (err) return res.json({
-            success: false,
-            error: err
+    if (positive) {
+        UserModel.findOneAndUpdate({
+            username: queryUsername
+        }, {
+            $pull: {
+                positiveRep: repObj
+            }
+        }, function (err) {
+            if (err) return res.json({
+                success: false,
+                error: err
+            });
+            return res.json({
+                success: true,
+                user: body
+            });
         });
-        return res.json({
-            success: true,
-            user: body
+    } else {
+        UserModel.findOneAndUpdate({
+            username: queryUsername
+        }, {
+            $pull: {
+                negativeRep: repObj
+            }
+        }, function (err) {
+            if (err) return res.json({
+                success: false,
+                error: err
+            });
+            return res.json({
+                success: true,
+                user: body
+            });
         });
-    });
+    }
 })
 
 //add message to inbox
@@ -555,7 +595,7 @@ router.put('/addMailToInbox/:username', function (req, res) {
         "sentBy": sentBy,
         "message": message,
         "read": false,
-        "sentTo" : queryUsername
+        "sentTo": queryUsername
 
     };
     UserModel.findOneAndUpdate({
@@ -581,7 +621,7 @@ router.put('/removeMailFromInbox/:username', function (req, res) {
     var queryUsername = req.params.username;
     var body = req.body;
     var messageObj = {
-        "_id" : body.id
+        "_id": body.id
     };
     UserModel.findOneAndUpdate({
         username: queryUsername
@@ -611,7 +651,7 @@ router.put('/addMailToOutbox/:username', function (req, res) {
         "sentTo": sentTo,
         "message": message,
         "read": true,
-        "sentBy" : queryUsername
+        "sentBy": queryUsername
 
     };
     UserModel.findOneAndUpdate({

@@ -3,16 +3,27 @@
 */
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-
 const Schema = mongoose.Schema;
+
+/*
+* Old Rep Schema
+* const playerRepSchema = new Schema({
+*    username: String, //required field, username of the person posting on the current players profile
+*    reputation: String, //this will hold a value of + or -'
+*    comment: String //not required but is an option for other users 
+* });
+*/
 
 const UserTagSchema = new Schema({name: String}); // need to add schema for postID
 const UsersGamesSchema = new Schema({name: String});
 const FriendSchema = new Schema({username: String});
 const PostIDSchema = new Schema({postID: String});
-const playerRepSchema = new Schema({
+const playerPositiveRepSchema = new Schema({
     username: String, //required field, username of the person posting on the current players profile
-    reputation: String, //this will hold a value of + or -'
+    comment: String //not required but is an option for other users 
+});
+const playerNegativeRepSchema = new Schema({
+    username: String, //required field, username of the person posting on the current players profile
     comment: String //not required but is an option for other users 
 });
 const message = new Schema({
@@ -65,7 +76,8 @@ const UserSchema = new Schema({
     friends: [FriendSchema],
     games: [UsersGamesSchema],
     forumPosts: [PostIDSchema],
-    playerReputation: [playerRepSchema],
+    positiveRep: [playerPositiveRepSchema],
+    negativeRep: [playerNegativeRepSchema],
     inbox: [message],
     outbox: [message]
 });

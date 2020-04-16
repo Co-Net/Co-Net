@@ -10,11 +10,11 @@ import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import TextField from '@material-ui/core/TextField';
 
-
-export default function AlertDialog() {
+export default function AlertDialog(props) {
   const [open1,setOpen1] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
-
+  var positiveRep = props.positive;
+  var negativeRep = props.negative;
 
   const handleClickOpenUp = () => {
     setOpen1(true);
@@ -28,10 +28,21 @@ export default function AlertDialog() {
     setOpen2(false);
   };
 
+  const handleFeedbackEdit = (e) => {
+    props.onFeedbackEdit(e.target.value);
+  }
+
+  const handleFeedbackPost = (repType) => {
+    props.onFeedbackPost(repType);
+    handleClose();
+  }
+
   return (
     <div style= {{display: 'inline',}}>
-    <Button onClick={handleClickOpenUp} className = {styles.tUp} variant = 'contained'><ThumbUpIcon style = {{color: 'green', marginRight: 10}}></ThumbUpIcon>54</Button>
-    <Button onClick={handleClickOpenDown} className = {styles.tDown} variant = 'contained'><ThumbDownIcon style = {{color: '#d6361d', marginRight: 10}}></ThumbDownIcon>72</Button>
+    <Button onClick={handleClickOpenUp} className = {styles.tUp} variant = 'contained'><ThumbUpIcon style = {{color: 'green', marginRight: 10}}></ThumbUpIcon>{positiveRep}</Button>
+    <Button onClick={handleClickOpenDown} className = {styles.tDown} variant = 'contained'><ThumbDownIcon style = {{color: '#d6361d', marginRight: 10}}></ThumbDownIcon>{negativeRep}</Button>
+      
+      {/* Positive Review */}
       <Dialog
       maxWidth = 'sm'
         open={open1}
@@ -51,6 +62,7 @@ export default function AlertDialog() {
         rows="10"
         fullWidth
         variant="outlined"
+        onChange={handleFeedbackEdit}
       />
           
         </DialogContent>
@@ -58,11 +70,13 @@ export default function AlertDialog() {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleClose} color="primary" autoFocus>
+          <Button onClick={() => handleFeedbackPost("+")} color="primary" autoFocus>
             Post Review
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Negative Review */}
       <Dialog
       maxWidth = 'sm'
       fullWidth
@@ -81,13 +95,14 @@ export default function AlertDialog() {
         rows="10"
         fullWidth
         variant="outlined"
+        onChange={handleFeedbackEdit}
       />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleClose} color="primary" autoFocus>
+          <Button onClick={() => handleFeedbackPost("-")} color="primary" autoFocus>
             Post Review
           </Button>
         </DialogActions>

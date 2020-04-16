@@ -23,6 +23,8 @@ class Profile extends Component {
     this.handleTimeZoneChange = this.handleTimeZoneChange.bind(this);
     this.onTagSelect = this.onTagSelect.bind(this);
     this.onTagRemove = this.onTagRemove.bind(this);
+    this.handleFeedbackPost = this.handleFeedbackPost.bind(this);
+    this.handleFeedbackEdit = this.handleFeedbackEdit.bind(this);
 
     this.state = {
       username: "",
@@ -34,12 +36,22 @@ class Profile extends Component {
       timeZone: "",
       allTags: [],
       userTags: [],
+      feedback: "",
+      positiveRep: [],
+      negativeRep: [],
     };
   }
 
   componentDidMount() {
+    // Own Profile
+    var route;
+    if (this.props.ownProfile) {
+      route = "http://localhost:3001/user/currentuser";
+    } else {
+      route = `http://localhost:3001/users/${this.props.match.params.username}`;
+    }
     axios
-      .get("http://localhost:3001/user/currentuser", {
+      .get(route, {
         withCredentials: true,
       })
       .then((json) => {
@@ -64,11 +76,17 @@ class Profile extends Component {
         if (json.data.userTags) {
           this.setState({ userTags: json.data.userTags });
         }
+        if (json.data.positiveRep) {
+          this.setState({ positiveRep: json.data.positiveRep.length });
+        }
+        if (json.data.negativeRep) {
+          this.setState({ negativeRep: json.data.negativeRep.length });
+        }
       });
 
     axios.get("http://localhost:3001/userTags/").then((json) => {
       // Get Tag Object Array and set it
-      this.setState({ allTags: json.data.tagObj});
+      this.setState({ allTags: json.data.tagObj });
     });
   }
 
@@ -119,25 +137,56 @@ class Profile extends Component {
     }
   }
 
+  handleFeedbackEdit(newFeedback) {
+    this.setState({
+      feedback: newFeedback,
+    });
+  }
+
+  handleFeedbackPost(repType) {
+    axios
+      .put(`http://localhost:3001/users/addReputation/${this.props.match.params.username}`, {
+        username: this.state.username,
+        reputation: repType,
+        comment: this.state.feedback,
+      })
+      .then((json) => {
+        if (json.data.success) {
+          console.log(`Feedback for ${this.state.username} successfully posted`);
+          if (repType === '+') this.setState({positiveRep: this.state.positiveRep + 1});
+          else this.setState({negativeRep: this.state.negativeRep + 1});
+        } else
+          console.log("An error has occurred while posting your feedback");
+      });
+  }
+
   onTagSelect(selectedList, selectedItem) {
     // Save selected user tags
     axios
-      .put(`http://localhost:3001/users/addTag/${this.state.username}`, selectedItem)
+      .put(
+        `http://localhost:3001/users/addTag/${this.state.username}`,
+        selectedItem
+      )
       .then((json) => {
         if (json.data.success) {
           console.log(`User Tag ${selectedItem.name} successfully added`);
-        } else console.log("An error has occurred while adding your User Tags.");
+        } else
+          console.log("An error has occurred while adding your User Tags.");
       });
   }
 
   onTagRemove(selectedList, selectedItem) {
     // Remove selected user tags
     axios
-      .put(`http://localhost:3001/users/removeUserTag/${this.state.username}`, selectedItem)
+      .put(
+        `http://localhost:3001/users/removeUserTag/${this.state.username}`,
+        selectedItem
+      )
       .then((json) => {
         if (json.data.success) {
           console.log(`User Tag ${selectedItem.name} successfully removed`);
-        } else console.log("An error has occurred while removing your User Tags.");
+        } else
+          console.log("An error has occurred while removing your User Tags.");
       });
   }
 
@@ -211,7 +260,7 @@ class Profile extends Component {
       multiselectContainer: {},
     };
 
-    const { allTags, userTags } = this.state;
+    const { allTags, userTags, positiveRep, negativeRep } = this.state;
 
     if (!this.state.editing) {
       return (
@@ -247,7 +296,12 @@ class Profile extends Component {
               {this.state.username}
             </Typography>
             <div style={{ margin: 15 }} className={styles.center}>
-              <Thumbs></Thumbs>
+              <Thumbs
+                positive={positiveRep}
+                negative={negativeRep}
+                onFeedbackPost={this.handleFeedbackPost}
+                onFeedbackEdit={this.handleFeedbackEdit}
+              ></Thumbs>
               <Status></Status>
             </div>
             <Typography
