@@ -21,6 +21,8 @@ class Profile extends Component {
     this.handleBioSave = this.handleBioSave.bind(this);
     this.handlePhotoChange = this.handlePhotoChange.bind(this);
     this.handleTimeZoneChange = this.handleTimeZoneChange.bind(this);
+    this.onTagSelect = this.onTagSelect.bind(this);
+    this.onTagRemove = this.onTagRemove.bind(this);
 
     this.state = {
       username: "",
@@ -30,17 +32,12 @@ class Profile extends Component {
       lastName: "",
       photo: "",
       timeZone: "",
-      options: [
-        { key: "Option 1" },
-        { key: "Option 2" },
-        { key: "Option 3" },
-        { key: "Option 4" },
-        { key: "Option 5" },
-        { key: "Option 6" },
-        { key: "Option 7" },
-      ],
+      allTags: [],
+      userTags: [],
     };
+  }
 
+  componentDidMount() {
     axios
       .get("http://localhost:3001/user/currentuser", {
         withCredentials: true,
@@ -64,7 +61,15 @@ class Profile extends Component {
         if (json.data.timeZone) {
           this.setState({ timeZone: json.data.timeZone });
         }
+        if (json.data.userTags) {
+          this.setState({ userTags: json.data.userTags });
+        }
       });
+
+    axios.get("http://localhost:3001/userTags/").then((json) => {
+      // Get Tag Object Array and set it
+      this.setState({ allTags: json.data.tagObj});
+    });
   }
 
   handleBioChange(newBio) {
@@ -112,6 +117,28 @@ class Profile extends Component {
           }
         });
     }
+  }
+
+  onTagSelect(selectedList, selectedItem) {
+    // Save selected user tags
+    axios
+      .put(`http://localhost:3001/users/addTag/${this.state.username}`, selectedItem)
+      .then((json) => {
+        if (json.data.success) {
+          console.log(`User Tag ${selectedItem.name} successfully added`);
+        } else console.log("An error has occurred while adding your User Tags.");
+      });
+  }
+
+  onTagRemove(selectedList, selectedItem) {
+    // Remove selected user tags
+    axios
+      .put(`http://localhost:3001/users/removeUserTag/${this.state.username}`, selectedItem)
+      .then((json) => {
+        if (json.data.success) {
+          console.log(`User Tag ${selectedItem.name} successfully removed`);
+        } else console.log("An error has occurred while removing your User Tags.");
+      });
   }
 
   render() {
@@ -184,6 +211,8 @@ class Profile extends Component {
       multiselectContainer: {},
     };
 
+    const { allTags, userTags } = this.state;
+
     if (!this.state.editing) {
       return (
         <div>
@@ -236,8 +265,11 @@ class Profile extends Component {
                 </Grid>
                 <Grid item xs={10}>
                   <Multiselect
-                    options={this.state.options}
-                    displayValue="key"
+                    options={allTags}
+                    displayValue="name"
+                    selectedValues={userTags}
+                    onSelect={this.onTagSelect}
+                    onRemove={this.onTagRemove}
                     style={this.style}
                   />
                 </Grid>

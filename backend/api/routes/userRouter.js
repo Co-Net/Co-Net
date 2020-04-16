@@ -303,7 +303,7 @@ router.put('/addTag/:username', function (req, res) {
     });
 })
 
-// Unfollow a user
+// Remove a tag from user
 router.put('/removeUserTag/:username', function (req, res) {
     var queryUsername = req.params.username;
     var body = req.body;
