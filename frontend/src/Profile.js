@@ -25,6 +25,7 @@ class Profile extends Component {
     this.handleFeedbackPost = this.handleFeedbackPost.bind(this);
     this.handleFeedbackEdit = this.handleFeedbackEdit.bind(this);
     this.analyzeRep = this.analyzeRep.bind(this);
+    this.handleFeedbackEditCancel = this.handleFeedbackEditCancel.bind(this);
 
     this.state = {
       username: "",
@@ -40,7 +41,8 @@ class Profile extends Component {
       negativeRep: 0,
       allRep: [],
       currentUser: "",
-      pastFeedback: {}
+      pastFeedback: {},
+      oldFeedback: {}
     };
   }
 
@@ -135,7 +137,7 @@ class Profile extends Component {
         negativeRepCount++;
       }
       if (review.username === this.state.currentUser) {
-        this.setState({ pastFeedback: review });
+        this.setState({ pastFeedback: review, oldFeedback: review });
       }
     });
     this.setState({ positiveRep: positiveRepCount });
@@ -201,11 +203,18 @@ class Profile extends Component {
     });
   }
 
+  handleFeedbackEditCancel() {
+    this.setState({
+      pastFeedback: this.state.oldFeedback
+    });
+  }
+
   handleFeedbackPost(repType) {
     axios
       .put(
         `http://localhost:3001/users/addReputation/${this.props.match.params.username}`,
         {
+          _id: this.state.pastFeedback._id,
           username: this.state.currentUser,
           reputation: repType,
           comment: this.state.pastFeedback.comment,
@@ -213,15 +222,32 @@ class Profile extends Component {
       )
       .then((json) => {
         if (json.data.success) {
-          console.log(
-            `Feedback for ${this.state.username} successfully posted`
-          );
-          if (repType === "+") {
-            this.setState({ positiveRep: this.state.positiveRep + 1 });
+          if (json.data.result === 'CREATED') {
+            console.log(
+              `Feedback for ${this.state.username} successfully posted`
+            );
+            if (repType === "+") {
+              this.setState({ positiveRep: this.state.positiveRep + 1 });
+            } else {
+              this.setState({ negativeRep: this.state.negativeRep + 1 });
+            }
           } else {
-            this.setState({ negativeRep: this.state.negativeRep + 1 });
+            console.log(
+              `Feedback for ${this.state.username} successfully updated`
+            );
+            if (repType != this.state.oldFeedback.rep) {
+              if (repType === "+") {
+                this.setState({ positiveRep: this.state.positiveRep + 1 });
+                this.setState({ negativeRep: this.state.negativeRep - 1 });
+              } else {
+                this.setState({ positiveRep: this.state.positiveRep - 1 });
+                this.setState({ negativeRep: this.state.negativeRep + 1 });
+              }
+            }
           }
-          this.setState({ allRep: json.data.user.playerRep });
+          this.setState({ oldFeedback: json.data.feedback });
+          this.setState({ pastFeedback: json.data.feedback });
+          this.setState({ allRep: json.data.playerRep });
         } else {
           console.log("An error has occurred while posting your feedback");
         }
@@ -390,6 +416,7 @@ class Profile extends Component {
             negative={negativeRep}
             onFeedbackPost={this.handleFeedbackPost}
             onFeedbackEdit={this.handleFeedbackEdit}
+            onFeedbackEditCancel={this.handleFeedbackEditCancel}
             feedback={this.state.pastFeedback}
           ></Thumbs>
           {setStatusE}

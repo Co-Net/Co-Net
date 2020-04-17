@@ -30,7 +30,6 @@ export default function AlertDialog(props) {
   };
 
   const handleFeedbackEdit = (e) => {
-    console.log(feedback);
     props.onFeedbackEdit(e.target.value);
   };
 
@@ -39,10 +38,34 @@ export default function AlertDialog(props) {
     handleClose();
   };
 
+  const handleFeedbackEditCancel = () => {
+    props.onFeedbackEditCancel();
+    handleClose();
+  };
+
   // Conditional Rendering
   // If feedback already posted, highlight the type they posted and disable clicking for other type
   var pastFeedback;
-  if (Object.entries(feedback).length === 0) {
+  // If own profile, don't allow clicking
+  if (!feedback) {
+    pastFeedback = (
+      <div>
+        <Button className={styles.tUp} variant="contained">
+          <ThumbUpIcon
+            style={{ color: "green", marginRight: 10 }}
+          ></ThumbUpIcon>
+          {positiveRep}
+        </Button>
+        <Button className={styles.tDown} variant="contained">
+          <ThumbDownIcon
+            style={{ color: "#d6361d", marginRight: 10 }}
+          ></ThumbDownIcon>
+          {negativeRep}
+        </Button>
+      </div>
+    );
+  } else if (Object.entries(feedback).length === 0) {
+    // If have not left feedback for user before, allow click on both
     pastFeedback = (
       <div>
         <Button
@@ -68,6 +91,7 @@ export default function AlertDialog(props) {
       </div>
     );
   } else {
+    // if left feedback before, allow edit and update
     pastFeedback =
       feedback.rep === "+" ? (
         <div>
@@ -82,6 +106,7 @@ export default function AlertDialog(props) {
             {positiveRep}
           </Button>
           <Button
+            onClick={handleClickOpenDown}
             className={styles.tDown}
             variant="contained"
           >
@@ -94,6 +119,7 @@ export default function AlertDialog(props) {
       ) : (
         <div>
           <Button
+            onClick={handleClickOpenUp}
             className={styles.tUp}
             variant="contained"
           >
@@ -129,7 +155,7 @@ export default function AlertDialog(props) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Write a Review"}
+          {"Write a review"}
           <ThumbUpIcon
             style={{ verticalAlign: "sub", marginLeft: 10, color: "green" }}
           ></ThumbUpIcon>
@@ -143,12 +169,12 @@ export default function AlertDialog(props) {
             rows="10"
             fullWidth
             variant="outlined"
-            value={feedback.comment}
+            value={feedback ? feedback.comment : ""}
             onChange={handleFeedbackEdit}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleFeedbackEditCancel} color="primary">
             Cancel
           </Button>
           <Button
@@ -171,7 +197,7 @@ export default function AlertDialog(props) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Write a Review"}
+          {"Write a review"}
           <ThumbDownIcon
             style={{ verticalAlign: "sub", marginLeft: 10, color: "#ce0606" }}
           ></ThumbDownIcon>
@@ -185,12 +211,12 @@ export default function AlertDialog(props) {
             rows="10"
             fullWidth
             variant="outlined"
-            value={feedback.comment}
+            value={feedback ? feedback.comment : ""}
             onChange={handleFeedbackEdit}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleFeedbackEditCancel} color="primary">
             Cancel
           </Button>
           <Button

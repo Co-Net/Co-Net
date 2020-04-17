@@ -492,44 +492,75 @@ router.put('/addReputation/:username', function (req, res) {
     var un = body.username; // author
     var rep = body.reputation;
     var comment = body.comment;
+    var id = body._id;
     var repObj = {
+        "_id": id,
         "username": un,
         "rep": rep,
         "comment": comment
     };
 
     // Check if feedback already posted by user
-    UserModel.findOne({ username: queryUsername }, 'playerRep', function(err, doc) {
+    // First get the player rep array of the user
+    UserModel.findOne({
+        username: queryUsername
+    }, 'playerRep', function (err, doc) {
         if (err) return res.json({
             success: false,
             error: err
         });
+        // Check player rep array if user already created review
         const result = doc.playerRep.filter(user => user.username === un);
         if (result.length > 0) {
-            // Add logic to update existing feedback
-            return res.json({
-                success: false,
-                message: "User already left feedback",
-                feedback: result
+            // Add logic to update existing feedback using ID
+            UserModel.findOneAndUpdate({
+                'username': queryUsername, 'playerRep._id': id
+            }, {
+                "$set": {
+                    "playerRep.$.rep": rep,
+                    "playerRep.$.comment": comment
+                }
+            }, { new: true }, function (err, doc2) {
+                if (err) {
+                    return res.json({
+                        success: false,
+                        error: err
+                    });
+                }
+                return res.json({
+                    success: true,
+                    result: "UPDATED",
+                    message: "Feedback updated successfully",
+                    feedback: repObj,
+                    playerRep: doc2.playerRep
+                });
+            });
+        } else {
+            // Else add new feedback
+            UserModel.findOneAndUpdate({
+                username: queryUsername
+            }, {
+                $push: {
+                    playerRep: repObj
+                }
+            }, {
+                new: true
+            }, function (err, doc) {
+                if (err) return res.json({
+                    success: false,
+                    result: "ERROR",
+                    error: err
+                });
+                repObj._id = doc.playerRep[doc.playerRep.length - 1]._id;
+                return res.json({
+                    success: true,
+                    result: "CREATED",
+                    message: "Feedback created successfully",
+                    feedback: repObj,
+                    playerRep: doc.playerRep
+                });
             });
         }
-        
-        UserModel.findOneAndUpdate({
-            username: queryUsername
-        }, {
-            $push: {
-                playerRep: repObj
-            }
-        }, { new: true }, function (err, doc) {
-            if (err) return res.json({
-                success: false,
-                error: err
-            });
-            return res.json({
-                success: true,
-                user: doc
-            });
-        });
     })
 })
 
