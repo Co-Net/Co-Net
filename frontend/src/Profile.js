@@ -30,6 +30,7 @@ class Profile extends Component {
     this.state = {
       username: "",
       bio: "",
+      avatar: "",
       editing: false,
       firstName: "",
       lastName: "",
@@ -56,6 +57,9 @@ class Profile extends Component {
       .then((json) => {
         if (json.data.username) {
           this.setState({ currentUser: json.data.username });
+        }
+        if (json.data.profilePhoto) {
+          this.setState({ avatar: json.data.profilePhoto });
         }
         // If own profile, get rest of data
         if (this.props.ownProfile) {
@@ -218,9 +222,11 @@ class Profile extends Component {
           username: this.state.currentUser,
           reputation: repType,
           comment: this.state.pastFeedback.comment,
+          avatar: this.state.avatar
         }
       )
       .then((json) => {
+        // console.log(json.data);
         if (json.data.success) {
           if (json.data.result === 'CREATED') {
             console.log(

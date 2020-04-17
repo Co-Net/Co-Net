@@ -53,7 +53,7 @@ class forumComment extends Component {
         <Grid item xs={11}>
           <Grid container spacing={8}>
             <Grid item xs={1}>
-              <Avatar src={profilePic} className={styles.smallSize} />
+              <Avatar src={this.props.avatar} className={styles.smallSize} />
             </Grid>
             <Grid item xs={10}>
               <Typography className={styles.userNameComment} display="inline">

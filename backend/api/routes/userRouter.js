@@ -492,12 +492,14 @@ router.put('/addReputation/:username', function (req, res) {
     var un = body.username; // author
     var rep = body.reputation;
     var comment = body.comment;
+    var avatar = body.avatar;
     var id = body._id;
     var repObj = {
         "_id": id,
         "username": un,
         "rep": rep,
-        "comment": comment
+        "comment": comment,
+        "avatar": avatar
     };
 
     // Check if feedback already posted by user

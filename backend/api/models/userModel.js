@@ -12,7 +12,8 @@ const PostIDSchema = new Schema({postID: String});
 const PlayerRepSchema = new Schema({
     username: String,
     rep: String,
-    comment: String
+    comment: String,
+    avatar: String
 });
 const message = new Schema({
     sentBy: String, //the person that the message is sent by

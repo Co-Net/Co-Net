@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import AppBar from "@material-ui/core/AppBar";
 import Typography from "@material-ui/core/Typography";
 import logo from "./logo.png";
@@ -113,7 +114,7 @@ export default function PrimarySearchAppBar(props) {
   const handleMenuClose = (event) => {
     setAnchorEl(null);
     handleMobileMenuClose();
-    if (event === "profile") history.push("profile");
+    if (event === "profile") history.push("/profile");
     else if (event === "logout") {
       axios
         .get("http://localhost:3001/users/logout", { withCredentials: true })
