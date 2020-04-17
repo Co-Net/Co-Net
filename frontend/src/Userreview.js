@@ -13,6 +13,7 @@ import Grid from "@material-ui/core/Grid";
 import CardContent from "@material-ui/core/CardContent";
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 import ThumbDownIcon from "@material-ui/icons/ThumbDown";
+import { Link } from '@material-ui/core';
 
 class forumComment extends Component {
   constructor(props) {
@@ -56,8 +57,8 @@ class forumComment extends Component {
               <Avatar src={this.props.avatar} className={styles.smallSize} />
             </Grid>
             <Grid item xs={10}>
-              <Typography className={styles.userNameComment} display="inline">
-                {this.props.author}{" "}
+              <Typography className={styles.userNameComment} href='google.com' display="inline">
+                <Link href={this.props.author}>{this.props.author}</Link> 
               </Typography>
               <Typography className={styles.timeStamp} display="inline">
                 2 hours ago
