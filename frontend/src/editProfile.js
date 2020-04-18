@@ -104,7 +104,7 @@ class EditProfile extends Component {
         <TopMenu history={this.props.history}></TopMenu>
         <div className={styles.bgColor}>
           <div className={styles.profilePhoto}> </div>
-          <Typography>
+          <Typography className={styles.timeZone}>
             Change Timezone:
             <TimeZonePicker
               value={timeZone}
