@@ -20,7 +20,6 @@ const GameCommentSchema = new Schema({
     }
 });
 
-
 const GameSchema = new Schema({
     name: {
         type: String,
@@ -30,7 +29,19 @@ const GameSchema = new Schema({
         type: Number, //this will be outputted and mutated based on the number of players that are looking to queue for this game
         default: 0
     },
-    gameTags: [GameTagSchema],
+    url: {
+        type: String
+    },
+    releaseDate: {
+        type: String
+    },
+    description: {
+        type: String
+    },
+    reviews: {
+        type: String
+    },
+    gameTags: [String],
     gameCommentsAndRatings: [GameCommentSchema]
     //need to add game image
 });

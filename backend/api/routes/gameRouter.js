@@ -51,6 +51,7 @@ router.post('/createGame', function (req, res) {
         });
     });
 })
+
 //Delete a game
 router.delete('/:name', function (req, res) {
     var queryName = req.params.name;
@@ -116,14 +117,11 @@ router.put('/addGameTag/:name', function (req, res) {
     var queryName = req.params.name;
     var body = req.body;
     var tag = body.name;
-    var tagObj = {
-        "name": tag
-    };
     GameModel.findOneAndUpdate({
         name: queryName
     }, {
-        $push: {
-            gameTags: tagObj
+        $addToSet: {
+            gameTags: tag
         }
     }, function (err) {
         if (err) return res.json({
@@ -142,14 +140,11 @@ router.put('/removeGameTag/:name', function (req, res) {
     var queryName = req.params.name;
     var body = req.body;
     var tag = body.name;
-    var tagObj = {
-        "name": tag
-    };
     GameModel.findOneAndUpdate({
         name: queryName
     }, {
         $pull: {
-            gameTags: tagObj
+            gameTags: tag
         }
     }, function (err) {
         if (err) return res.json({
