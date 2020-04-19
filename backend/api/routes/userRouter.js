@@ -296,7 +296,8 @@ router.get('/photo/:username', function (req, res) {
         }
         return res.json({
             success: false,
-            message: "User does not exist"
+            message: "User does not exist",
+            profilePhoto: 'https://res.cloudinary.com/co-net-pix/image/upload/v1586238488/default_user_avatar.jpg'
         });
     });
 })
