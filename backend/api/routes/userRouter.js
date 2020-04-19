@@ -277,6 +277,30 @@ router.put('/photo/:username', function (req, res) {
     });
 })
 
+// Temp?
+// Get a user's photo url
+router.get('/photo/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    UserModel.findOne({
+        username: queryUsername
+    }, (err, user) => {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        if (user) {
+            return res.json({
+                success: true,
+                profilePhoto: user.profilePhoto
+            });
+        }
+        return res.json({
+            success: false,
+            message: "User does not exist"
+        });
+    });
+})
+
 //add a tag to a user
 router.put('/addTag/:username', function (req, res) {
     var queryUsername = req.params.username;
@@ -516,13 +540,16 @@ router.put('/addReputation/:username', function (req, res) {
         if (result.length > 0) {
             // Add logic to update existing feedback using ID
             UserModel.findOneAndUpdate({
-                'username': queryUsername, 'playerRep._id': id
+                'username': queryUsername,
+                'playerRep._id': id
             }, {
                 "$set": {
                     "playerRep.$.rep": rep,
                     "playerRep.$.comment": comment
                 }
-            }, { new: true }, function (err, doc2) {
+            }, {
+                new: true
+            }, function (err, doc2) {
                 if (err) {
                     return res.json({
                         success: false,

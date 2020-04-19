@@ -34,6 +34,10 @@ class forumComment extends Component {
   constructor(props) {
     super(props);
     this.convertTime = this.convertTime.bind(this);
+
+    this.state = {
+      avatar: ""
+    }
   }
 
   convertTime(time) {
@@ -59,6 +63,20 @@ class forumComment extends Component {
       }
     }
     return `${month} ${d.getDate()}, ${d.getFullYear()}`;
+  }
+
+  // Really inefficient way to deal with updated user avatars because a call is made for every review on the page which is inefficient
+  // A better way is when a user updates user photo, update every review by this user with the new avatar url
+  // For now, we will keep avatar props for future implementation
+  componentDidMount() {
+    // Update avatar
+    axios
+      .get(`http://localhost:3001/users/photo/${this.props.author}`)
+      .then((json) => {
+        if (json.data.profilePhoto) {
+          this.setState({ avatar: json.data.profilePhoto });
+        }
+      });
   }
 
   render() {
@@ -102,7 +120,7 @@ class forumComment extends Component {
         <Grid item xs={11}>
           <Grid container spacing={8}>
             <Grid item xs={1}>
-              <Avatar src={this.props.avatar} className={styles.smallSize} />
+              <Avatar src={this.state.avatar} className={styles.smallSize} />
             </Grid>
             <Grid item xs={10}>
               <Typography
