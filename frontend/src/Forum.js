@@ -122,8 +122,9 @@ class Forum extends Component {
               const user = post.username;
               var recentReply;
               const waitForReply = async () => { 
-                recentReply = await this.getReply(post.allReplyIDs.length > 0 
-                  ? post.allReplyIDs[post.allReplyIDs.length - 1].childID : null);
+                var numOfComments = post.allReplyIDs.length;
+                recentReply = await this.getReply(numOfComments > 0 
+                  ? post.allReplyIDs[numOfComments - 1].childID : null);
                 var replyUser;
                 var replyDate;
                 if (recentReply) {
@@ -136,7 +137,8 @@ class Forum extends Component {
                   game: game,
                   user: user,
                   replyUser: replyUser,
-                  replyDate: replyDate
+                  replyDate: replyDate,
+                  numOfComments: numOfComments
                 });
                 this.setState({ cards: cards });
               }
@@ -274,13 +276,13 @@ class Forum extends Component {
                         className={mainStyles.timeStamp}
                         display="inline"
                       >
-                        Comments{" "}
+                        Comments{": "}
                       </Typography>
                       <Typography
                         className={mainStyles.userName}
                         display="inline"
                       >
-                        2,194{" "}
+                        {card.numOfComments}{" "}
                       </Typography>
                     </div>
                     <Typography
@@ -307,7 +309,7 @@ class Forum extends Component {
                         className={mainStyles.userName}
                         display="inline"
                       >
-                        {card.replyUser ? card.replyUser : "No replies"}{" "}
+                        {card.replyUser ? card.replyUser : "No comments"}{" "}
                       </Typography>
                     </div>
                     <Typography
