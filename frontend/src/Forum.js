@@ -87,22 +87,23 @@ class Forum extends Component {
     const month = monthNames[d.getMonth()];
     if (reply) {
       const today = new Date();
+      var localTime = d.toLocaleString("en-US", {
+        timeZone: this.state.timeZone,
+      });
+      localTime = new Date(localTime);
+      var day = localTime.getHours() >= 12 ? "PM" : "AM";
+      var hour = (localTime.getHours() + 24) % 12 || 12;
+      var min = localTime.getMinutes();
+      min = min < 10 ? `0${min}` : min;
       if (
         d.getMonth() === today.getMonth() &&
         d.getFullYear() &&
         today.getFullYear()
       ) {
         if (d.getDate() === today.getDate()) {
-          var localTime = d.toLocaleString("en-US", {
-            timeZone: this.state.timeZone,
-          });
-          localTime = new Date(localTime);
-          var day = localTime.getHours() >= 12 ? "PM" : "AM";
-          return `Today, ${
-            (localTime.getHours() + 24) % 12 || 12
-          }:${localTime.getMinutes()} ${day}`;
+          return `Today, ${hour}:${min} ${day}`;
         } else if (d.getDate() === today.getDate() - 1) {
-          return `Yesterday, `;
+          return `Yesterday, ${hour}:${min} ${day}`;
         }
       }
     }
