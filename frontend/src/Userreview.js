@@ -13,11 +13,52 @@ import Grid from "@material-ui/core/Grid";
 import CardContent from "@material-ui/core/CardContent";
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 import ThumbDownIcon from "@material-ui/icons/ThumbDown";
-import { Link } from '@material-ui/core';
+import { Link } from "@material-ui/core";
+
+const monthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
 class forumComment extends Component {
   constructor(props) {
     super(props);
+    this.convertTime = this.convertTime.bind(this);
+  }
+
+  convertTime(time) {
+    var d = new Date(time);
+    const month = monthNames[d.getMonth()];
+    const today = new Date();
+    if (
+      d.getMonth() === today.getMonth() &&
+      d.getFullYear() &&
+      today.getFullYear()
+    ) {
+      if (d.getDate() === today.getDate()) {
+        var localTime = d.toLocaleString("en-US", {
+          timeZone: this.props.timeZone,
+        });
+        localTime = new Date(localTime);
+        var day = localTime.getHours() >= 12 ? "PM" : "AM";
+        return `Today, ${
+          (localTime.getHours() + 24) % 12 || 12
+        }:${localTime.getMinutes()} ${day}`;
+      } else if (d.getDate() === today.getDate() - 1) {
+        return `Yesterday, `;
+      }
+    }
+    return `${month} ${d.getDate()}, ${d.getFullYear()}`;
   }
 
   render() {
@@ -46,7 +87,14 @@ class forumComment extends Component {
       marginTop: 3,
     };
 
-    var thumbsIcon = (this.props.rep === '+') ? <ThumbUpIcon className={styles.thumbsUp}></ThumbUpIcon> : <ThumbDownIcon className={styles.thumbsDown}></ThumbDownIcon>;
+    var thumbsIcon =
+      this.props.rep === "+" ? (
+        <ThumbUpIcon className={styles.thumbsUp}></ThumbUpIcon>
+      ) : (
+        <ThumbDownIcon className={styles.thumbsDown}></ThumbDownIcon>
+      );
+
+    var timestamp = this.convertTime(this.props.timestamp);
 
     return (
       <Grid container spacing={8}>
@@ -57,11 +105,15 @@ class forumComment extends Component {
               <Avatar src={this.props.avatar} className={styles.smallSize} />
             </Grid>
             <Grid item xs={10}>
-              <Typography className={styles.userNameComment} href='google.com' display="inline">
-                <Link href={this.props.author}>{this.props.author}</Link> 
+              <Typography
+                className={styles.userNameComment}
+                href="google.com"
+                display="inline"
+              >
+                <Link href={this.props.author}>{this.props.author}</Link>
               </Typography>
               <Typography className={styles.timeStamp} display="inline">
-                2 hours ago
+                {timestamp}
               </Typography>
               {thumbsIcon}
               <Typography variant="body1" className={styles.commentBody}>

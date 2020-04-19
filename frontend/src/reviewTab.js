@@ -54,11 +54,12 @@ export default function ReviewTab(props) {
           const author = review.username;
           const comment = review.comment;
           const avatar = review.avatar;
+          const timestamp = review.timestamp;
           // console.log(rep);
           // console.log(author);
           // console.log(comment);
 
-          reviewList.unshift(<Review key={key++} author={author} rep={rep} comment={comment} avatar={avatar}></Review>);
+          reviewList.unshift(<Review key={key++} author={author} rep={rep} comment={comment} avatar={avatar} timestamp={timestamp} timeZone={props.timeZone}></Review>);
           // setReviews(reviews);
         })
 

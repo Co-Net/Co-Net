@@ -35,9 +35,20 @@ import mainStyles from "./main.module.css";
 import Divider from "@material-ui/core/Divider";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 
-const monthNames = ["January", "February", "March", "April", "May", "June",
-   "July", "August", "September", "October", "November", "December"
-    ];
+const monthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
 class Forum extends Component {
   constructor(props) {
@@ -60,10 +71,9 @@ class Forum extends Component {
         },
       ],
       cards: [],
-      timeZone: ""
+      timeZone: "",
     };
   }
-  
 
   pushHistory() {
     this.props.history.push("/forumPost");
@@ -77,25 +87,31 @@ class Forum extends Component {
     const month = monthNames[d.getMonth()];
     if (reply) {
       const today = new Date();
-      if (d.getMonth() === today.getMonth() && d.getFullYear() && today.getFullYear()) {
+      if (
+        d.getMonth() === today.getMonth() &&
+        d.getFullYear() &&
+        today.getFullYear()
+      ) {
         if (d.getDate() === today.getDate()) {
-          var localTime = d.toLocaleString("en-US", {timeZone: this.state.timeZone } );
+          var localTime = d.toLocaleString("en-US", {
+            timeZone: this.state.timeZone,
+          });
           localTime = new Date(localTime);
-          var day = (localTime.getHours() >= 12) ? 'PM' : 'AM';
-          return `Today, ${(localTime.getHours() + 24) % 12 || 12}:${localTime.getMinutes()} ${day}`;
+          var day = localTime.getHours() >= 12 ? "PM" : "AM";
+          return `Today, ${
+            (localTime.getHours() + 24) % 12 || 12
+          }:${localTime.getMinutes()} ${day}`;
         } else if (d.getDate() === today.getDate() - 1) {
           return `Yesterday, `;
         }
       }
     }
-      return `${month} ${d.getDate()}, ${d.getFullYear()}`;
+    return `${month} ${d.getDate()}, ${d.getFullYear()}`;
   }
 
   getReply(id) {
     if (id === null) return null;
-    return axios
-    .get(`http://localhost:3001/forum/${id}`)
-    .then((json) => {
+    return axios.get(`http://localhost:3001/forum/${id}`).then((json) => {
       return json.data;
     });
   }
@@ -108,7 +124,8 @@ class Forum extends Component {
         if (!json.data.username) {
           this.props.history.push("/");
         } else {
-          if (json.data.timeZone) this.setState({ timeZone: json.data.timeZone });
+          if (json.data.timeZone)
+            this.setState({ timeZone: json.data.timeZone });
           axios.get("http://localhost:3001/forum/").then((json) => {
             this.setState({ allPosts: json.data.forumPostObj });
             // Prepare card variables
@@ -121,10 +138,13 @@ class Forum extends Component {
               const game = post.game;
               const user = post.username;
               var recentReply;
-              const waitForReply = async () => { 
+              const waitForReply = async () => {
                 var numOfComments = post.allReplyIDs.length;
-                recentReply = await this.getReply(numOfComments > 0 
-                  ? post.allReplyIDs[numOfComments - 1].childID : null);
+                recentReply = await this.getReply(
+                  numOfComments > 0
+                    ? post.allReplyIDs[numOfComments - 1].childID
+                    : null
+                );
                 var replyUser;
                 var replyDate;
                 if (recentReply) {
@@ -138,10 +158,10 @@ class Forum extends Component {
                   user: user,
                   replyUser: replyUser,
                   replyDate: replyDate,
-                  numOfComments: numOfComments
+                  numOfComments: numOfComments,
                 });
                 this.setState({ cards: cards });
-              }
+              };
               waitForReply();
             });
           });

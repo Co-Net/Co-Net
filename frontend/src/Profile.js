@@ -493,6 +493,7 @@ class Profile extends Component {
               className={styles.menu}
               username={this.state.username}
               allRep={this.state.allRep}
+              timeZone={this.state.timeZone}
             ></Menu>
           </div>
         </div>

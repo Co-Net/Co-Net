@@ -13,7 +13,11 @@ const PlayerRepSchema = new Schema({
     username: String,
     rep: String,
     comment: String,
-    avatar: String
+    avatar: String,
+    timestamp: {
+        type: Date,
+        default: Date.now
+    }
 });
 const message = new Schema({
     sentBy: String, //the person that the message is sent by
