@@ -11,11 +11,11 @@ import axios from "axios";
 import styles from "./App.css";
 import TextField from "@material-ui/core/TextField";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     transform: "translateZ(0)",
     height: 768,
-    flexGrow: 1
+    flexGrow: 1,
   },
 
   modal: {
@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "center",
     backgroundImage: "url(" + bgd + ")",
     backgroundSize: "cover",
-    overflow: "hidden"
+    overflow: "hidden",
   },
   paper: {
     width: 400,
@@ -36,11 +36,11 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2, 4, 3),
     marginBottom: 200,
     marginRight: 400,
-    marginTop: 100
+    marginTop: 100,
   },
   error: {
-    backgroundColor: "#FFCCCC"
-  }
+    backgroundColor: "#FFCCCC",
+  },
 }));
 
 /**
@@ -65,6 +65,9 @@ function onSignUp(e, history, fn, ln, em, cEm, pass, cPass, uname) {
   } else if (email !== confirmEmail) {
     document.getElementById("errorMessage").innerText =
       "Email did not match. Please make sure you enter the same email.";
+  } else if (username === "Guest" || username === "guest") {
+    document.getElementById("errorMessage").innerText =
+      "Username is not allowed. Please use a different username.";
   } else {
     axios
       .post(`http://localhost:3001/users/signup`, {
@@ -72,9 +75,9 @@ function onSignUp(e, history, fn, ln, em, cEm, pass, cPass, uname) {
         firstName: firstName,
         lastName: lastName,
         emailAddress: email,
-        password: password
+        password: password,
       })
-      .then(json => {
+      .then((json) => {
         console.log(json);
         if (json.data.success) {
           axios
@@ -82,13 +85,13 @@ function onSignUp(e, history, fn, ln, em, cEm, pass, cPass, uname) {
               `http://localhost:3001/users/signin`,
               {
                 username: email,
-                password: password
+                password: password,
               },
               {
-                withCredentials: true
+                withCredentials: true,
               }
             )
-            .then(json => {
+            .then((json) => {
               if (json.data.success) {
                 history.push("/feed");
               } else {
@@ -140,6 +143,14 @@ export default function ServerModal(props) {
   const [password, setPassword] = useState("");
   const [cPassword, setConfirmPassword] = useState("");
 
+  axios
+    .get("http://localhost:3001/user/currentuser", { withCredentials: true })
+    .then((json) => {
+      if (json.data.username !== "Guest") {
+        history.push("/Feed");
+      }
+    });
+
   return (
     <div className={classes.root} ref={rootRef}>
       <Modal
@@ -183,7 +194,7 @@ export default function ServerModal(props) {
                     id="firstName"
                     label="First Name"
                     value={firstName}
-                    onChange={e => setFirstName(e.target.value)}
+                    onChange={(e) => setFirstName(e.target.value)}
                     autoFocus
                   />
                 </Grid>
@@ -197,7 +208,7 @@ export default function ServerModal(props) {
                     id="lastName"
                     label="Last Name"
                     value={lastName}
-                    onChange={e => setLastName(e.target.value)}
+                    onChange={(e) => setLastName(e.target.value)}
                     autoFocus
                   />
                 </Grid>
@@ -211,7 +222,7 @@ export default function ServerModal(props) {
                     id="username"
                     label="Username"
                     value={username}
-                    onChange={e => setUserName(e.target.value)}
+                    onChange={(e) => setUserName(e.target.value)}
                     autoFocus
                   />
                 </Grid>
@@ -225,7 +236,7 @@ export default function ServerModal(props) {
                     id="email"
                     label="Email"
                     value={email}
-                    onChange={e => setEmail(e.target.value)}
+                    onChange={(e) => setEmail(e.target.value)}
                     autoFocus
                   />
                 </Grid>
@@ -239,7 +250,7 @@ export default function ServerModal(props) {
                     id="cEmail"
                     label="Confirm Email"
                     value={cEmail}
-                    onChange={e => setConfirmEmail(e.target.value)}
+                    onChange={(e) => setConfirmEmail(e.target.value)}
                     autoFocus
                   />
                 </Grid>
@@ -254,7 +265,7 @@ export default function ServerModal(props) {
                     id="password"
                     label="Password"
                     value={password}
-                    onChange={e => setPassword(e.target.value)}
+                    onChange={(e) => setPassword(e.target.value)}
                     autoFocus
                   />
                 </Grid>
@@ -269,7 +280,7 @@ export default function ServerModal(props) {
                     id="cPassword"
                     label="Confirm Password"
                     value={cPassword}
-                    onChange={e => setConfirmPassword(e.target.value)}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
                     autoFocus
                   />
                 </Grid>
@@ -279,7 +290,7 @@ export default function ServerModal(props) {
                     fullWidth
                     variant="contained"
                     color="primary first"
-                    onClick={e =>
+                    onClick={(e) =>
                       onSignUp(
                         e,
                         history,

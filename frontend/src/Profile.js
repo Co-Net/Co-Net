@@ -43,7 +43,8 @@ class Profile extends Component {
       allRep: [],
       currentUser: "",
       pastFeedback: {},
-      oldFeedback: {}
+      oldFeedback: {},
+      ownProfile: false
     };
   }
 
@@ -62,7 +63,8 @@ class Profile extends Component {
           this.setState({ avatar: json.data.profilePhoto });
         }
         // If own profile, get rest of data
-        if (this.props.ownProfile) {
+        if (this.props.ownProfile || this.props.match.params.username === json.data.username) {
+          this.setState({ ownProfile: true });
           if (json.data.username) {
             this.setState({ username: json.data.username });
           }
@@ -360,14 +362,14 @@ class Profile extends Component {
       multiselectContainer: {},
     };
 
-    const { allTags, userTags, positiveRep, negativeRep } = this.state;
+    const { allTags, userTags, positiveRep, negativeRep, ownProfile } = this.state;
 
     // Conditional Rendering
     var editProfileE;
     var setStatusE;
     var setTagsE;
     var feedbackE;
-    if (this.props.ownProfile) {
+    if (ownProfile) {
       // Allow edit
       editProfileE = (
         <Button

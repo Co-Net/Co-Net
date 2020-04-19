@@ -44,7 +44,7 @@ router.post('/signup', function (req, res) {
     // Validate username
     // eslint-disable-next-line no-useless-escape
     const format = /[ !@#$%^&*()+\-.=\[\]{};':"\\|,<>\/?]/;
-    if (format.test(username)) {
+    if (format.test(username) || username === 'Guest' || username === 'guest') {
         return res.json({
             created: false,
             message: 'ILLEGAL USERNAME'
