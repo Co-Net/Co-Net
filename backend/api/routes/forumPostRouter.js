@@ -13,7 +13,7 @@ router.post('/createPostOrReply', function (req, res) {
         username
     } = req.body;
 
-    if (!body || !game || !username) {
+    if (!body || !username) {
         return res.json({
             success: false,
             message: 'MISSING INPUTS'
@@ -34,7 +34,7 @@ router.post('/createPostOrReply', function (req, res) {
         }
         return res.send({
             success: true,
-            title: post,
+            forumPostObj: post,
             message: 'Post Created'
         });
     });
@@ -143,7 +143,7 @@ router.get('/:id', function (req, res) {
 
 //add a a childID to parent post
 router.put('/addReply/:id', function (req, res) {
-    var queryID = req.params.id;        // Parent Post ID (NOT PARENT ID)
+    var queryID = req.params.id;        // Parent Post ID
     var body = req.body;
     var child = body.childID;
     var childObj = {

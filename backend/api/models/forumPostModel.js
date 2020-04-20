@@ -22,16 +22,15 @@ const ForumPostModelSchema = new Schema({
         default: 'No title, because child!'
     },
     game: {
-        type: String,
-        required: [true, "Please enter the game of this thread!"]
+        type: String
     },
     username: { 
         type: String,
-        require: [true, "Please enter the username of the user who created this post!"]
+        required: [true, "Please enter the username of the user who created this post!"]
     },
     votes: {
         type: Number,
-        defualt: 0
+        default: 0
     }
 })
 

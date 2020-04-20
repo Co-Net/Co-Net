@@ -53,7 +53,6 @@ const monthNames = [
 class Forum extends Component {
   constructor(props) {
     super(props);
-    this.pushHistory = this.pushHistory.bind(this);
     this.createPost = this.createPost.bind(this);
     this.convertTime = this.convertTime.bind(this);
     this.getReply = this.getReply.bind(this);
@@ -75,13 +74,16 @@ class Forum extends Component {
     };
   }
 
-  pushHistory() {
-    this.props.history.push("/forumPost");
-  }
   createPost() {
     this.props.history.push("/createForumPost");
   }
 
+  // Returns
+  // If Post = Month Day, Year
+  // If Reply,
+  //  If Today = Today, HH:MM PM
+  //  If Yesterday = Yesterday, HH:MM PM
+  //  Else = Month Day, Year
   convertTime(time, reply) {
     var d = new Date(time);
     const month = monthNames[d.getMonth()];
@@ -122,51 +124,62 @@ class Forum extends Component {
     axios
       .get("http://localhost:3001/user/currentuser", { withCredentials: true })
       .then((json) => {
-        if (!json.data.username) {
-          this.props.history.push("/");
-        } else {
-          if (json.data.timeZone)
-            this.setState({ timeZone: json.data.timeZone });
-          axios.get("http://localhost:3001/forum/").then((json) => {
-            this.setState({ allPosts: json.data.forumPostObj });
-            // Prepare card variables
-            const cards = [];
-            this.state.allPosts.forEach((post) => {
+        if (json.data.timeZone) this.setState({ timeZone: json.data.timeZone });
+        axios.get("http://localhost:3001/forum/").then((json) => {
+          this.setState({ allPosts: json.data.forumPostObj });
+
+          // Get All Replies
+          // Using Promise Strategy
+          const cards = [];
+          let promArr = this.state.allPosts
+            .filter((postFilter) => {
               // If it is a reply, don't display
-              if (post.parentID != 0) return;
+              if (postFilter.parentID != 0) return false;
+              return true;
+            })
+            .map(async function (post) {
               const title = post.title;
-              const timePosted = this.convertTime(post.timePosted, false);
+              const timePosted = post.timePosted;
               const game = post.game;
               const user = post.username;
-              var recentReply;
-              const waitForReply = async () => {
-                var numOfComments = post.allReplyIDs.length;
-                recentReply = await this.getReply(
-                  numOfComments > 0
-                    ? post.allReplyIDs[numOfComments - 1].childID
-                    : null
+              const postID = post._id;
+              if (post.allReplyIDs.length > 0) {
+                const json = await axios.get(
+                  `http://localhost:3001/forum/${
+                    post.allReplyIDs[post.allReplyIDs.length - 1].childID
+                  }`
                 );
                 var replyUser;
                 var replyDate;
-                if (recentReply) {
-                  replyUser = recentReply.username;
-                  replyDate = this.convertTime(recentReply.timePosted, true);
+                if (json) {
+                  replyUser = json.data.username;
+                  replyDate = json.data.timePosted;
                 }
-                cards.unshift({
-                  title: title,
-                  timePosted: timePosted,
-                  game: game,
-                  user: user,
-                  replyUser: replyUser,
-                  replyDate: replyDate,
-                  numOfComments: numOfComments,
-                });
-                this.setState({ cards: cards });
+              }
+              return {
+                title: title,
+                timePosted: timePosted,
+                game: game,
+                user: user,
+                replyUser: replyUser,
+                replyDate: replyDate,
+                numOfComments: post.allReplyIDs.length,
+                postID: postID,
               };
-              waitForReply();
             });
-          });
-        }
+
+          Promise.all(promArr)
+            .then((res) => {
+              res.forEach((comp) => {
+                cards.unshift(comp);
+              });
+              this.setState({ cards: cards });
+            })
+            .catch(function (err) {
+              console.log("ERROR");
+              console.log(err);
+            });
+        });
       });
   }
 
@@ -245,8 +258,11 @@ class Forum extends Component {
     const renderCards = [];
     // Render each card
     cards.forEach((card) => {
+      const postTimestamp = this.convertTime(card.timePosted, false);
+      const replyTimestamp = card.replyDate ? this.convertTime(card.replyDate, true) : "";
+
       const renderCard = (
-        <Card className={mainStyles.postSpacing}>
+        <Card key={card.postID} className={mainStyles.postSpacing}>
           <CardContent className={mainStyles.forumCard}>
             <Grid container spacing={1}>
               <Grid item xs={2}>
@@ -255,7 +271,7 @@ class Forum extends Component {
               <Grid item xs={6}>
                 <div className={mainStyles.gameAndTitle}>
                   <Typography
-                    onClick={this.pushHistory}
+                    // onClick=Game Info Pop-up
                     display="inline"
                     color="primary"
                     component="h2"
@@ -267,7 +283,9 @@ class Forum extends Component {
                     {card.game}{" "}
                   </Typography>
                   <Typography
-                    onClick={this.pushHistory}
+                    onClick={() => {
+                      this.props.history.push(`/forumPost/${card.postID}`);
+                    }}
                     className={mainStyles.forumTitle}
                     display="inline"
                     component="h2"
@@ -282,7 +300,7 @@ class Forum extends Component {
                   {card.user}{" "}
                 </Typography>
                 <Typography className={mainStyles.timeStamp} display="inline">
-                  {card.timePosted}
+                  {postTimestamp}
                 </Typography>
               </Grid>
               <Grid item xs>
@@ -337,7 +355,7 @@ class Forum extends Component {
                       className={mainStyles.timeStamp}
                       display="inline"
                     >
-                      {card.replyDate ? card.replyDate : ""}
+                      {replyTimestamp ? replyTimestamp : ""}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -346,7 +364,7 @@ class Forum extends Component {
           </CardContent>
         </Card>
       );
-      renderCards.unshift(renderCard);
+      renderCards.push(renderCard);
     });
 
     return (

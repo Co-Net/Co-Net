@@ -14,7 +14,7 @@ import signin from './signin';
 import Profile from './Profile';
 import Forum from './Forum';
 import history from './history';
-import forumPost from './forumPost';
+import ForumPost from './forumPost';
 import createForumPost from './createForumPost';
 import editForumPost from './editForumPost';
 import AccountSettings from './AccountSettings';
@@ -31,7 +31,8 @@ const routing = (
         <Route exact path="/Profile" render={(props) => <Profile {...props} ownProfile={true}/>} />
         <Route exact path="/Profile/:username" render={(props) => <Profile {...props} ownProfile={false}/>} />
         <Route path="/Forum" component={Forum} />
-        <Route path="/forumPost" component={forumPost} />
+        <Route exact path="/forumPost/:postID" render={(props) => <ForumPost {...props}/>} />
+        {/* <Route exact path="/forumPost/:postID" component={forumPost} /> */}
         <Route path="/createForumPost" component={createForumPost} />
         <Route path="/editForumPost" component={editForumPost} />
         <Route path="/myaccount" component={AccountSettings} />
