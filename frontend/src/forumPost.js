@@ -298,7 +298,7 @@ class ForumPost extends Component {
                     </Grid>
                     <Grid item xs={10}>
                       <Button
-                        onClick={this.pushHistory}
+                        // onClick={} edit post
                         className={styles.editPostButton}
                         color="secondary"
                         variant="contained"
