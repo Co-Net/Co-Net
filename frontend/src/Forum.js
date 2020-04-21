@@ -75,6 +75,7 @@ class Forum extends Component {
   }
 
   createPost() {
+    if (this.state.username === 'Guest') alert("You must be signed in to post");
     this.props.history.push("/createForumPost");
   }
 
@@ -124,6 +125,7 @@ class Forum extends Component {
     axios
       .get("http://localhost:3001/user/currentuser", { withCredentials: true })
       .then((json) => {
+        if (json.data.username) this.setState({ username: json.data.username });
         if (json.data.timeZone) this.setState({ timeZone: json.data.timeZone });
         axios.get("http://localhost:3001/forum/").then((json) => {
           this.setState({ allPosts: json.data.forumPostObj });
