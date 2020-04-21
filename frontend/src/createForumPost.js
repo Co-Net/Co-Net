@@ -123,7 +123,16 @@ class CreateForumPost extends Component {
       })
       .then((json) => {
         console.log(json.data);
-        if (json.data.success) this.props.history.push("/Forum");
+        if (json.data.success) {
+          axios
+          .put(`http://localhost:3001/users/addPost/${this.state.username}`, {
+            postID: json.data.forumPostObj._id
+          })
+          .then((json) => {
+            console.log(json.data);
+            if(json.data.success) this.props.history.push("/forum");
+          })
+        }
         else alert("Something went wrong. Please try again");
       });
   }
