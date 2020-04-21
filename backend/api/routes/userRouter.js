@@ -644,7 +644,7 @@ router.put('/removeReputation/:username', function (req, res) {
 })
 
 //add a message thread id to a user
-router.put('/addMessageThread/:username', function (req, res) {
+router.put('/addMessageThreadID/:username', function (req, res) {
     var queryUsername = req.params.username;
     var body = req.body;
     var messageThreadID = body.messageThreadID;
@@ -670,7 +670,7 @@ router.put('/addMessageThread/:username', function (req, res) {
 })
 
 //remove a messsage thread from user
-router.put('/removePost/:username', function (req, res) {
+router.put('/removeThreadID/:username', function (req, res) {
     var queryUsername = req.params.username;
     var body = req.body;
     var messageThreadID = body.messageThreadID;
