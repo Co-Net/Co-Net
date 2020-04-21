@@ -54,7 +54,7 @@ const UserSchema = new Schema({
     },
     timeZone: {
         type: String,
-        default: '(GMT-08:00) Pacific Time - Los Angeles'
+        default: 'America/Los Angeles'
     },
     status:{
         type: String,
