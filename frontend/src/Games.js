@@ -28,6 +28,7 @@ import Brightness1Icon from '@material-ui/icons/Brightness1';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import AddGames from './AddGames';
 
 export default function Games(props){
     const titleStyle = {
@@ -54,6 +55,7 @@ export default function Games(props){
 
 <Typography style = {titleStyle} align = 'Left' variant="h6" component="h2" >
 {props.title}</Typography>
+<AddGames></AddGames>
 </Grid>
 <Grid container spacing={3}>
 <Grid item xs={4}>

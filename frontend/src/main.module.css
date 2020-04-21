@@ -426,4 +426,21 @@ body{
     margin-top: 12px !important;
 }
 
+.plus{
+    color: white !important;
+    background-color: rgb(175, 49, 49) !important;
+    margin-left: 20px !important;
+    vertical-align: bottom;
+}  
+
+.dialogBox{
+    height: 400px !important;
+}
+
+.centerText{
+    margin-bottom: 6% !important;
+    text-align: center !important;
+    margin-top: 6% !important;
+}
+
 
