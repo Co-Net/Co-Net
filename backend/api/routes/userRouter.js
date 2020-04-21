@@ -643,4 +643,56 @@ router.put('/removeReputation/:username', function (req, res) {
     });
 })
 
+//add a forum post ID to their list of posts
+router.put('/addMessageThread/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    var body = req.body;
+    var messageThreadID = body.messageThreadID;
+    var messageIDobj = {
+        "threadID": messageThreadID
+    };
+    UserModel.findOneAndUpdate({
+        username: queryUsername
+    }, {
+        $push: {
+            allMessageThreads: messageIDobj
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            user: body
+        });
+    });
+})
+
+//remove a forum post ID to their list of posts
+router.put('/removePost/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    var body = req.body;
+    var messageThreadID = body.messageThreadID;
+    var messageIDobj = {
+        "threadID": messageThreadID
+    };
+    UserModel.findOneAndUpdate({
+        username: queryUsername
+    }, {
+        $pull: {
+            allMessageThreads: messageIDobj
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            user: body
+        });
+    });
+})
+
 module.exports = router;

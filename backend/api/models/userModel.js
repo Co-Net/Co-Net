@@ -9,6 +9,7 @@ const UserTagSchema = new Schema({name: String}); // need to add schema for post
 const UsersGamesSchema = new Schema({name: String});
 const FriendSchema = new Schema({username: String});
 const PostIDSchema = new Schema({postID: String});
+const MessageThreadIDSchema = new Schema({threadID: String});
 const PlayerRepSchema = new Schema({
     username: String,
     rep: String,
@@ -64,6 +65,7 @@ const UserSchema = new Schema({
     games: [UsersGamesSchema],
     forumPosts: [PostIDSchema],
     playerRep: [PlayerRepSchema],
+    allMessageThreads: [MessageThreadIDSchema]
 });
 
 UserSchema.methods.generateHash = function (password) {
