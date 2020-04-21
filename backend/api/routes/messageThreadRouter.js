@@ -21,7 +21,7 @@ router.get('/:username', function (req, res) {
     });
 })
 
-router.get('/:id', function (req, res) {
+router.get('/byID/:id', function (req, res) {
     var queryID = req.params.id;
     MessageThreadModel.findById(queryID, function (err, doc) {
         if (err) return res.json({
