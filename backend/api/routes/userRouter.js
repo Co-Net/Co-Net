@@ -643,7 +643,7 @@ router.put('/removeReputation/:username', function (req, res) {
     });
 })
 
-//add a forum post ID to their list of posts
+//add a message thread id to a user
 router.put('/addMessageThread/:username', function (req, res) {
     var queryUsername = req.params.username;
     var body = req.body;
@@ -669,7 +669,7 @@ router.put('/addMessageThread/:username', function (req, res) {
     });
 })
 
-//remove a forum post ID to their list of posts
+//remove a messsage thread from user
 router.put('/removePost/:username', function (req, res) {
     var queryUsername = req.params.username;
     var body = req.body;
