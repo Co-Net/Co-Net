@@ -11,7 +11,7 @@ const MessageThreadModel = require('../models/messageThreadModel');
 router.get('/:username', function (req, res) {
     var queryUsername = req.params.username;
     MessageThreadModel.find({
-        userName1: queryUsername
+        username1: queryUsername
     }, function (err, obj) {
         if (err) return res.json({
             success: false,
