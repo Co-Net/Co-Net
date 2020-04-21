@@ -38,6 +38,9 @@ class ForumPost extends Component {
     this.convertTime = this.convertTime.bind(this);
     this.handleEditComment = this.handleEditComment.bind(this);
     this.handlePostComment = this.handlePostComment.bind(this);
+    this.onUpVote = this.onUpVote.bind(this);
+    this.onDownVote = this.onDownVote.bind(this);
+    this.handleVote = this.handleVote.bind(this);
 
     this.state = {
       clicks: 0,
@@ -172,6 +175,23 @@ class ForumPost extends Component {
       });
   }
 
+  onUpVote(){
+    this.setState({votes: ++this.state.votes}, this.handleVote());
+  }
+  onDownVote(){
+    this.setState({votes: --this.state.votes}, this.handleVote());
+  }
+
+  handleVote(){
+    axios
+      .put(`http://localhost:3001/forum/${this.props.match.params.postID}`, {
+        votes: this.state.votes
+      })
+      .then((json) => {
+        console.log(json.data);
+      })
+  }
+
   handleEditComment(e) {
     this.setState({ comment: e.target.value });
   }
@@ -286,6 +306,7 @@ class ForumPost extends Component {
                         <ExpandLessIcon
                           className={styles.upDownVote}
                           fontsize="large"
+                          onClick = {this.onUpVote}
                         ></ExpandLessIcon>
                         <Typography className={styles.voteNumber}>
                           {votes}
@@ -293,6 +314,7 @@ class ForumPost extends Component {
                         <ExpandMoreIcon
                           className={styles.upDownVote}
                           fontsize="large"
+                          onClick = {this.onDownVote}
                         ></ExpandMoreIcon>
                       </div>
                     </Grid>
