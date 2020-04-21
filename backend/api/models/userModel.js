@@ -19,12 +19,6 @@ const PlayerRepSchema = new Schema({
         default: Date.now
     }
 });
-const message = new Schema({
-    sentBy: String, //the person that the message is sent by
-    sentTo: String, //the person that the message is sent to 
-    message: String, //the message body
-    read: Boolean //boolean that marks the mail as read if the user has read it
-});
 
 const UserSchema = new Schema({
     firstName: {
@@ -70,8 +64,6 @@ const UserSchema = new Schema({
     games: [UsersGamesSchema],
     forumPosts: [PostIDSchema],
     playerRep: [PlayerRepSchema],
-    inbox: [message],
-    outbox: [message]
 });
 
 UserSchema.methods.generateHash = function (password) {
