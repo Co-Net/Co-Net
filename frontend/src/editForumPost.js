@@ -220,8 +220,11 @@ class editForumPost extends Component
     className = {mainStyles.bodyInput}
   ></TextField>
   <div className = {mainStyles.buttonMargins}>
+ 
   <Button     onClick = {this.pushHistory}
    className = {mainStyles.cancelButton} variant = "contained" >Cancel</Button>
+   <Button     onClick = {this.pushHistory}
+   className = {mainStyles.cancelButton} color = "secondary" variant = "contained" >Delete Post</Button>
 
   <Button     onClick = {this.pushHistory}
    className = {mainStyles.postButton} color = "primary" variant = "contained" ><CheckIcon style = {{marginRight: 6,}}></CheckIcon>Save Changes</Button>

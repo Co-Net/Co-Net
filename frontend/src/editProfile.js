@@ -96,8 +96,7 @@ class EditProfile extends Component {
       <div>
         <TopMenu history={this.props.history}></TopMenu>
         <div className={styles.bgColor}>
-          <div className={styles.profilePhoto}> </div>
-          <div>
+          <div className={styles.profilePhoto}> </div>          <div>
             <Avatar src={this.state.photo} className={styles.large} />
             <input
               accept="image/*"
