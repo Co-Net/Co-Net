@@ -18,7 +18,6 @@ const MessageThreadSchema = new Schema({
         required: [true, "The username of the second user us required"]
     },
     sharedMessages: [message]
-
 });
 
 module.exports = mongoose.model('MessageThread',MessageThreadSchema);
