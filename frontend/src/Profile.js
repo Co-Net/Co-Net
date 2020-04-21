@@ -403,6 +403,7 @@ class Profile extends Component {
       setTagsE = (
         <Grid item xs={10}>
           <Multiselect
+            placeholder="+"
             options={allTags}
             displayValue="name"
             selectedValues={userTags}
