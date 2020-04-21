@@ -359,9 +359,10 @@ body{
 }
 
 .tagTitle{
-    text-align:right;
     margin-top: 6px !important;
     margin-right: 10px !important;
+    display: inline !important;
+
 }
 
 
@@ -441,6 +442,24 @@ body{
     margin-bottom: 6% !important;
     text-align: center !important;
     margin-top: 6% !important;
+}
+
+.statusGuest{
+    vertical-align: middle;
+    margin-right: 5px;
+    width: 17px !important;
+}
+
+.statusText{
+    vertical-align: initial;
+    margin-bottom: 15px !important;
+}
+
+.tagsText{
+    margin-top: 6px !important;
+    margin-right: 10px !important;
+    display: inline !important;
+    color: gray;
 }
 
 
