@@ -23,14 +23,12 @@ router.get('/:username', function (req, res) {
 
 router.get('/:id', function (req, res){
     var queryID = req.params.id;
-    MessageThreadModel.findOne({
-        _id: queryID
-    }, function (err, obj) {
+    MessageThreadModel.findById(queryID, function (err, doc) {
         if (err) return res.json({
             success: false,
             error: err
         });
-        return res.send(obj);
+        return res.send(doc);
     });
 })
 
