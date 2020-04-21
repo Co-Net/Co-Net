@@ -103,14 +103,14 @@ router.put('/addMessageToThread/:id', function (req, res) {
         "message": message,
         "read": false,
         "timeSent": new Date(),
-        "sentBy": body.sentBy
+        "sentBy": sentBy
 
     };
     MessageThreadModel.findOneAndUpdate({
         _id: queryID
     }, {
         $push: {
-            messages: messageObj
+            sharedMessages: messageObj
         }
     }, function (err) {
         if (err) return res.json({
@@ -131,11 +131,11 @@ router.put('/removeMessageFromThread/:id', function (req, res) {
     var messageObj = {
         "_id": body.id
     };
-    UserModel.findOneAndUpdate({
-        username: queryUsername
+    MessageThreadModel.findOneAndUpdate({
+        _id: queryID
     }, {
         $pull: {
-            messages: messageObj
+            sharedMessages: messageObj
         }
     }, function (err) {
         if (err) return res.json({
