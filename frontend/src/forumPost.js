@@ -167,7 +167,13 @@ class ForumPost extends Component {
           )
           .then((json) => {
             if (json.data.success) {
-              // Display "Comment posted successfully"
+              axios
+                .put(`http://localhost:3001/users/addPost/${this.state.currentUser}`, {
+                  postID: json.data.child._id
+                })
+                .then((json) => {
+                  console.log(json.data);
+                })
               console.log("Comment Posted Successfully");
               this.setState({ comment: "" });
             }
