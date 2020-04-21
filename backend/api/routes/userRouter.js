@@ -458,6 +458,58 @@ router.put('/removeGame/:username', function (req, res) {
     });
 })
 
+//add a game to game list
+router.put('/addCurrentSearchingGame/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    var body = req.body;
+    var game = body.name;
+    var gameObj = {
+        "name": game
+    };
+    UserModel.findOneAndUpdate({
+        username: queryUsername
+    }, {
+        $push: {
+            currentSearchingGames: gameObj
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            user: body
+        });
+    });
+})
+
+//remove game from user current game list
+router.put('/removeCurrentSearchingGame/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    var body = req.body;
+    var game = body.name;
+    var gameObj = {
+        "name": game
+    };
+    UserModel.findOneAndUpdate({
+        username: queryUsername
+    }, {
+        $pull: {
+            currentSearchingGames: gameObj
+        }
+    }, function (err) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            user: body
+        });
+    });
+})
+
 //add a forum post ID to their list of posts
 router.put('/addPost/:username', function (req, res) {
     var queryUsername = req.params.username;

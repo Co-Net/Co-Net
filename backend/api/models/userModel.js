@@ -63,6 +63,7 @@ const UserSchema = new Schema({
     userTags: [UserTagSchema],
     friends: [FriendSchema],
     games: [UsersGamesSchema],
+    currentSearchingGames: [UsersGamesSchema],
     forumPosts: [PostIDSchema],
     playerRep: [PlayerRepSchema],
     allMessageThreads: [MessageThreadIDSchema]
