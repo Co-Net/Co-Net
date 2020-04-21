@@ -40,6 +40,7 @@ import AutoGame from './autoGame';
 import CreatableSelect from 'react-select/creatable';
 import Select from '@material-ui/core/Select';
 import CheckIcon from '@material-ui/icons/Check';
+import MessageBox from './messageInbox';
 
 
 
@@ -151,10 +152,7 @@ class editForumPost extends Component
       marginTop: 5,
       marginLeft: 8,
 
-    }
-
-    const gameList = ['League of Legends', 'Counter Strike', 'Fortnite', 'Portal', 'Minecraft']
-    
+    }    
 
     const dividerGridStyle = {
         root: {
@@ -189,47 +187,16 @@ class editForumPost extends Component
  <div>
  <TopMenu history={this.props.history}></TopMenu>
    <div className = "content">
-      <Grid container spacing={3}>
+      <Grid container spacing={3} style = {{marginBottom: 20}}>
       <Grid item xs={6}>
       <Typography style = {titleStyle} align = 'Left' variant="h4" component="h2" >
-      Edit Forum Post</Typography>
+      Messages</Typography>
       </Grid>
+
      
     </Grid>
-    <TextField
-    id="outlined-full-width"
-    label="Title"
-    defaultValue="Looking for Duo in Ranked, I'm Gold"
-    margin="normal"
-    InputLabelProps={{
-      shrink: true,
-    }}
-    className = {mainStyles.titleInput}
-    variant="outlined"
-  />
- 
-    <AutoGame></AutoGame>
-    <div style = {{marginRight: 20,}}>
-    <TextField
-    id="outlined-multiline-static"
-    label="What's your post about?"
-    multiline
-    rows="10"
-    defaultValue="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget rhoncus nunc, eget tempor purus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget rhoncus nunc, eget tempor purus.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget rhoncus nunc, eget tempor purus.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget rhoncus nunc, eget tempor purus.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget rhoncus nunc, eget tempor purus."
-    variant="outlined"
-    className = {mainStyles.bodyInput}
-  ></TextField>
-  <div className = {mainStyles.buttonMargins}>
- 
-  <Button     onClick = {this.pushHistory}
-   className = {mainStyles.cancelButton} variant = "contained" >Cancel</Button>
-   <Button     onClick = {this.pushHistory}
-   className = {mainStyles.cancelButton} color = "secondary" variant = "contained" >Delete Post</Button>
-
-  <Button     onClick = {this.pushHistory}
-   className = {mainStyles.postButton} color = "primary" variant = "contained" ><CheckIcon style = {{marginRight: 6,}}></CheckIcon>Save Changes</Button>
-  </div>
-  </div>
+    <MessageBox></MessageBox>
+  
     </div>
     </div>
   
