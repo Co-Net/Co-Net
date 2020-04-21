@@ -7,7 +7,7 @@ import Tab from '@material-ui/core/Tab';
 
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import Games from './Games.js';
+import Games from './GamesMenuGuest.js';
 import ReviewTab from './reviewTab.js';
 import FriendsList from './friendsList.js';
 
@@ -54,7 +54,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function ScrollableTabsButtonForce(props) {
+export default function ScrollableTabsButtonForce() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
@@ -89,7 +89,7 @@ export default function ScrollableTabsButtonForce(props) {
         <FriendsList title = "Your Friends"></FriendsList>
       </TabPanel>
       <TabPanel value={value} index={3}>
-        <ReviewTab title = "User Reputation" allRep = {props.allRep} timeZone = {props.timeZone}></ReviewTab>
+        <ReviewTab title = "User Reputation"></ReviewTab>
       </TabPanel>
     </div>
   );

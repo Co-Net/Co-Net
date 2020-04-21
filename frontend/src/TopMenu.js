@@ -91,13 +91,16 @@ export default function PrimarySearchAppBar(props) {
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const [username, setUsername] = useState();
+  const [isGuest, setIsGuest] = useState(false);
+
   const getUser = () => {
     axios
       .get("http://localhost:3001/user/currentuser", { withCredentials: true })
       .then((json) => {
-        if (json.data.username) {
-          setUsername(json.data.username);
+        if (json.data.username === "Guest") {
+          setIsGuest(true);
         }
+        setUsername(json.data.username);
       });
   };
 
@@ -125,6 +128,7 @@ export default function PrimarySearchAppBar(props) {
         });
     }
     else if (event === "myaccount") history.push("myaccount");
+    else if (event === "messages") history.push("messages");
   };
 
   const handleMobileMenuOpen = (event) => {
@@ -147,7 +151,11 @@ export default function PrimarySearchAppBar(props) {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={() => handleMenuClose("profile")}>Profile</MenuItem>
-      <MenuItem onClick={() => handleMenuClose("myaccount")}>My account</MenuItem>
+      <MenuItem onClick={() => handleMenuClose("myaccount")}>
+        My account
+      </MenuItem>
+      <MenuItem onClick={() => handleMenuClose("messages")}>Messages</MenuItem>
+
       <MenuItem onClick={() => handleMenuClose("logout")}>Logout</MenuItem>
     </Menu>
   );
@@ -194,7 +202,7 @@ export default function PrimarySearchAppBar(props) {
     </Menu>
   );
 
-  return (
+  return isGuest ? (
     <div class="hi" style={{ margin: 0 }} className={classes.grow}>
       <AppBar
         style={{ margin: 0, padding: 10 }}
@@ -202,7 +210,92 @@ export default function PrimarySearchAppBar(props) {
         position="static"
       >
         <Toolbar>
-          <a href="http://localhost:3000/">
+          <a href="http://localhost:3000/Feed">
+            <img src={logo} alt="Logo" style={{ width: "70px" }} />
+          </a>
+
+          <IconButton color="inherit">
+            <Typography
+              className="menuButtons"
+              onClick={() => history.push("/feed")}
+            >
+              Browse
+            </Typography>
+          </IconButton>
+
+          <IconButton color="inherit">
+            <Typography
+              className="menuButtons"
+              onClick={() => history.push("/forum")}
+            >
+              Forum
+            </Typography>
+          </IconButton>
+
+          <div className={classes.search}>
+            <div className={classes.searchIcon}>
+              <SearchIcon />
+            </div>
+
+            <InputBase
+              placeholder="Search…"
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+              inputProps={{ "aria-label": "search" }}
+            />
+          </div>
+          <div className={classes.grow} />
+          <div className={classes.sectionDesktop}>
+            <IconButton color="inherit">
+              <Typography
+                className="menuButtons"
+                onClick={() => history.push("/signin")}
+              >
+                Sign In
+              </Typography>
+            </IconButton>
+            <IconButton color="inherit">
+              <Typography
+                className="menuButtons"
+                onClick={() => history.push("/signup")}
+                style={{ color: "#af0303" }}
+              >
+                Sign Up
+              </Typography>
+            </IconButton>
+          </div>
+          <div className={classes.sectionMobile}>
+            <IconButton color="inherit">
+              <Typography
+                className="menuButtons"
+                onClick={() => history.push("/signin")}
+              >
+                Sign In
+              </Typography>
+            </IconButton>
+            <IconButton color="inherit">
+              <Typography
+                className="menuButtons"
+                onClick={() => history.push("/signup")}
+              >
+                Sign Up
+              </Typography>
+            </IconButton>
+          </div>
+        </Toolbar>
+      </AppBar>
+    </div>
+  ) : (
+    <div class="hi" style={{ margin: 0 }} className={classes.grow}>
+      <AppBar
+        style={{ margin: 0, padding: 10 }}
+        color="transparent"
+        position="static"
+      >
+        <Toolbar>
+          <a href="http://localhost:3000/Feed">
             <img src={logo} alt="Logo" style={{ width: "70px" }} />
           </a>
 
