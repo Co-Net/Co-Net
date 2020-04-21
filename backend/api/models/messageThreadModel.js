@@ -5,7 +5,8 @@ const Schema = mongoose.Schema;
 const message = new Schema({
     message: String, //the message body
     timeSent: Date,
-    read: Boolean //boolean that marks the mail as read if the user has read it
+    read: Boolean, //boolean that marks the mail as read if the user has read it
+    sentBy: String //username of who sent the message
 });
 
 const MessageThreadSchema = new Schema({

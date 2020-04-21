@@ -98,10 +98,13 @@ router.put('/addMessageToThread/:id', function (req, res) {
     var queryID = req.params.id;
     var body = req.body;
     var message = body.message;
+    var sentBy = body.sentBy;
     var messageObj = {
         "message": message,
         "read": false,
-        "timeSent": new Date()
+        "timeSent": new Date(),
+        "sentBy": body.sentBy
+
     };
     MessageThreadModel.findOneAndUpdate({
         _id: queryID
