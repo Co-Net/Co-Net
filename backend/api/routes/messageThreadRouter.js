@@ -21,6 +21,19 @@ router.get('/:username', function (req, res) {
     });
 })
 
+router.get('/:id', function (req, res){
+    var queryID = req.params.id;
+    MessageThreadModel.findOne({
+        _id: queryID
+    }, function (err, obj) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.send(obj);
+    });
+})
+
 // Create a message thread if one does not exist
 router.post('/create', function (req, res) {
     let messageThread = new MessageThreadModel();
