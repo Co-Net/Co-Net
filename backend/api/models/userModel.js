@@ -64,6 +64,10 @@ const UserSchema = new Schema({
         type: String,
         default: 'Offline'
     },
+    currentPartyId:{
+        type: String,
+        default: ''
+    },
     userTags: [UserTagSchema],
     friends: [FriendSchema],
     games: [UsersGamesSchema],
