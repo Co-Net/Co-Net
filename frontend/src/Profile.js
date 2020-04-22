@@ -401,7 +401,7 @@ class Profile extends Component {
 
       // Allow edit
       setTagsE = (
-        <Grid item xs={10}>
+        <Grid item xs={5}>
           <Multiselect
             placeholder="+"
             options={allTags}
@@ -483,6 +483,8 @@ class Profile extends Component {
             </Typography>
             <div className={styles.tags}>
               <Grid style={{ marginTop: 10 }} container spacing={1}>
+              <Grid item xs={4}>
+              </Grid>
                 <Grid item xs={2}>
                   <Typography className={styles.tagTitle}>Tags:</Typography>
                 </Grid>

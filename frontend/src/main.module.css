@@ -367,9 +367,8 @@ body{
 }
 
 .tagTitle{
-    margin-top: 6px !important;
     margin-right: 10px !important;
-    display: inline !important;
+    margin-top: 6px !important;
 
 }
 
@@ -488,5 +487,38 @@ body{
     overflow-wrap: break-word !important;
     display: inherit !important;
 }
+
+.tags{
+    text-align: center;
+}
+
+.partyGame{
+    display: inline;
+    font-size: inherit !important;
+    color: #0808af;
+    margin-left: 5px !important;
+}
+
+.partyGame:hover{
+    text-Decoration: underline;
+    cursor: pointer;
+}
+
+.dialogBoxParty{
+    height: 500px !important;
+    overflow: hidden !important;
+}
+
+.superSmallAvatar{
+    width: 20px !important;
+    height: 20px !important;
+    margin-top: 2px !important;
+}
+
+.userCard{
+    padding: 5px !important;
+}
+
+
 
 

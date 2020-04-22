@@ -19,6 +19,9 @@ import MoreIcon from "@material-ui/icons/MoreVert";
 import createHistory from "history/createBrowserHistory";
 import { createHashHistory } from "history";
 import { browserHistory } from "react-router";
+import PartyButton from './Party';
+import PartyActive from './PartyActive';
+
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -331,6 +334,14 @@ export default function PrimarySearchAppBar(props) {
               inputProps={{ "aria-label": "search" }}
             />
           </div>
+         
+          <IconButton color="inherit">
+            <PartyButton></PartyButton>
+          </IconButton>
+          <IconButton color="inherit">
+            <PartyActive history={history}></PartyActive>
+          </IconButton>
+
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             <IconButton
