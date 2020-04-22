@@ -51,7 +51,24 @@ router.delete('/:id', function (req, res) { //neded to figure out what happens w
             success: false,
             error: err
         });
-        return res.send(obj);
+
+        // If parent was deleted, delete all child/replies with parent id
+        ForumPostModel.deleteMany({
+            'parentID': {
+                $in: [queryID]
+            }
+        }, function (err, doc) {
+            if (err) {
+                return res.json({
+                    success: false,
+                    error: err
+                });
+            }
+            return res.json({
+                success: true,
+                forumPostObj: obj
+            });
+        })
     });
 })
 
