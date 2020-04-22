@@ -16,7 +16,7 @@ import TextField from "@material-ui/core/TextField";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import EditIcon from "@material-ui/icons/Edit";
-import EditForumPost from './editForumPost';
+import EditForumPost from "./editForumPost";
 
 const monthNames = [
   "January",
@@ -47,6 +47,8 @@ class ForumPost extends Component {
     this.handleEditTitle = this.handleEditTitle.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.handleDeletePost = this.handleDeletePost.bind(this);
+    this.handleEditCommentSave = this.handleEditCommentSave.bind(this);
+    this.handleEditCommentDelete = this.handleEditCommentDelete.bind(this);
 
     this.state = {
       clicks: 0,
@@ -63,9 +65,11 @@ class ForumPost extends Component {
       ownAvatar: "",
       allReplies: [],
       comment: "",
+      oldComment: "",
       currentUser: "",
       editing: false,
-      oldBody: ""
+      oldBody: "",
+      numOfReplies: 0
     };
   }
 
@@ -87,6 +91,7 @@ class ForumPost extends Component {
               author: json.data.username,
               body: json.data.body,
               allReplyIDs: json.data.allReplyIDs,
+              numOfReplies: json.data.allReplyIDs.length,
               game: json.data.game,
               votes: json.data.votes,
             });
@@ -101,6 +106,9 @@ class ForumPost extends Component {
                 // Using Promise Strategy
                 const replies = [];
                 var timeZone = this.state.timeZone;
+                var currentUser = this.state.currentUser;
+                var onSave = this.handleEditCommentSave;
+                var onDelete = this.handleEditCommentDelete;
                 let promArr = this.state.allReplyIDs.map(async function (
                   reply
                 ) {
@@ -114,10 +122,14 @@ class ForumPost extends Component {
                   const comp = (
                     <ForumComment
                       key={reply.childID}
+                      id={reply.childID}
                       author={replyAuthor}
+                      isAuthor={replyAuthor === currentUser}
                       body={body}
                       timePosted={timePosted}
                       timeZone={timeZone}
+                      onDelete={onDelete}
+                      onSave={onSave}
                     ></ForumComment>
                   );
                   return comp;
@@ -173,6 +185,10 @@ class ForumPost extends Component {
           <ForumComment
             key={res._id}
             author={res.username}
+            isAuthor={true}
+            id={res._id}
+            onSave={this.handleEditCommentSave}
+            onDelete={this.handleEditCommentDelete}
             body={res.body}
             timePosted={res.timePosted}
             timeZone={this.state.timeZone}
@@ -202,7 +218,7 @@ class ForumPost extends Component {
                   console.log(json.data);
                 });
               console.log("Comment Posted Successfully");
-              this.setState({ comment: "" });
+              this.setState({ comment: "", numOfReplies: this.state.numOfReplies + 1});
             }
           });
       });
@@ -229,21 +245,53 @@ class ForumPost extends Component {
     this.setState({ comment: e.target.value });
   }
 
+  handleEditCommentSave(id, newBody) {
+    axios
+      .put(`http://localhost:3001/forum/${id}`, {
+        body: newBody,
+      })
+      .then((json) => {
+        if (json.data.success) {
+          console.log("Comment Updated");
+        }
+      });
+  }
+
+  handleEditCommentDelete(id) {
+    axios
+      .delete(`http://localhost:3001/forum/${id}`)
+      .then((json) => {
+        if (json.data.success) {
+          axios
+            .put(`http://localhost:3001/forum/removeReply/${this.props.match.params.postID}`, {
+              childID: id
+            })
+            .then((json) => {
+              if (json.data.success) {
+                console.log("Comment Deleted");
+              }
+            })
+        }
+      });
+      this.setState({ numOfReplies: this.state.numOfReplies - 1 });
+  }
+
   handleEditPost(e) {
     this.setState({ body: e.target.value });
   }
 
   handleSavePost() {
-    axios.put(`http://localhost:3001/forum/${this.props.match.params.postID}`, {
-      body: this.state.body,
-      title: this.state.title
-    })
-    .then((json) => {
-      if (json.data.success) {
-        console.log("Post Updated");
-        this.setState({ editing: false });  
-      }
-    });
+    axios
+      .put(`http://localhost:3001/forum/${this.props.match.params.postID}`, {
+        body: this.state.body,
+        title: this.state.title,
+      })
+      .then((json) => {
+        if (json.data.success) {
+          console.log("Post Updated");
+          this.setState({ editing: false });
+        }
+      });
   }
 
   handleCancel() {
@@ -255,14 +303,15 @@ class ForumPost extends Component {
   }
 
   handleDeletePost() {
-    axios.delete(`http://localhost:3001/forum/${this.props.match.params.postID}`)
-    .then((json) => {
-      if (json.data.success) {
-        console.log("Post Deleted");
-        this.setState({ editing: false });
-        this.props.push('/Forum');
-      }
-    });
+    axios
+      .delete(`http://localhost:3001/forum/${this.props.match.params.postID}`)
+      .then((json) => {
+        if (json.data.success) {
+          console.log("Post Deleted");
+          this.setState({ editing: false });
+          this.props.push("/Forum");
+        }
+      });
   }
 
   render() {
@@ -328,8 +377,8 @@ class ForumPost extends Component {
       votes,
       ownAvatar,
       currentUser,
+      numOfReplies
     } = this.state;
-    const numOfReplies = this.state.allReplies.length;
     const timePosted = this.convertTime(this.state.timePosted);
     var replies = [];
     this.state.allReplies.forEach((reply) => {
@@ -339,7 +388,7 @@ class ForumPost extends Component {
     const editButton =
       author === currentUser ? (
         <Button
-          onClick={() => this.setState({ editing: true , oldBody: body})}
+          onClick={() => this.setState({ editing: true, oldBody: body })}
           className={styles.editPostButton}
           color="secondary"
           variant="contained"
@@ -351,7 +400,15 @@ class ForumPost extends Component {
       );
 
     const forumPostUI = this.state.editing ? (
-      <EditForumPost body={body} title={title} onDelete={this.handleDeletePost} onCancel={this.handleCancel} onTitleEdit={this.handleEditTitle} onBodyEdit={this.handleEditPost} onSave={this.handleSavePost} ></EditForumPost>
+      <EditForumPost
+        body={body}
+        title={title}
+        onDelete={this.handleDeletePost}
+        onCancel={this.handleCancel}
+        onTitleEdit={this.handleEditTitle}
+        onBodyEdit={this.handleEditPost}
+        onSave={this.handleSavePost}
+      ></EditForumPost>
     ) : (
       <div className="content">
         <Grid container spacing={1}>
@@ -555,10 +612,10 @@ class ForumPost extends Component {
     );
 
     return (
-    <div>
-      <TopMenu history={this.props.history}></TopMenu>
-      {forumPostUI}
-    </div>
+      <div>
+        <TopMenu history={this.props.history}></TopMenu>
+        {forumPostUI}
+      </div>
     );
   }
 }

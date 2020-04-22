@@ -11,12 +11,9 @@ import Card from "@material-ui/core/Card";
 import Grid from "@material-ui/core/Grid";
 import CardContent from "@material-ui/core/CardContent";
 import EditIcon from "@material-ui/icons/Edit";
-import TextField from '@material-ui/core/TextField';
-import CheckIcon from '@material-ui/icons/Check';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-
-
-
+import TextField from "@material-ui/core/TextField";
+import CheckIcon from "@material-ui/icons/Check";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
 const monthNames = [
   "January",
@@ -39,12 +36,15 @@ class forumComment extends Component {
     this.convertTime = this.convertTime.bind(this);
     this.canEdit = this.canEdit.bind(this);
     this.canDelete = this.canDelete.bind(this);
-
+    this.handleEditComment = this.handleEditComment.bind(this);
+    this.handleSave = this.handleSave.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
 
     this.state = {
       avatar: "",
       isEdit: false,
       isDeleted: false,
+      commentBody: this.props.body
     };
   }
 
@@ -94,18 +94,34 @@ class forumComment extends Component {
   }
 
   canEdit = () => {
-    this.setState(prevState => ({
-      isEdit: !prevState.isEdit
+    this.setState((prevState) => ({
+      isEdit: !prevState.isEdit,
     }));
-}
-canDelete = () => {
-  this.setState(prevState => ({
-    isDeleted: !prevState.isDeleted
-  }));
-  //decrement the number of comments here and delete comment from DB
-}
+  };
+  canDelete = () => {
+    this.setState((prevState) => ({
+      isDeleted: !prevState.isDeleted,
+    }));
+    //decrement the number of comments here and delete comment from DB
+  };
 
+  handleEditComment(e) {
+    this.setState({ commentBody: e.target.value });
+  }
 
+  handleSave() {
+    if (this.state.commentBody === '') {
+      alert("Comment cannot be empty");
+      return;
+    }
+    this.props.onSave(this.props.id, this.state.commentBody);
+    this.canEdit();
+  }
+
+  handleDelete() {
+    this.props.onDelete(this.props.id);
+    this.canDelete();
+  }
 
   render() {
     const theme = createMuiTheme({
@@ -135,57 +151,74 @@ canDelete = () => {
 
     const { avatar } = this.state;
     const timestamp = this.convertTime(this.props.timePosted);
+    var editButton = null;
+
+    if (this.props.isAuthor) {
+      editButton = (
+        <Button
+          className={styles.editCommentButton}
+          color="secondary"
+          variant="contained"
+          onClick={this.canEdit}
+        >
+          <EditIcon></EditIcon>
+        </Button>
+      );
+    }
 
     return (
       <div>
-      {(!this.state.isDeleted) ? 
-      <Grid container spacing={8}>
-        <Grid item xs={1}>
-          <Avatar src={avatar} className={styles.smallSize} />
-        </Grid>
-        <Grid item xs={10}>
-          <Typography className={styles.userNameComment} display="inline">
-            {this.props.author}{" "}
-          </Typography>
-          <Typography className={styles.timeStamp} display="inline">
-            {timestamp}
-          </Typography>
-          {(!this.state.isEdit) ? 
-          <Button
-                        // onClick={} edit post
-                        className={styles.editCommentButton}
-                        color="secondary"
-                        variant="contained"
-                        onClick = {this.canEdit}
-                      >
-                        <EditIcon></EditIcon>
-                      </Button>: <div style = {{float:'right'}}>
-                      <Button
-                      // onClick={} edit post
-                      className={styles.editCommentButton}
-                      color="secondary"
-                      variant="contained"
-                      onClick = {this.canEdit}
-                    >
-                      <CheckIcon></CheckIcon>
-                    </Button>
-                      <Button
-                      // onClick={} edit post
-                      className={styles.editCommentButton}
-                      color="secondary"
-                      variant="contained"
-                      onClick = {this.canDelete}
-                      
-                    >
-                      <DeleteForeverIcon></DeleteForeverIcon>
-                    </Button>
-                     </div>}
-         {(!this.state.isEdit) ?  <Typography variant="body1" className={styles.commentBody}>
-         {this.props.body}</Typography> : <TextField className={styles.editCommentField}id="standard-basic" value = {this.props.body}/>}
-         
-          
-        </Grid>
-      </Grid> : <Typography></Typography>}
+        {!this.state.isDeleted ? (
+          <Grid container spacing={8}>
+            <Grid item xs={1}>
+              <Avatar src={avatar} className={styles.smallSize} />
+            </Grid>
+            <Grid item xs={10}>
+              <Typography className={styles.userNameComment} display="inline">
+                {this.props.author}{" "}
+              </Typography>
+              <Typography className={styles.timeStamp} display="inline">
+                {timestamp}
+              </Typography>
+              {!this.state.isEdit ? 
+                editButton
+               : (
+                <div style={{ float: "right" }}>
+                  <Button
+                    className={styles.editCommentButton}
+                    color="secondary"
+                    variant="contained"
+                    onClick={this.handleSave}
+                  >
+                    <CheckIcon></CheckIcon>
+                  </Button>
+                  <Button
+                    className={styles.editCommentButton}
+                    color="secondary"
+                    variant="contained"
+                    onClick={this.handleDelete}
+                  >
+                    <DeleteForeverIcon></DeleteForeverIcon>
+                  </Button>
+                </div>
+              )}
+              {!this.state.isEdit ? (
+                <Typography variant="body1" className={styles.commentBody}>
+                  {this.state.commentBody}
+                </Typography>
+              ) : (
+                <TextField
+                  className={styles.editCommentField}
+                  id="standard-basic"
+                  value={this.state.commentBody}
+                  onChange={this.handleEditComment}
+                />
+              )}
+            </Grid>
+          </Grid>
+        ) : (
+          <Typography></Typography>
+        )}
       </div>
     );
   }

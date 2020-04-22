@@ -41,7 +41,7 @@ router.post('/createPostOrReply', function (req, res) {
 })
 
 // Delete iPost by ID 
-router.delete('/:id', function (req, res) { //neded to figure out what happens when a parent is deleted
+router.delete('/:id', function (req, res) { 
     var queryID = req.params.id;
 
     ForumPostModel.findOneAndDelete({
@@ -57,7 +57,7 @@ router.delete('/:id', function (req, res) { //neded to figure out what happens w
             'parentID': {
                 $in: [queryID]
             }
-        }, function (err, doc) {
+        }, function (err) {
             if (err) {
                 return res.json({
                     success: false,
@@ -213,14 +213,14 @@ router.put('/removeReply/:id', function (req, res) {
         $pull: {
             allReplyIDs: childObj
         }
-    }, function (err) {
+    }, { new: true }, function (err, doc) {
         if (err) return res.json({
             success: false,
             error: err
         });
         return res.json({
             success: true,
-            post: body
+            post: doc
         });
     });
 })
