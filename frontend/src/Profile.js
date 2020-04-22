@@ -468,14 +468,11 @@ class Profile extends Component {
     // Other Profile User Tags
     var otherTags = "";
     userTags.forEach((tag, index, arr) => {
-      if (index != arr.length - 1) otherTags.concat(tag);
-      else otherTags.concat(tag).concat(", ");
+      if (index == arr.length - 1) otherTags = otherTags + tag.name;
+      else otherTags = otherTags + tag.name + ", ";
     });
-    const otherTagsCmp =
-      userTags.length != 0 ? (
-        <Typography className={styles.tagsText}>{otherTags}</Typography>
-      ) : null;
-
+    if (otherTags.length == 0) otherTags = "None";
+    
     // Conditional Rendering
     var editProfileE;
     var setStatusE;
@@ -564,7 +561,7 @@ class Profile extends Component {
       setTagsE = (
         <div className={styles.center}>
           <Typography className={styles.tagTitle}>Tags:</Typography>
-          {otherTagsCmp}
+          <Typography className={styles.tagsText}>{otherTags}</Typography>
         </div>
       );
 
