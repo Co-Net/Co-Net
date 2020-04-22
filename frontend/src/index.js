@@ -20,7 +20,6 @@ import editForumPost from './editForumPost';
 import AccountSettings from './AccountSettings';
 import Messages from './messages';
 import Game from './game';
-import ForumPostGuest from './forumPostGuest';
 
 
 const routing = (
