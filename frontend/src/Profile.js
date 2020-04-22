@@ -28,6 +28,8 @@ class Profile extends Component {
     this.handleFeedbackEdit = this.handleFeedbackEdit.bind(this);
     this.analyzeRep = this.analyzeRep.bind(this);
     this.handleFeedbackEditCancel = this.handleFeedbackEditCancel.bind(this);
+    this.handleFollow = this.handleFollow.bind(this);
+    this.handleUnfollow = this.handleUnfollow.bind(this);
 
     this.state = {
       username: "",
@@ -299,6 +301,36 @@ class Profile extends Component {
       });
   }
 
+  handleFollow(){
+    axios
+      .put(
+        `http://localhost:3001/users/addFriend/${this.state.currentUser}`,{
+        username: this.state.username
+        })
+        .then((json) => {
+          console.log(json.data);
+          if (json.data.success) {
+            console.log("Follow Request Success!");
+          }
+          else alert("Something went wrong. Please try again");
+        })
+  }
+
+  handleUnfollow(){
+    axios
+      .put(
+        `http://localhost:3001/users/removeFriend/${this.state.currentUser}`,{
+        username: this.state.username
+        })
+        .then((json) => {
+          console.log(json.data);
+          if (json.data.success) {
+            console.log("Unfollow Request Success!");
+          }
+          else alert("Something went wrong. Please try again");
+        })
+  }
+
   render() {
     const theme = createMuiTheme({
       "@global": {
@@ -506,7 +538,7 @@ class Profile extends Component {
       // Show Follow Button
       followE = (
         <Button
-            onClick={() => this.setState({ editing: true })}
+            onClick={() => this.handleFollow()}
             variant="contained"
             color="primary"
             size="large"
