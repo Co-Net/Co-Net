@@ -153,10 +153,7 @@ class Profile extends Component {
             if (json.data.friends) {
               this.setState({ followList: json.data.friends });
             }
-            console.log("here");
-            console.table(this.state.currentFollowList);
             if (this.state.currentFollowList.some(user => user.username === this.state.username)) {
-              console.log("smol wang");
               this.setState({ followText: 'Unfollow' });
             }
             else{
