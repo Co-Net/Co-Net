@@ -49,10 +49,9 @@ class ForumPost extends Component {
     this.handleDeletePost = this.handleDeletePost.bind(this);
     this.handleEditCommentSave = this.handleEditCommentSave.bind(this);
     this.handleEditCommentDelete = this.handleEditCommentDelete.bind(this);
+    this.clearVote = this.clearVote.bind(this);
 
     this.state = {
-      clicks: 0,
-      show: true,
       timeZone: "",
       author: "",
       title: "",
@@ -65,11 +64,12 @@ class ForumPost extends Component {
       ownAvatar: "",
       allReplies: [],
       comment: "",
-      oldComment: "",
       currentUser: "",
       editing: false,
       oldBody: "",
-      numOfReplies: 0
+      numOfReplies: 0,
+      hasUpVoted: false,
+      hasDownVoted: false,
     };
   }
 
@@ -80,6 +80,14 @@ class ForumPost extends Component {
         if (json.data.timeZone) this.setState({ timeZone: json.data.timeZone });
         if (json.data.profilePhoto)
           this.setState({ ownAvatar: json.data.profilePhoto });
+        if (json.data.votedPosts) {
+          json.data.votedPosts.forEach((post) => {
+            if (post.postID === this.props.match.params.postID) {
+              if (post.type === "+") this.setState({ hasUpVoted: true });
+              else this.setState({ hasDownVoted: true });
+            }
+          });
+        }
         if (json.data.username)
           this.setState({ currentUser: json.data.username });
         axios
@@ -151,16 +159,6 @@ class ForumPost extends Component {
       });
   }
 
-  IncrementItem = () => {
-    this.setState({ clicks: this.state.clicks + 1 });
-  };
-  DecreaseItem = () => {
-    this.setState({ clicks: this.state.clicks - 1 });
-  };
-  ToggleClick = () => {
-    this.setState({ show: !this.state.show });
-  };
-
   // Return Month Day, Year
   convertTime(time) {
     var d = new Date(time);
@@ -218,26 +216,94 @@ class ForumPost extends Component {
                   console.log(json.data);
                 });
               console.log("Comment Posted Successfully");
-              this.setState({ comment: "", numOfReplies: this.state.numOfReplies + 1});
+              this.setState({
+                comment: "",
+                numOfReplies: this.state.numOfReplies + 1,
+              });
             }
           });
       });
   }
 
   onUpVote() {
-    this.setState({ votes: ++this.state.votes }, this.handleVote());
-  }
-  onDownVote() {
-    this.setState({ votes: --this.state.votes }, this.handleVote());
+    this.setState({ votes: ++this.state.votes }, this.handleVote("+"));
   }
 
-  handleVote() {
+  onDownVote() {
+    this.setState({ votes: --this.state.votes }, this.handleVote("-"));
+  }
+
+  clearVote(type) {
+    console.log("DELETE Vote Type: " + type);
+    axios
+      .put(`http://localhost:3001/users/votedPosts/${this.state.currentUser}`, {
+        method: "DELETE",
+        postID: this.props.match.params.postID,
+        type: type,
+      })
+      .then((json) => {
+        // console.log(json.data);
+        if (type === "+")
+          this.setState({ votes: this.state.votes - 1, hasUpVoted: false });
+        else
+          this.setState({ votes: this.state.votes + 1, hasDownVoted: false });
+        axios.put(
+          `http://localhost:3001/forum/${this.props.match.params.postID}`,
+          {
+            votes: this.state.votes,
+          }
+        );
+      });
+  }
+
+  handleVote(type) {
+    console.log("INSERT Vote Type: " + type);
+    // Update Vote Number
     axios
       .put(`http://localhost:3001/forum/${this.props.match.params.postID}`, {
         votes: this.state.votes,
       })
       .then((json) => {
-        console.log(json.data);
+        // If user already voted previously with different type, remove first
+        if (this.state.hasUpVoted || this.state.hasDownVoted) {
+          let clearType = this.state.hasUpVoted ? "+" : "-";
+          axios
+            .put(
+              `http://localhost:3001/users/votedPosts/${this.state.currentUser}`,
+              {
+                method: "DELETE",
+                postID: this.props.match.params.postID,
+                type: clearType,
+              }
+            )
+            .then((json) => {
+              axios.put(
+                `http://localhost:3001/users/votedPosts/${this.state.currentUser}`,
+                {
+                  method: "INSERT",
+                  postID: this.props.match.params.postID,
+                  type: type,
+                }
+              );
+            });
+        } else {
+          // New Vote
+          axios.put(
+            `http://localhost:3001/users/votedPosts/${this.state.currentUser}`,
+            {
+              method: "INSERT",
+              postID: this.props.match.params.postID,
+              type: type,
+            }
+          );
+        }
+        if (type === "+") {
+          this.setState({ hasUpVoted: true });
+          this.setState({ hasDownVoted: false });
+        } else {
+          this.setState({ hasUpVoted: false });
+          this.setState({ hasDownVoted: true });
+        }
       });
   }
 
@@ -258,22 +324,23 @@ class ForumPost extends Component {
   }
 
   handleEditCommentDelete(id) {
-    axios
-      .delete(`http://localhost:3001/forum/${id}`)
-      .then((json) => {
-        if (json.data.success) {
-          axios
-            .put(`http://localhost:3001/forum/removeReply/${this.props.match.params.postID}`, {
-              childID: id
-            })
-            .then((json) => {
-              if (json.data.success) {
-                console.log("Comment Deleted");
-              }
-            })
-        }
-      });
-      this.setState({ numOfReplies: this.state.numOfReplies - 1 });
+    axios.delete(`http://localhost:3001/forum/${id}`).then((json) => {
+      if (json.data.success) {
+        axios
+          .put(
+            `http://localhost:3001/forum/removeReply/${this.props.match.params.postID}`,
+            {
+              childID: id,
+            }
+          )
+          .then((json) => {
+            if (json.data.success) {
+              console.log("Comment Deleted");
+            }
+          });
+      }
+    });
+    this.setState({ numOfReplies: this.state.numOfReplies - 1 });
   }
 
   handleEditPost(e) {
@@ -377,7 +444,9 @@ class ForumPost extends Component {
       votes,
       ownAvatar,
       currentUser,
-      numOfReplies
+      numOfReplies,
+      hasUpVoted,
+      hasDownVoted,
     } = this.state;
     const timePosted = this.convertTime(this.state.timePosted);
     var replies = [];
@@ -398,6 +467,34 @@ class ForumPost extends Component {
       ) : (
         ""
       );
+
+    const upVoteButton = hasUpVoted ? (
+      <ExpandLessIcon
+        className={styles.upVoteOn}
+        fontsize="large"
+        onClick={() => this.clearVote("+")}
+      ></ExpandLessIcon>
+    ) : (
+      <ExpandLessIcon
+        className={styles.upDownVote}
+        fontsize="large"
+        onClick={this.onUpVote}
+      ></ExpandLessIcon>
+    );
+
+    const downVoteButton = hasDownVoted ? (
+      <ExpandMoreIcon
+        className={styles.downVoteOn}
+        fontsize="large"
+        onClick={() => this.clearVote("-")}
+      ></ExpandMoreIcon>
+    ) : (
+      <ExpandMoreIcon
+        className={styles.upDownVote}
+        fontsize="large"
+        onClick={this.onDownVote}
+      ></ExpandMoreIcon>
+    );
 
     const forumPostUI = this.state.editing ? (
       <EditForumPost
@@ -450,19 +547,11 @@ class ForumPost extends Component {
                       </div>
                     </div>
                     <div className={styles.arrows}>
-                      <ExpandLessIcon
-                        className={styles.upDownVote}
-                        fontsize="large"
-                        onClick={this.onUpVote}
-                      ></ExpandLessIcon>
+                      {upVoteButton}
                       <Typography className={styles.voteNumber}>
                         {votes}
                       </Typography>
-                      <ExpandMoreIcon
-                        className={styles.upDownVote}
-                        fontsize="large"
-                        onClick={this.onDownVote}
-                      ></ExpandMoreIcon>
+                      {downVoteButton}
                     </div>
                   </Grid>
                   <Grid item xs={10}>

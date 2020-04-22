@@ -747,4 +747,84 @@ router.put('/removeThreadID/:username', function (req, res) {
     });
 })
 
+// Get User's Voted Posts and find post with id
+router.get('/votedPosts/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    UserModel.findOne({
+        username: queryUsername
+    }, function (err, obj) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        return res.json({
+            success: true,
+            votedPosts: obj.votedPosts
+        });
+    });
+})
+
+// Update User's voted Posts
+router.put('/votedPosts/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    var body = req.body;
+    var method = body.method;
+    var postID = body.postID;
+    var type = body.type;
+    var voteObj = {
+        "postID": postID,
+        "type": type
+    };
+    if (!method || !type || !postID) {
+        return res.json({
+            success: false,
+            message: 'MISSING FIELDS'
+        });
+    }
+    if (method === 'INSERT') {
+        UserModel.findOneAndUpdate({
+            username: queryUsername
+        }, {
+            $push: {
+                votedPosts: voteObj
+            }
+        }, {
+            new: true
+        }, function (err, doc) {
+            if (err) return res.json({
+                success: false,
+                error: err
+            });
+            return res.json({
+                success: true,
+                user: doc
+            });
+        });
+    } else if (method === 'DELETE') {
+        UserModel.findOneAndUpdate({
+            username: queryUsername
+        }, {
+            $pull: {
+                votedPosts: voteObj
+            }
+        }, {
+            new: true
+        }, function (err, doc) {
+            if (err) return res.json({
+                success: false,
+                error: err
+            });
+            return res.json({
+                success: true,
+                user: doc
+            });
+        });
+    } else {
+        return res.json({
+            success: false,
+            message: 'INVALID METHOD'
+        });
+    }
+})
+
 module.exports = router;

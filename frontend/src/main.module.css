@@ -224,6 +224,18 @@ body{
     font-size: 40px !important;
 }
 
+.upVoteOn {
+    display: block !important;
+    font-size: 40px !important;
+    color: green;
+}
+
+.downVoteOn {
+    display: block !important;
+    font-size: 40px !important;
+    color: #ce0606;
+}
+
 .avatarForum{
     width: 60px !important;
     height: 60px !important;

@@ -10,6 +10,10 @@ const UsersGamesSchema = new Schema({name: String});
 const FriendSchema = new Schema({username: String});
 const PostIDSchema = new Schema({postID: String});
 const MessageThreadIDSchema = new Schema({threadID: String});
+const VotedPostSchema = new Schema({
+    type: String,
+    postID: String
+});
 const PlayerRepSchema = new Schema({
     username: String,
     rep: String,
@@ -66,7 +70,8 @@ const UserSchema = new Schema({
     currentSearchingGames: [UsersGamesSchema],
     forumPosts: [PostIDSchema],
     playerRep: [PlayerRepSchema],
-    allMessageThreads: [MessageThreadIDSchema]
+    allMessageThreads: [MessageThreadIDSchema],
+    votedPosts: [VotedPostSchema]
 });
 
 UserSchema.methods.generateHash = function (password) {
