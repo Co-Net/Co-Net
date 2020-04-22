@@ -12,6 +12,8 @@ import Status from "./status.js";
 import Thumbs from "./thumbs";
 import { Multiselect } from "multiselect-react-dropdown";
 import Grid from "@material-ui/core/Grid";
+import Brightness1Icon from "@material-ui/icons/Brightness1";
+
 class Profile extends Component {
   constructor(props) {
     super(props);
@@ -44,7 +46,9 @@ class Profile extends Component {
       currentUser: "",
       pastFeedback: {},
       oldFeedback: {},
-      ownProfile: false
+      ownProfile: false,
+      status: "",
+      followText: "Follow"
     };
   }
 
@@ -56,14 +60,16 @@ class Profile extends Component {
         withCredentials: true,
       })
       .then((json) => {
-        if (json.data.username) {
-          this.setState({ currentUser: json.data.username });
-        }
+        if (json.data.username === "Guest") this.props.history.push("/signin");
+        else this.setState({ currentUser: json.data.username });
         if (json.data.profilePhoto) {
           this.setState({ avatar: json.data.profilePhoto });
         }
         // If own profile, get rest of data
-        if (this.props.ownProfile || this.props.match.params.username === json.data.username) {
+        if (
+          this.props.ownProfile ||
+          this.props.match.params.username === json.data.username
+        ) {
           this.setState({ ownProfile: true });
           if (json.data.username) {
             this.setState({ username: json.data.username });
@@ -91,53 +97,54 @@ class Profile extends Component {
             this.analyzeRep(json.data.playerRep);
           }
         } else {
-            // If not own profile, get the other user's data
-            route = `http://localhost:3001/users/${this.props.match.params.username}`;
-            axios
-              .get(route)
-              .then((json) => {
-                if (json.data.username) {
-                  this.setState({ username: json.data.username });
-                }
-                if (json.data.bio) {
-                  this.setState({ bio: json.data.bio });
-                }
-                if (json.data.firstName) {
-                  this.setState({ firstName: json.data.firstName });
-                }
-                if (json.data.lastName) {
-                  this.setState({ lastName: json.data.lastName });
-                }
-                if (json.data.profilePhoto) {
-                  this.setState({ photo: json.data.profilePhoto });
-                }
-                if (json.data.timeZone) {
-                  this.setState({ timeZone: json.data.timeZone });
-                }
-                if (json.data.userTags) {
-                  this.setState({ userTags: json.data.userTags });
-                }
-                if (json.data.playerRep) {
-                  this.setState({ allRep: json.data.playerRep });
-                  this.analyzeRep(json.data.playerRep);
-                }
-              });
+          // If not own profile, get the other user's data
+          route = `http://localhost:3001/users/${this.props.match.params.username}`;
+          axios.get(route).then((json) => {
+            if (json.data.username) {
+              this.setState({ username: json.data.username });
+            }
+            if (json.data.bio) {
+              this.setState({ bio: json.data.bio });
+            }
+            if (json.data.firstName) {
+              this.setState({ firstName: json.data.firstName });
+            }
+            if (json.data.lastName) {
+              this.setState({ lastName: json.data.lastName });
+            }
+            if (json.data.profilePhoto) {
+              this.setState({ photo: json.data.profilePhoto });
+            }
+            if (json.data.timeZone) {
+              this.setState({ timeZone: json.data.timeZone });
+            }
+            if (json.data.userTags) {
+              this.setState({ userTags: json.data.userTags });
+            }
+            if (json.data.playerRep) {
+              this.setState({ allRep: json.data.playerRep });
+              this.analyzeRep(json.data.playerRep);
+            }
+            if (json.data.status) {
+              this.setState({ status: json.data.status });
+            }
+          });
         }
       });
 
-      axios.get("http://localhost:3001/userTags/").then((json) => {
-        // Get Tag Object Array and set it
-        this.setState({ allTags: json.data.tagObj });
-      });
+    axios.get("http://localhost:3001/userTags/").then((json) => {
+      // Get Tag Object Array and set it
+      this.setState({ allTags: json.data.tagObj });
+    });
   }
 
   // Split rep into positive and negative
   // Check if user already left feedback on profile
   analyzeRep(playerRep) {
-    var positiveRepCount= this.state.positiveRep;
+    var positiveRepCount = this.state.positiveRep;
     var negativeRepCount = this.state.negativeRep;
     playerRep.forEach((review) => {
-      if (review.rep === '+') {
+      if (review.rep === "+") {
         positiveRepCount++;
       } else {
         negativeRepCount++;
@@ -202,16 +209,16 @@ class Profile extends Component {
       _id: this.state.pastFeedback._id,
       username: this.state.pastFeedback.username,
       rep: this.state.pastFeedback.rep,
-      comment: newFeedback
-    }
+      comment: newFeedback,
+    };
     this.setState({
-      pastFeedback: tmp
+      pastFeedback: tmp,
     });
   }
 
   handleFeedbackEditCancel() {
     this.setState({
-      pastFeedback: this.state.oldFeedback
+      pastFeedback: this.state.oldFeedback,
     });
   }
 
@@ -224,13 +231,13 @@ class Profile extends Component {
           username: this.state.currentUser,
           reputation: repType,
           comment: this.state.pastFeedback.comment,
-          avatar: this.state.avatar
+          avatar: this.state.avatar,
         }
       )
       .then((json) => {
         // console.log(json.data);
         if (json.data.success) {
-          if (json.data.result === 'CREATED') {
+          if (json.data.result === "CREATED") {
             console.log(
               `Feedback for ${this.state.username} successfully posted`
             );
@@ -362,13 +369,54 @@ class Profile extends Component {
       multiselectContainer: {},
     };
 
-    const { allTags, userTags, positiveRep, negativeRep, ownProfile } = this.state;
+    // Active, In-Game, Full, Offline, Away
+    const statusColorCodes = {
+      active: "#26AD00",
+      ingame: "4ACFF9",
+      full: "FF3200",
+      offline: "C4C4C4",
+      away: "FFE614",
+    };
+
+    const {
+      allTags,
+      userTags,
+      positiveRep,
+      negativeRep,
+      ownProfile,
+      status,
+    } = this.state;
+
+    // Set Status Color
+    var statusColor;
+    if (status === "Active") {
+      statusColor = statusColorCodes.active;
+    } else if (status === "In-Game") {
+      statusColor = statusColorCodes.ingame;
+    } else if (status === "Full") {
+      statusColor = statusColorCodes.full;
+    } else if (status === "Away") {
+      statusColor = statusColorCodes.away;
+    } else {
+      statusColor = statusColorCodes.offline;
+    }
+
+    // Other Profile User Tags
+    var otherTags = "";
+    userTags.forEach((tag, index, arr) => {
+      if (index != arr.length - 1) otherTags.concat(tag);
+      else otherTags.concat(tag).concat(", ");
+    })
+    const otherTagsCmp = userTags.length != 0 ? (<Typography className={styles.tagsText}>
+            {otherTags}
+          </Typography>) : null;
 
     // Conditional Rendering
     var editProfileE;
     var setStatusE;
     var setTagsE;
     var feedbackE;
+    var followE;
     if (ownProfile) {
       // Allow edit
       editProfileE = (
@@ -401,21 +449,36 @@ class Profile extends Component {
 
       // Allow edit
       setTagsE = (
-        <Grid item xs={5}>
-          <Multiselect
-            placeholder="+"
-            options={allTags}
-            displayValue="name"
-            selectedValues={userTags}
-            onSelect={this.onTagSelect}
-            onRemove={this.onTagRemove}
-            style={this.style}
-          />
-        </Grid>
+        <div className={styles.tags}>
+          <Grid style={{ marginTop: 10 }} container spacing={1}>
+            <Grid item xs={4} style={{ marginRight: "11%" }}></Grid>
+            <Grid item xs={2} style={{ flexBasis: "auto" }}>
+              <Typography className={styles.tagTitle}>Tags:</Typography>
+            </Grid>
+            <Grid item xs={10} style={{ flexBasis: "auto"}}>
+              <Multiselect
+                options={allTags}
+                displayValue="name"
+                selectedValues={userTags}
+                onSelect={this.onTagSelect}
+                onRemove={this.onTagRemove}
+                style={this.style}
+              />
+            </Grid>
+          </Grid>
+        </div>
       );
     } else {
       // Should only show status, don't allow edit
-      setStatusE = <Status></Status>;
+      setStatusE = (
+        <Typography className={styles.statusText}>
+          <Brightness1Icon
+            className={styles.statusGuest}
+            style={{ color: statusColor }}
+          ></Brightness1Icon>
+          {status}
+        </Typography>
+      );
 
       // Clicking on feedback will show window to leave feedback or edit feedback
       feedbackE = (
@@ -434,17 +497,23 @@ class Profile extends Component {
 
       // Show Tags, don't allow edit, use new style
       setTagsE = (
-        <Grid item xs={10}>
-          <Multiselect
-            options={allTags}
-            displayValue="name"
-            selectedValues={userTags}
-            onSelect={this.onTagSelect}
-            onRemove={this.onTagRemove}
-            style={this.style}
-          />
-        </Grid>
+        <div className={styles.center}>
+          <Typography className={styles.tagTitle}>Tags:</Typography>
+          {otherTagsCmp}
+        </div>
       );
+
+      // Show Follow Button
+      followE = (
+        <Button
+            onClick={() => this.setState({ editing: true })}
+            variant="contained"
+            color="primary"
+            size="large"
+            className={styles.editProfile}
+            > {this.state.followText}
+          </Button>
+      )
     }
 
     if (!this.state.editing) {
@@ -457,7 +526,7 @@ class Profile extends Component {
               Time Zone: {this.state.timeZone}
             </Typography>
             <Avatar src={this.state.photo} className={styles.large} />
-
+            {followE}
             {editProfileE}
           </div>
           <div className={styles.bgColor}>
@@ -476,27 +545,19 @@ class Profile extends Component {
             <Typography
               className={styles.profileBio}
               variant="body1"
-              style={{ paddingTop: 20 }}
+              // style={{ paddingTop: 20 }}
               align="center"
             >
               {this.state.bio}
             </Typography>
-            <div className={styles.tags}>
-              <Grid style={{ marginTop: 10 }} container spacing={1}>
-              <Grid item xs={4}>
-              </Grid>
-                <Grid item xs={2}>
-                  <Typography className={styles.tagTitle}>Tags:</Typography>
-                </Grid>
-                {setTagsE}
-              </Grid>
-            </div>
+            {setTagsE}
             <Menu
               style={{ marginTop: 200 }}
               className={styles.menu}
               username={this.state.username}
               allRep={this.state.allRep}
               timeZone={this.state.timeZone}
+              currentUser={this.state.currentUser === this.state.username}
             ></Menu>
           </div>
         </div>

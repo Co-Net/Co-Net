@@ -55,7 +55,7 @@ export default function Games(props){
 
 <Typography style = {titleStyle} align = 'Left' variant="h6" component="h2" >
 {props.title}</Typography>
-<AddGames></AddGames>
+{props.currentUser ? <AddGames></AddGames> : null}
 </Grid>
 <Grid container spacing={3}>
 <Grid item xs={4}>
