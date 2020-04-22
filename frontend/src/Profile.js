@@ -13,6 +13,7 @@ import Thumbs from "./thumbs";
 import { Multiselect } from "multiselect-react-dropdown";
 import Grid from "@material-ui/core/Grid";
 import Brightness1Icon from "@material-ui/icons/Brightness1";
+import Error404 from "./Error404";
 
 class Profile extends Component {
   constructor(props) {
@@ -48,11 +49,23 @@ class Profile extends Component {
       oldFeedback: {},
       ownProfile: false,
       status: "",
-      followText: "Follow"
+      followText: "Follow",
+      error: false
     };
   }
 
   componentDidMount() {
+    // Check if profile exists, if not alert them and redirect to Own Profile
+    if (!this.props.ownProfile) {
+      axios
+        .get(`http://localhost:3001/users/${this.props.match.params.username}`)
+        .then((json) => {
+          if (!json.data) {
+            // this.props.history.push('/error');
+            this.setState({ error: true });
+          }
+        });
+    }
     // Get own username first
     var route = "http://localhost:3001/user/currentuser";
     axios
@@ -406,10 +419,11 @@ class Profile extends Component {
     userTags.forEach((tag, index, arr) => {
       if (index != arr.length - 1) otherTags.concat(tag);
       else otherTags.concat(tag).concat(", ");
-    })
-    const otherTagsCmp = userTags.length != 0 ? (<Typography className={styles.tagsText}>
-            {otherTags}
-          </Typography>) : null;
+    });
+    const otherTagsCmp =
+      userTags.length != 0 ? (
+        <Typography className={styles.tagsText}>{otherTags}</Typography>
+      ) : null;
 
     // Conditional Rendering
     var editProfileE;
@@ -455,7 +469,7 @@ class Profile extends Component {
             <Grid item xs={2} style={{ flexBasis: "auto" }}>
               <Typography className={styles.tagTitle}>Tags:</Typography>
             </Grid>
-            <Grid item xs={10} style={{ flexBasis: "auto"}}>
+            <Grid item xs={10} style={{ flexBasis: "auto" }}>
               <Multiselect
                 options={allTags}
                 displayValue="name"
@@ -506,17 +520,22 @@ class Profile extends Component {
       // Show Follow Button
       followE = (
         <Button
-            onClick={() => this.setState({ editing: true })}
-            variant="contained"
-            color="primary"
-            size="large"
-            className={styles.editProfile}
-            > {this.state.followText}
-          </Button>
-      )
+          onClick={() => this.setState({ editing: true })}
+          variant="contained"
+          color="primary"
+          size="large"
+          className={styles.editProfile}
+        >
+          {" "}
+          {this.state.followText}
+        </Button>
+      );
     }
 
-    if (!this.state.editing) {
+    if (this.state.error) {
+      return <Error404></Error404>
+    }
+    else if (!this.state.editing) {
       return (
         <div>
           <TopMenu history={this.props.history}></TopMenu>
