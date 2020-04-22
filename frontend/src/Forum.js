@@ -70,7 +70,7 @@ class Forum extends Component {
         },
       ],
       cards: [],
-      timeZone: "",
+      timeZone: "America/Los_Angeles",
     };
   }
 
@@ -288,7 +288,8 @@ class Forum extends Component {
                   </Typography>
                   <Typography
                     onClick={() => {
-                      this.props.history.push(`/forumPost/${card.postID}`);
+                      if (this.state.username === 'Guest') alert("You must be signed in to view a thread.");
+                      else this.props.history.push(`/forumPost/${card.postID}`);
                     }}
                     className={mainStyles.forumTitle}
                     display="inline"
