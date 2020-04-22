@@ -33,7 +33,8 @@ router.get('/currentuser', (req, res) => {
       timeZone: req.user.timeZone,
       userTags: req.user.userTags,
       playerRep: req.user.playerRep,
-      votedPosts: req.user.votedPosts
+      votedPosts: req.user.votedPosts,
+      friends: req.user.friends
     });
   }
 });

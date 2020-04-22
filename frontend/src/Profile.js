@@ -52,6 +52,8 @@ class Profile extends Component {
       ownProfile: false,
       status: "",
       followText: "Follow",
+      followList: [],
+      currentFollowList: [],
       error: false
     };
   }
@@ -79,6 +81,10 @@ class Profile extends Component {
         else this.setState({ currentUser: json.data.username });
         if (json.data.profilePhoto) {
           this.setState({ avatar: json.data.profilePhoto });
+        }
+        console.log(json.data.friends);
+        if (json.data.friends) {
+          this.setState({ currentFollowList: json.data.friends });
         }
         // If own profile, get rest of data
         if (
@@ -111,6 +117,7 @@ class Profile extends Component {
             this.setState({ allRep: json.data.playerRep });
             this.analyzeRep(json.data.playerRep);
           }
+          
         } else {
           // If not own profile, get the other user's data
           route = `http://localhost:3001/users/${this.props.match.params.username}`;
@@ -142,6 +149,19 @@ class Profile extends Component {
             }
             if (json.data.status) {
               this.setState({ status: json.data.status });
+            }
+            if (json.data.friends) {
+              this.setState({ followList: json.data.friends });
+            }
+            console.log("here");
+            console.table(this.state.currentFollowList);
+            if (this.state.currentFollowList.some(user => user.username === this.state.username)) {
+              console.log("smol wang");
+              this.setState({ followText: 'Unfollow' });
+            }
+            else{
+              //console.log("smol wang");
+              this.setState({ followText: 'Follow' });
             }
           });
         }
@@ -314,34 +334,36 @@ class Profile extends Component {
       });
   }
 
-  handleFollow(){
+  handleFollow() {
     axios
       .put(
-        `http://localhost:3001/users/addFriend/${this.state.currentUser}`,{
+        `http://localhost:3001/users/addFriend/${this.state.currentUser}`, {
         username: this.state.username
-        })
-        .then((json) => {
-          console.log(json.data);
-          if (json.data.success) {
-            console.log("Follow Request Success!");
-          }
-          else alert("Something went wrong. Please try again");
-        })
+      })
+      .then((json) => {
+        console.log(json.data);
+        if (json.data.success) {
+          this.setState({ followText: 'Unfollow' });
+          console.log("Follow Request Success!");
+        }
+        else alert("Something went wrong. Please try again");
+      })
   }
 
-  handleUnfollow(){
+  handleUnfollow() {
     axios
       .put(
-        `http://localhost:3001/users/removeFriend/${this.state.currentUser}`,{
+        `http://localhost:3001/users/removeFriend/${this.state.currentUser}`, {
         username: this.state.username
-        })
-        .then((json) => {
-          console.log(json.data);
-          if (json.data.success) {
-            console.log("Unfollow Request Success!");
-          }
-          else alert("Something went wrong. Please try again");
-        })
+      })
+      .then((json) => {
+        console.log(json.data);
+        if (json.data.success) {
+          this.setState({ followText: 'Follow' });
+          console.log("Unfollow Request Success!");
+        }
+        else alert("Something went wrong. Please try again");
+      })
   }
 
   render() {
@@ -550,16 +572,23 @@ class Profile extends Component {
       );
 
       // Show Follow Button
-      followE = (
+      followE = this.state.followText === 'Follow' ? (
         <Button
-            onClick={() => this.handleFollow()}
-            variant="contained"
-            color="primary"
-            size="large"
-            className={styles.editProfile}
-            > {this.state.followText}
-          </Button>
-      )
+          onClick={() => this.handleFollow()}
+          variant="contained"
+          color="primary"
+          size="large"
+          className={styles.editProfile}
+        > {this.state.followText}
+        </Button>
+      ) : <Button
+        onClick={() => this.handleUnfollow()}
+        variant="contained"
+        color="primary"
+        size="large"
+        className={styles.editProfile}
+      > {this.state.followText}
+        </Button>
     }
 
     if (this.state.error) {
