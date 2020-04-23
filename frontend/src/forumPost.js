@@ -563,6 +563,8 @@ class ForumPost extends Component {
                     <Typography
                       className={styles.userNameForum}
                       display="inline"
+                      style={{cursor: 'pointer', color: "#0755ca"}}
+                      onClick={() => this.props.history.push(`/profile/${author}`)}
                     >
                       {author},{" "}
                     </Typography>

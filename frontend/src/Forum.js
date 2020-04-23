@@ -6,6 +6,7 @@ import TextField from "@material-ui/core/TextField";
 //import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
+import { Link as LinkR } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 //import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -301,7 +302,7 @@ class Forum extends Component {
                     {card.title}
                   </Typography>
                 </div>
-                <Typography className={mainStyles.userName} display="inline">
+                <Typography onClick={() => this.props.history.push(`/profile/${card.user}`)} style={{cursor: 'pointer', color: '#3f51b5'}} className={mainStyles.userName} display="inline">
                   {card.user}{" "}
                 </Typography>
                 <Typography className={mainStyles.timeStamp} display="inline">
@@ -352,6 +353,8 @@ class Forum extends Component {
                       <Typography
                         className={mainStyles.userName}
                         display="inline"
+                        style={card.replyUser ? {cursor: 'pointer', color: '#3f51b5'} : null}
+                        onClick={card.replyUser ? () => this.props.history.push(`/profile/${card.replyUser}`) : null}
                       >
                         {card.replyUser ? card.replyUser : "No comments"}{" "}
                       </Typography>

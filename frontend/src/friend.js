@@ -64,6 +64,7 @@ class friend extends Component
 
       </Grid>
       <Grid item xs = {10}>
+      {/* use this for hyperlink below <Link href={`/profile/${this.props.author}`}>{this.props.author}</Link> */}
       <Typography className = {styles.friendUsername} display = "inline" >HelloHydra </Typography>
       <Typography  className = {styles.timeStamp} display = "inline" >Added 2 days ago</Typography>
       <Typography variant = 'body1' className = {styles.commentBody}>

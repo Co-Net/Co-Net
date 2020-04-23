@@ -14,6 +14,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import TextField from "@material-ui/core/TextField";
 import CheckIcon from "@material-ui/icons/Check";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import { withRouter } from 'react-router-dom';
 
 const monthNames = [
   "January",
@@ -174,7 +175,7 @@ class forumComment extends Component {
               <Avatar src={avatar} className={styles.smallSize} />
             </Grid>
             <Grid item xs={10}>
-              <Typography className={styles.userNameComment} display="inline">
+              <Typography onClick={() => this.props.history.push(`/profile/${this.props.author}`)} style={{cursor: 'pointer'}} className={styles.userNameComment} display="inline">
                 {this.props.author}{" "}
               </Typography>
               <Typography className={styles.timeStamp} display="inline">
@@ -224,4 +225,4 @@ class forumComment extends Component {
   }
 }
 
-export default forumComment;
+export default withRouter(forumComment);

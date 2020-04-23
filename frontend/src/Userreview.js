@@ -129,7 +129,7 @@ class forumComment extends Component {
                 href="google.com"
                 display="inline"
               >
-                <Link href={this.props.author}>{this.props.author}</Link>
+                <Link href={`/profile/${this.props.author}`}>{this.props.author}</Link>
               </Typography>
               <Typography className={styles.timeStamp} display="inline">
                 {timestamp}
