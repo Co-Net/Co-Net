@@ -64,7 +64,10 @@ class AccountSettings extends Component {
       })
       .then((json) => {
         if (json.data.username) {
-          this.setState({ username: json.data.username, newUsername: json.data.username });
+          this.setState({
+            username: json.data.username,
+            newUsername: json.data.username,
+          });
         }
         if (json.data.firstName) {
           this.setState({ firstName: json.data.firstName });
@@ -106,10 +109,7 @@ class AccountSettings extends Component {
             console.log("Account successfully updated");
             this.pushHistory();
           } else {
-            if (
-              json.data.message ===
-              "Username already exists"
-            ) {
+            if (json.data.message === "Username already exists") {
               document.getElementById("errorMessage").innerText =
                 "Username already in use. Please try a different username.";
             } else if (json.data.message === "MISSING INPUTS") {
@@ -160,7 +160,6 @@ class AccountSettings extends Component {
                 .then((json) => {
                   if (json.data.success) {
                     console.log("Account successfully updated");
-
                   } else {
                     if (
                       json.data.message ===
@@ -285,16 +284,6 @@ class AccountSettings extends Component {
       marginLeft: 8,
     };
 
-    /*const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleClick = event => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };*/
-
     const {
       firstName,
       lastName,
@@ -363,7 +352,7 @@ class AccountSettings extends Component {
             >
               Edit Account Info
             </Typography>
-            <Grid container spacing={2}>
+            {/* <Grid container spacing={2}>
               <Grid item xs={2}>
                 <TextField
                   style={{ marginBottom: 20 }}
@@ -375,7 +364,7 @@ class AccountSettings extends Component {
                 />
               </Grid>
               <Grid item xs={2}></Grid>
-            </Grid>
+            </Grid> */}
             <Grid container spacing={2}>
               <Grid item xs={2}>
                 <TextField

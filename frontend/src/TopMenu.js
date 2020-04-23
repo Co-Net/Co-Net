@@ -19,9 +19,8 @@ import MoreIcon from "@material-ui/icons/MoreVert";
 import createHistory from "history/createBrowserHistory";
 import { createHashHistory } from "history";
 import { browserHistory } from "react-router";
-import PartyButton from './Party';
-import PartyActive from './PartyActive';
-
+import PartyButton from "./Party";
+import PartyActive from "./PartyActive";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -102,8 +101,9 @@ export default function PrimarySearchAppBar(props) {
       .then((json) => {
         if (json.data.username === "Guest") {
           setIsGuest(true);
+        } else {
+          setUsername(json.data.username);
         }
-        setUsername(json.data.username);
       });
   };
 
@@ -126,11 +126,16 @@ export default function PrimarySearchAppBar(props) {
         .get("http://localhost:3001/users/logout", { withCredentials: true })
         .then((json) => {
           if (json.data.loggedOut) {
-            history.push(""); // still need?
+            axios
+              .put(`http://localhost:3001/users/${username}`, {
+                status: "Offline",
+              })
+              .then((json) => {
+                history.push("");
+              });
           }
         });
-    }
-    else if (event === "myaccount") history.push("myaccount");
+    } else if (event === "myaccount") history.push("myaccount");
     else if (event === "messages") history.push("messages");
   };
 
@@ -334,7 +339,7 @@ export default function PrimarySearchAppBar(props) {
               inputProps={{ "aria-label": "search" }}
             />
           </div>
-         
+
           <IconButton color="inherit">
             <PartyButton></PartyButton>
           </IconButton>

@@ -34,7 +34,8 @@ router.get('/currentuser', (req, res) => {
       userTags: req.user.userTags,
       playerRep: req.user.playerRep,
       votedPosts: req.user.votedPosts,
-      friends: req.user.friends
+      friends: req.user.friends,
+      status: req.user.status
     });
   }
 });

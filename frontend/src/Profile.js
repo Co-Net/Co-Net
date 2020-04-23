@@ -37,6 +37,7 @@ class Profile extends Component {
     this.handleFeedbackEditCancel = this.handleFeedbackEditCancel.bind(this);
     this.handleFollow = this.handleFollow.bind(this);
     this.handleUnfollow = this.handleUnfollow.bind(this);
+    this.handleStatusChange = this.handleStatusChange.bind(this);
 
     this.state = {
       username: "",
@@ -123,7 +124,9 @@ class Profile extends Component {
             this.setState({ allRep: json.data.playerRep });
             this.analyzeRep(json.data.playerRep);
           }
-          
+          if (json.data.status) {
+            this.setState({ status: json.data.status });
+          }
         } else {
           // If not own profile, get the other user's data
           route = `http://localhost:3001/users/${this.props.match.params.username}`;
@@ -369,6 +372,18 @@ class Profile extends Component {
       })
   }
 
+  handleStatusChange(e) {
+    axios
+      .put(
+        `http://localhost:3001/users/${this.state.currentUser}`, {
+        status: e.target.value
+      })
+      .then((json) => {
+        console.log("Status set to: " + json.data.user.status);
+        this.setState({ status: json.data.user.status });
+      });
+  }
+
   render() {
     const theme = createMuiTheme({
       "@global": {
@@ -500,7 +515,9 @@ class Profile extends Component {
       );
 
       // Allow edit
-      setStatusE = <Status ></Status>;
+      setStatusE = (
+        <Status status={status} onStatusChange={this.handleStatusChange}></Status>
+      );
 
       // Clicking will open the reviews page tab
       feedbackE = (
@@ -607,6 +624,7 @@ class Profile extends Component {
             <Typography>
             Time Zone: {this.state.timeZone} </Typography>
             <Typography>Currently Playing: <Typography className = {styles.gameName} style ={{color:'#3f51b5', display: 'inline',}}>League of Legends</Typography></Typography>
+            <Typography>Current Status: </Typography>
             {setStatusE}
 
               </CardContent>

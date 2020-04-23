@@ -203,7 +203,7 @@ router.put('/:username', function (req, res) {
     var body = req.body;
     UserModel.findOneAndUpdate({
         username: queryUsername
-    }, body, function (err) {
+    }, body, { new: true }, function (err, doc) {
         if (err) {
             if (err.code == 11000) {
                 return res.json({
@@ -215,7 +215,7 @@ router.put('/:username', function (req, res) {
         }
         return res.json({
             success: true,
-            user: body
+            user: doc
         });
     });
 })
