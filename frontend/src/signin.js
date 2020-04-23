@@ -1,39 +1,37 @@
+import Modal from "@material-ui/core/Modal";
+import React, { useState } from "react";
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
+import logo from "./logo.png";
+import bgd from "./background.jpeg";
+import axios from "axios";
+import styles from "./main.module.css";
+import TextField from "@material-ui/core/TextField";
 
-import Modal from '@material-ui/core/Modal';
-import React, { useState } from 'react';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import logo from './logo.png';
-import bgd from './background.jpeg';
-import axios from 'axios';
-import styles from './main.module.css';
-import TextField from '@material-ui/core/TextField';
-
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    transform: 'translateZ(0)',
+    transform: "translateZ(0)",
     height: 768,
     flexGrow: 1,
   },
 
   modal: {
-    display: 'flex',
+    display: "flex",
     padding: theme.spacing(1),
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundSize: 'cover',
-    overflow: 'hidden',
-
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundSize: "cover",
+    overflow: "hidden",
   },
   paper: {
     width: 400,
     height: 400,
 
     backgroundColor: theme.palette.background.paper,
-    border: '0.5px solid #a9a9a9',
+    border: "0.5px solid #a9a9a9",
     borderRadius: 10,
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
@@ -41,8 +39,8 @@ const useStyles = makeStyles(theme => ({
     marginRight: 400,
   },
   error: {
-    backgroundColor: "#FFCCCC"
-  }
+    backgroundColor: "#FFCCCC",
+  },
 }));
 
 function onSignIn(e, history, pass, em) {
@@ -55,13 +53,13 @@ function onSignIn(e, history, pass, em) {
       "http://localhost:3001/users/signin",
       {
         username: email,
-        password: password
+        password: password,
       },
       {
-        withCredentials: true
+        withCredentials: true,
       }
     )
-    .then(json => {
+    .then((json) => {
       // console.log(json.data);
       if (json.data.success) {
         history.push("/feed");
@@ -73,7 +71,7 @@ function onSignIn(e, history, pass, em) {
 }
 
 export default function ServerModal(props) {
-  const {history} = props;
+  const { history } = props;
   const classes = useStyles();
   const rootRef = React.useRef(null);
   const [email, setEmail] = useState("");
@@ -91,77 +89,72 @@ export default function ServerModal(props) {
         className={classes.modal}
         container={() => rootRef.current}
       >
-        <div className={classes.paper} style = {{padding: 45, marginTop: 167}}>
-
+        <div className={classes.paper} style={{ padding: 45, marginTop: 167 }}>
           <p id="server-modal-description">
-          <Typography align="center" id = "server-modal-title">
-          <img src = {logo} alt = "Logo" style = {{width: '100px'}}/>    
-          </Typography>
-          <Grid container spacing={2}>
-            
-            <Grid item xs={12}>
-        <Typography component="h2" fontsize = {18} align="center" id = "server-modal-title">
-          Connecting Gamers Worldwide. <p></p>
-          <p id="errorMessage" className={classes.error}></p>
-        </Typography>
-        </Grid>
-        <Grid item xs={12}></Grid>
-        </Grid>
-        <form className={classes.form} noValidate>
-          <Grid container spacing={4}>
-            
-          
-       
-      <Grid item xs={12}>
-      <TextField
-        autoComplete="email"
-        name="email"
-        variant="outlined"
-        required
-        fullWidth
-        id="email"
-        label="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        
-      />
-    </Grid>
-    <Grid item xs={12}>
-      <TextField
-        autoComplete="password"
-        name="password"
-        variant="outlined"
-        required
-        fullWidth
-        id="password"
-        label="Password"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-    </Grid>
-  
-    <Grid item xs={12} >
-    <Button
-    type="submit"
-    fullWidth
-    variant="contained"
-    color="primary"
-    className={classes.submit}
-    onClick = {(e) => onSignIn(e, history, password, email)}
-  >
-  Sign In
-  </Button>
-    </Grid>
-          </Grid>
-          
-         
-       
+            <Typography align="center" id="server-modal-title">
+              <img src={logo} alt="Logo" style={{ width: "100px" }} />
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Typography
+                  component="h2"
+                  fontsize={18}
+                  align="center"
+                  id="server-modal-title"
+                >
+                  Connecting Gamers Worldwide. <p></p>
+                  <p id="errorMessage" className={classes.error}></p>
+                </Typography>
+              </Grid>
+              <Grid item xs={12}></Grid>
+            </Grid>
+            <form className={classes.form} noValidate>
+              <Grid container spacing={4}>
+                <Grid item xs={12}>
+                  <TextField
+                    autoComplete="email"
+                    name="email"
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    autoComplete="password"
+                    name="password"
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="password"
+                    label="Password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </Grid>
 
-        </form>
-      <Box mt={5}>
-        <copyright/>
-      </Box>
+                <Grid item xs={12}>
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}
+                    onClick={(e) => onSignIn(e, history, password, email)}
+                  >
+                    Sign In
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+            <Box mt={5}>
+              <copyright />
+            </Box>
           </p>
         </div>
       </Modal>
