@@ -15,7 +15,7 @@ const io = require("socket.io")(server);
 var connectedUsers = {};
 var timeouts = {};
 io.on("connection", function (socket) {
-  console.log("Client connected");
+  // console.log("Client connected");
   socket.emit("connected");
   socket.on("login", (username) => {
     connectedUsers[socket.id] = username;
