@@ -86,7 +86,7 @@ export default function ScrollableTabsButtonForce(props) {
         <Activity title = "Your Activity" ></Activity>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <FriendsList title = "Who you're following" allFollowers = {props.allFollowers}></FriendsList>
+        <FriendsList title = {`Who ${props.username} is Following`} allFollowers = {props.allFollowers}></FriendsList>
       </TabPanel>
       <TabPanel value={value} index={3}>
         <ReviewTab title = "User Reputation" allRep = {props.allRep} timeZone = {props.timeZone}></ReviewTab>

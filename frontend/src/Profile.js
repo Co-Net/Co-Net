@@ -647,11 +647,9 @@ class Profile extends Component {
               style={{ paddingTop: 20 }}
               align="center"
             >
-              {this.state.firstName} {this.state.lastName}
-            </Typography>
-            <Typography className={styles.user}>
               {this.state.username}
             </Typography>
+
             {feedbackE}
             <Typography
               className={styles.profileBio}
