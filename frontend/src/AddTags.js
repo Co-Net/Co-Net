@@ -14,23 +14,23 @@ import { Multiselect } from 'multiselect-react-dropdown';
 import Typography from "@material-ui/core/Typography";
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import axios from "axios";
 
 
 
 
 export default function AlertDialog() {
-  const [open1,setOpen1] = React.useState(false);
+  const [open1, setOpen1] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
+  const [open3, setOpen3] = React.useState(false);
+  const [newTagName, setTagName] = React.useState("");
 
 
 
   const handleClickOpenUp = () => {
     setOpen1(true);
   };
- 
-  const handleClick = () => {
-    setOpen2(true);
-  };
+
 
   const handleClose = () => {
     setOpen1(false);
@@ -40,9 +40,31 @@ export default function AlertDialog() {
     if (reason === 'clickaway') {
       return;
     }
-
     setOpen2(false);
+    setOpen3(false);
   };
+
+  function onCreateTag(newTagName) {
+    const tagName = newTagName;
+
+    axios
+      .post(`http://localhost:3001/userTags/create`, {
+        name: tagName
+      })
+      .then((json) => {
+        if (json.data.success) {
+          //this.setState({created: true})
+          setOpen3(true);
+          console.log('User Tag Created!');
+          window.location.reload();
+        }
+        else {
+          //this.setState({created: false})
+          setOpen2(true);
+          console.log('Error in user tag creation')
+        }
+      })
+  }
 
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -50,7 +72,7 @@ export default function AlertDialog() {
 
 
   const state = {
-    options:[
+    options: [
       { key: "League", },
       { key: "Minecraft", },
       { key: "Valorant", },
@@ -62,7 +84,7 @@ export default function AlertDialog() {
   };
 
   const style = {
-    multiselectContainer: { 
+    multiselectContainer: {
       textAlign: 'center',
     },
     chips: {
@@ -72,52 +94,54 @@ export default function AlertDialog() {
       fontFamily: 'Segoe UI',
 
     },
-    inputField: { 
+    inputField: {
       fontSize: '15px',
 
 
-  },
+    },
     multiselectContainer: {
     }
   };
 
- 
+
 
   return (
-    <div style= {{display: 'inline',}}>
-    <AddCircleIcon onClick={handleClickOpenUp}  className = {styles.addTags}></AddCircleIcon>      <Dialog
-      maxWidth = 'sm'
+    <div style={{ display: 'inline', }}>
+      <AddCircleIcon onClick={handleClickOpenUp} className={styles.addTags}></AddCircleIcon>      <Dialog
+        maxWidth='sm'
         open={open1}
         fullWidth
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        className = {styles.dialogBox}
+        className={styles.dialogBox}
       >
         <DialogTitle id="alert-dialog-title">{"Create a Tag"}
         </DialogTitle>
         <DialogContent>
-        <TextField variant = "outlined" placeholder = "Enter a Tag"></TextField>
-        <Button style = {{marginTop: 9, marginLeft: 12,}} onClick={handleClick} color="primary">
-        Add Tag
+          <TextField variant="outlined" placeholder="Enter a Tag" name="newTagName" value={newTagName} onChange={(e => setTagName(e.target.value))}></TextField>
+          <Button style={{ marginTop: 9, marginLeft: 12, }} onClick={(e) => {onCreateTag(newTagName); }} color="primary">
+            Add Tag
       </Button>
-          </DialogContent>
+        </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleClose}  color="primary" autoFocus>
+          <Button onClick={handleClose} color="primary" autoFocus>
             Done
           </Button>
-          <Snackbar open={open2} autoHideDuration={6000} onClose={handleClose1}>
-          <Alert onClose={handleClose} severity="error">
-            Tag Already Exists!
-          </Alert> 
-          
-        </Snackbar>
+          <Snackbar open={open2} autoHideDuration={900} onClose={handleClose1}>
+            <Alert onClose={handleClose} severity="error">
+              Tag Already Exists!
+          </Alert>
+          </Snackbar>
+          <Snackbar open={open3} autoHideDuration={900} onClose={handleClose1}>
+          <Alert severity="success">User Tag Created!</Alert>
+          </Snackbar>
         </DialogActions>
       </Dialog>
-      
+
     </div>
   );
 }
