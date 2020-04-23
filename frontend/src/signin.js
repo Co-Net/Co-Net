@@ -62,7 +62,7 @@ function onSignIn(e, history, pass, em) {
     .then((json) => {
       // console.log(json.data);
       if (json.data.success) {
-        history.push("/feed");
+        history.push("/Feed");
       } else {
         console.log("SIGN IN FAILED");
         document.getElementById("errorMessage").innerText = json.data.message;

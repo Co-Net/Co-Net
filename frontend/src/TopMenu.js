@@ -21,6 +21,7 @@ import { createHashHistory } from "history";
 import { browserHistory } from "react-router";
 import PartyButton from "./Party";
 import PartyActive from "./PartyActive";
+import socketIOClient from "socket.io-client";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -92,20 +93,26 @@ export default function PrimarySearchAppBar(props) {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  const [username, setUsername] = useState();
+  const [username, setUsername] = useState("Guest");
   const [isGuest, setIsGuest] = useState(false);
 
-  const getUser = () => {
-    axios
-      .get("http://localhost:3001/user/currentuser", { withCredentials: true })
-      .then((json) => {
-        if (json.data.username === "Guest") {
-          setIsGuest(true);
-        } else {
-          setUsername(json.data.username);
-        }
-      });
-  };
+  // // Runs on refresh and every component load/change
+  // // Use this to check if still Active
+  // const getUser = () => {
+  //   axios
+  //     .get("http://localhost:3001/user/currentuser", { withCredentials: true })
+  //     .then((json) => {
+  //       // If already logged in, don't run
+  //       if (isGuest) {
+  //         setUsername(json.data.username);
+  //         setIsGuest(false);
+  //         const socket = socketIOClient("http://localhost:3001");
+  //         socket.on("connected", () => {
+  //           socket.emit("login", json.data.username);
+  //         });
+  //       }
+  //     });
+  // };
 
   const { history } = props;
 
@@ -144,7 +151,21 @@ export default function PrimarySearchAppBar(props) {
   };
 
   useEffect(() => {
-    getUser();
+    axios
+      .get("http://localhost:3001/user/currentuser", { withCredentials: true })
+      .then((json) => {
+        if (json.data.username === "Guest") {
+          setIsGuest(true);
+        } else {
+          // If logged in, set username and guest to false
+          setUsername(json.data.username);
+          setIsGuest(false);
+          const socket = socketIOClient("http://localhost:3001");
+          socket.on("connected", () => {
+            socket.emit("login", json.data.username);
+          });
+        }
+      });
   }, []);
 
   const menuId = "primary-search-account-menu";
@@ -218,14 +239,17 @@ export default function PrimarySearchAppBar(props) {
         position="static"
       >
         <Toolbar>
-          <a href="http://localhost:3000/Feed">
+          <a
+            onClick={() => history.push("/Feed")}
+            style={{ cursor: "pointer" }}
+          >
             <img src={logo} alt="Logo" style={{ width: "70px" }} />
           </a>
 
           <IconButton color="inherit">
             <Typography
               className="menuButtons"
-              onClick={() => history.push("/feed")}
+              onClick={() => history.push("/Feed")}
             >
               Browse
             </Typography>
@@ -234,7 +258,7 @@ export default function PrimarySearchAppBar(props) {
           <IconButton color="inherit">
             <Typography
               className="menuButtons"
-              onClick={() => history.push("/forum")}
+              onClick={() => history.push("/Forum")}
             >
               Forum
             </Typography>
@@ -303,7 +327,10 @@ export default function PrimarySearchAppBar(props) {
         position="static"
       >
         <Toolbar>
-          <a href="http://localhost:3000/Feed">
+          <a
+            onClick={() => history.push("/Feed")}
+            style={{ cursor: "pointer" }}
+          >
             <img src={logo} alt="Logo" style={{ width: "70px" }} />
           </a>
 

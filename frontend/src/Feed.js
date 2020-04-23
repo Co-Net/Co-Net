@@ -29,29 +29,11 @@ import FilterListIcon from "@material-ui/icons/FilterList";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import mainStyles from "./main.module.css";
-import socketIOClient from "socket.io-client";
 
 class Feed extends Component {
   constructor(props) {
     super(props);
     this.pushHistory = this.pushHistory.bind(this);
-
-    const socket = socketIOClient("http://localhost:3001");
-
-    socket.on("connected", () => {
-      axios
-        .get("http://localhost:3001/user/currentuser", {
-          withCredentials: true,
-        })
-        .then((json) => {
-          if (json.data.username === "Guest") {
-            console.log("guest");
-          } else {
-            console.log(json.data.username);
-            socket.emit("login", json.data.username);
-          }
-        });
-    });
   }
 
   pushHistory() {
@@ -111,16 +93,6 @@ class Feed extends Component {
       marginTop: 5,
       marginLeft: 8,
     };
-
-    /*const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleClick = event => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };*/
 
     return (
       <div>

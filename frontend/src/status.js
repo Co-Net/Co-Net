@@ -55,12 +55,12 @@ export default function SimpleSelect(props) {
             ></Brightness1Icon>
             Full
           </MenuItem>
-          <MenuItem value={"Offline"}>
+          <MenuItem value={"Invisible"}>
             <Brightness1Icon
               className={mainStyles.statusDot}
               style={{ color: "#C4C4C4" }}
             ></Brightness1Icon>
-            Offline
+            Invisible
           </MenuItem>
           <MenuItem value={"Away"}>
             <Brightness1Icon
