@@ -49,14 +49,15 @@ app.use(
 app.use(cookieParser(process.env.JWT_SECRET));
 
 // Routers
-const userRouter = require("./api/routes/userRouter");
-const userTagRouter = require("./api/routes/userTagRouter");
-const gameRouter = require("./api/routes/gameRouter");
-const forumRouter = require("./api/routes/forumPostRouter");
-const secureRouter = require("./api/routes/secureRouter");
-const steamRouter = require("./api/routes/steamRouter");
-const gameTagRouter = require("./api/routes/gameTagRouter");
-const messageThreadRouter = require("./api/routes/messageThreadRouter");
+const userRouter = require('./api/routes/userRouter');
+const userTagRouter = require('./api/routes/userTagRouter');
+const gameRouter = require('./api/routes/gameRouter');
+const forumRouter = require('./api/routes/forumPostRouter');
+const secureRouter = require('./api/routes/secureRouter');
+const steamRouter = require('./api/routes/steamRouter');
+const gameTagRouter = require('./api/routes/gameTagRouter')
+const messageThreadRouter = require('./api/routes/messageThreadRouter')
+const partyRouter = require("./api/routes/partyRouter");
 // this is our MongoDB database
 const dbRoute = `mongodb+srv://${process.env.DB_CREDENTIALS}@cluster0-8hzh3.mongodb.net/${process.env.DATABASE_NAME}?retryWrites=true&w=majority`;
 
@@ -77,21 +78,15 @@ app.use(bodyParser.json());
 app.use(logger("dev"));
 
 // Routes
-app.use("/users", userRouter);
-app.use("/userTags", userTagRouter);
-app.use("/games", gameRouter);
-app.use("/forum", forumRouter);
-app.use(
-  "/user",
-  passport.authenticate("jwt", {
-    session: false,
-    failureRedirect: "/users/guest",
-  }),
-  secureRouter
-);
-app.use("/auth", steamRouter);
-app.use("/gameTags", gameTagRouter);
-app.use("/messageThread", messageThreadRouter);
+app.use('/users', userRouter);
+app.use('/userTags', userTagRouter);
+app.use('/games', gameRouter);
+app.use('/forum', forumRouter);
+app.use('/user', passport.authenticate('jwt', { session: false, failureRedirect: '/users/guest' }), secureRouter);
+app.use('/auth', steamRouter);
+app.use('/gameTags', gameTagRouter);
+app.use('/messageThread', messageThreadRouter);
+app.use('/party', partyRouter);
 // launch our backend into a port
 server.listen(process.env.PORT, () =>
   console.log(`CO-NET LISTENING ON PORT ${process.env.PORT}`)
