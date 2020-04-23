@@ -10,7 +10,7 @@ import Box from '@material-ui/core/Box';
 import Games from './Games.js';
 import ReviewTab from './reviewTab.js';
 import FriendsList from './friendsList.js';
-
+import Activity from './Activity.js';
 
 
 function TabPanel(props) {
@@ -83,7 +83,7 @@ export default function ScrollableTabsButtonForce(props) {
         <Games title = 'Your Games' currentUser={props.currentUser}></Games>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Games title = "Your Activity" currentUser={props.currentUser}></Games>
+        <Activity title = "Your Activity" ></Activity>
       </TabPanel>
       <TabPanel value={value} index={2}>
         <FriendsList title = "Who you're following"></FriendsList>

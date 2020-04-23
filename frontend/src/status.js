@@ -38,6 +38,7 @@ export default function SimpleSelect() {
           displayEmpty
           onChange={handleChange}
           label="Age"
+          className = {mainStyles.width300}
         
         >
           <MenuItem value="" disabled>

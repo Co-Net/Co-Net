@@ -14,6 +14,12 @@ import { Multiselect } from "multiselect-react-dropdown";
 import Grid from "@material-ui/core/Grid";
 import Brightness1Icon from "@material-ui/icons/Brightness1";
 import Error404 from "./Error404";
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import AddTags from './AddTags';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+
 
 class Profile extends Component {
   constructor(props) {
@@ -494,7 +500,7 @@ class Profile extends Component {
       );
 
       // Allow edit
-      setStatusE = <Status></Status>;
+      setStatusE = <Status ></Status>;
 
       // Clicking will open the reviews page tab
       feedbackE = (
@@ -505,7 +511,6 @@ class Profile extends Component {
             onFeedbackPost={this.handleFeedbackPost}
             onFeedbackEdit={this.handleFeedbackEdit}
           ></Thumbs>
-          {setStatusE}
         </div>
       );
 
@@ -517,7 +522,7 @@ class Profile extends Component {
             <Grid item xs={2} style={{ flexBasis: "auto" }}>
               <Typography className={styles.tagTitle}>Tags:</Typography>
             </Grid>
-            <Grid item xs={10} style={{ flexBasis: "auto" }}>
+            <Grid item xs={9} style={{ flexBasis: "auto" }}>
               <Multiselect
                 options={allTags}
                 displayValue="name"
@@ -527,6 +532,8 @@ class Profile extends Component {
                 style={this.style}
               />
             </Grid>
+          <Grid item xs={1} ><AddTags></AddTags></Grid>
+
           </Grid>
         </div>
       );
@@ -594,9 +601,20 @@ class Profile extends Component {
           <TopMenu history={this.props.history}></TopMenu>
           <div className={styles.bgColor}>
             <div className={styles.profilePhoto}> </div>
-            <Typography className={styles.timeZone}>
-              Time Zone: {this.state.timeZone}
-            </Typography>
+            <Grid item xs = {4} className = {styles.profileCard}>
+            <Card className = {styles.profileCardPadding}>
+            <CardContent className = {styles.forumCard}>
+            <Typography>
+            Time Zone: {this.state.timeZone} </Typography>
+            <Typography>Currently Playing: <Typography className = {styles.gameName} style ={{color:'#3f51b5', display: 'inline',}}>League of Legends</Typography></Typography>
+            {setStatusE}
+
+              </CardContent>
+              </Card>
+
+      </Grid>
+     
+         
             <Avatar src={this.state.photo} className={styles.large} />
             {followE}
             {editProfileE}
