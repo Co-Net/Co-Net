@@ -21,7 +21,7 @@ io.on("connection", function (socket) {
     connectedUsers[socket.id] = username;
     // If user refreshed, set to false to prevent timeout
     if (timeouts[username]) {
-      console.log(`${username} refreshed`);
+      // console.log(`${username} refreshed`);
       timeouts[username] = false;
     } else {
       // If timeout for id doesnt exist, user was timedout and is trying to reconnect or is first time joining
@@ -30,7 +30,7 @@ io.on("connection", function (socket) {
           status: "Active",
         })
         .then(() => {
-          console.log("logged in as " + username);
+          // console.log("logged in as " + username);
           timeouts[username] = false;
         });
     }
@@ -39,7 +39,7 @@ io.on("connection", function (socket) {
   socket.on("disconnect", function () {
     const disconnectedUsername = connectedUsers[socket.id];
     timeouts[disconnectedUsername] = true;
-    console.log(`Client ${disconnectedUsername} disconnected`);
+    // console.log(`Client ${disconnectedUsername} disconnected`);
     setTimeout(function () {
       if (timeouts[disconnectedUsername] == true) {
         axios
@@ -52,7 +52,7 @@ io.on("connection", function (socket) {
             delete timeouts[disconnectedUsername];
           });
       }
-    }, 10000);    // 10 second till timeout
+    }, 10000); // 10 second till timeout
   });
 });
 
