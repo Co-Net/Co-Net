@@ -17,19 +17,41 @@ import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 
 
 
-class friend extends Component
-{
+class friend extends Component {
   constructor(props) {
     super(props);
 
-  }
+    this.state = {
+      bio: "",
+      username: "",
+      profilePic: ""
+    }
 
-   
- 
-  render()
-  {
+  }
+    componentDidMount(){
+      axios
+        .get(`http://localhost:3001/users/${this.props.username}`)
+        .then((json) => {
+          if(!json){
+            console.log("error getting following");
+          }
+          else{
+            if(json.data.bio){
+              this.setState({bio: json.data.bio});
+            }
+            if(json.data.username){
+              this.setState({username: json.data.username});
+            }
+            if(json.data.profilePhoto){
+              this.setState({profilePic: json.data.profilePhoto});
+            }
+          }
+        })
+    }
+
+  render() {
     const theme = createMuiTheme({
-      '@global' : {
+      '@global': {
         body: {
           backgroundColor: "white",
         }
@@ -54,31 +76,30 @@ class friend extends Component
     }
 
     return (
-     <Grid container spacing = {8}>
-     <Grid item>
-</Grid>
-     <Grid item xs ={11}>
-        <Grid container spacing = {8}>
-      <Grid item xs ={1}>
-      <Avatar src= {profilePic} className = {styles.smallSize} />
+      <Grid container spacing={8}>
+        <Grid item>
+        </Grid>
+        <Grid item xs={11}>
+          <Grid container spacing={8}>
+            <Grid item xs={1}>
+              <Avatar src={this.state.profilePic} className={styles.smallSize} />
 
-      </Grid>
-      <Grid item xs = {10}>
-      {/* use this for hyperlink below <Link href={`/profile/${this.props.author}`}>{this.props.author}</Link> */}
-      <Typography className = {styles.friendUsername} display = "inline" >HelloHydra </Typography>
-      <Typography  className = {styles.timeStamp} display = "inline" >Added 2 days ago</Typography>
-      <Typography variant = 'body1' className = {styles.commentBody}>
-      I'm a southern girl with a big city heart. CSGO is my jam, don't even try to play me! You'll regret it :)
+            </Grid>
+            <Grid item xs={10}>
+              {/* use this for hyperlink below <Link href={`/profile/${this.props.author}`}>{this.props.author}</Link> */}
+              <Typography className={styles.friendUsername} display="inline" >{this.state.username} </Typography>
+              <Typography variant='body1' className={styles.commentBody}>
+                {this.state.bio}
         </Typography>
-      
-      </Grid>
-      </Grid>
-      </Grid>
-      </Grid>
-   
 
-   
-  
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+
+
+
+
     );
   }
 }

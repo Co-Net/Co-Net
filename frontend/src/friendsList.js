@@ -33,8 +33,6 @@ import Friend from './friend';
 
 export default function friendList(props) {
 
-
-
   const titleStyle = {
     marginBottom: 30,
     color: "#535353",
@@ -52,6 +50,13 @@ export default function friendList(props) {
     marginLeft: 8,
 
   }
+
+  var followList = [];
+  props.allFollowers.forEach((following) => {
+    const username = following.username;
+      followList.unshift(<Friend username={username}></Friend>);
+  });
+
   return (
 
     <div className="content">
@@ -60,11 +65,7 @@ export default function friendList(props) {
         <Typography style={titleStyle} align='Left' variant="h6" component="h2" >
           {props.title}</Typography>
       </Grid>
-      <Friend></Friend>
-      <Friend></Friend>
-      <Friend></Friend>
-      <Friend></Friend>
-      <Friend></Friend>
+      {followList}
 
     </div>
   );

@@ -127,6 +127,9 @@ class Profile extends Component {
           if (json.data.status) {
             this.setState({ status: json.data.status });
           }
+          if(json.data.friends){
+            this.setState({followList: json.data.friends})
+          }
         } else {
           // If not own profile, get the other user's data
           route = `http://localhost:3001/users/${this.props.match.params.username}`;
@@ -644,11 +647,9 @@ class Profile extends Component {
               style={{ paddingTop: 20 }}
               align="center"
             >
-              {this.state.firstName} {this.state.lastName}
-            </Typography>
-            <Typography className={styles.user}>
               {this.state.username}
             </Typography>
+
             {feedbackE}
             <Typography
               className={styles.profileBio}
@@ -666,6 +667,7 @@ class Profile extends Component {
               allRep={this.state.allRep}
               timeZone={this.state.timeZone}
               currentUser={this.state.currentUser === this.state.username}
+              allFollowers = {this.state.followList}
             ></Menu>
           </div>
         </div>
