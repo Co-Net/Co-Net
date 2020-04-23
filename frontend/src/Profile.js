@@ -562,7 +562,7 @@ class Profile extends Component {
             className={styles.statusGuest}
             style={{ color: statusColor }}
           ></Brightness1Icon>
-          {status}
+          {status === 'Invisible' ? "Offline" : status}
         </Typography>
       );
 
