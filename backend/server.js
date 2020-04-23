@@ -27,6 +27,7 @@ const secureRouter = require('./api/routes/secureRouter');
 const steamRouter = require('./api/routes/steamRouter');
 const gameTagRouter = require('./api/routes/gameTagRouter')
 const messageThreadRouter = require('./api/routes/messageThreadRouter')
+const partyRouter = require("./api/routes/partyRouter");
 // this is our MongoDB database
 const dbRoute =
   `mongodb+srv://${process.env.DB_CREDENTIALS}@cluster0-8hzh3.mongodb.net/${process.env.DATABASE_NAME}?retryWrites=true&w=majority`;
@@ -56,5 +57,6 @@ app.use('/user', passport.authenticate('jwt', { session: false, failureRedirect:
 app.use('/auth', steamRouter);
 app.use('/gameTags', gameTagRouter);
 app.use('/messageThread', messageThreadRouter);
+app.use('/party', partyRouter);
 // launch our backend into a port
 app.listen(process.env.PORT, () => console.log(`CO-NET LISTENING ON PORT ${process.env.PORT}`));
