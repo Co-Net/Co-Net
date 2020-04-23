@@ -178,7 +178,9 @@ class Profile extends Component {
 
     axios.get("http://localhost:3001/userTags/").then((json) => {
       // Get Tag Object Array and set it
-      this.setState({ allTags: json.data.tagObj });
+      this.setState({ allTags: json.data.tagObj.sort( function ( a, b) {
+        return  a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
+      }) });
     });
   }
 
@@ -265,7 +267,6 @@ class Profile extends Component {
       pastFeedback: this.state.oldFeedback,
     });
   }
-
   handleFeedbackPost(repType) {
     axios
       .put(
