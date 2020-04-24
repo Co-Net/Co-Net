@@ -14,6 +14,7 @@ import Avatar from '@material-ui/core/Avatar';
 import CardContent from '@material-ui/core/CardContent';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import CardActions from '@material-ui/core/CardActions';
+import JoinParty from './JoinParty';
 
 
 
@@ -31,14 +32,19 @@ class UserCard extends Component
   {
 
     return (
-        <Card>
+        <Card  style = {{marginBottom: 20, padding: 5,}} raised = "true" variant="outlined">
         <CardContent className = {styles.userCard}>
         <Grid container>
-        <Grid item xs = {2}>
-        <Avatar src= {profilePic} className = {styles.superSmallAvatar} />
+        <Grid item xs = {1}>
+        <Avatar src= {profilePic}  />
         </Grid>
         <Grid item xs = {10}>
-        <Typography>Hello</Typography>
+        <Typography className = {styles.userNameGame} >Hello</Typography>
+        <JoinParty></JoinParty>
+        <Typography>Max Players: 10</Typography>
+        <Typography>Current Players: 3</Typography>
+
+
         </Grid>
         </Grid>
         </CardContent>

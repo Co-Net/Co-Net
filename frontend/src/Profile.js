@@ -178,7 +178,9 @@ class Profile extends Component {
 
     axios.get("http://localhost:3001/userTags/").then((json) => {
       // Get Tag Object Array and set it
-      this.setState({ allTags: json.data.tagObj });
+      this.setState({ allTags: json.data.tagObj.sort( function ( a, b) {
+        return  a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
+      }) });
     });
   }
 
@@ -265,7 +267,6 @@ class Profile extends Component {
       pastFeedback: this.state.oldFeedback,
     });
   }
-
   handleFeedbackPost(repType) {
     axios
       .put(
@@ -538,7 +539,7 @@ class Profile extends Component {
       setTagsE = (
         <div className={styles.tags}>
           <Grid style={{ marginTop: 10 }} container spacing={1}>
-            <Grid item xs={4} style={{ marginRight: "11%" }}></Grid>
+            <Grid item xs={4}></Grid>
             <Grid item xs={2} style={{ flexBasis: "auto" }}>
               <Typography className={styles.tagTitle}>Tags:</Typography>
             </Grid>
@@ -550,9 +551,9 @@ class Profile extends Component {
                 onSelect={this.onTagSelect}
                 onRemove={this.onTagRemove}
                 style={this.style}
+                selectionLimit	= {5}
               />
-            </Grid>
-          <Grid item xs={1} ><AddTags></AddTags></Grid>
+            </Grid><AddTags></AddTags>
 
           </Grid>
         </div>
