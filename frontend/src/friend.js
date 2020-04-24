@@ -1,21 +1,18 @@
-
-import React, { Component } from 'react';
-import TopMenu from './TopMenu';
-import axios from 'axios';
+import React, { Component } from "react";
+import TopMenu from "./TopMenu";
+import axios from "axios";
 import { createMuiTheme } from "@material-ui/core/styles";
-import styles from './main.module.css';
-import profilePic from './commentPhoto.jpg';
-import Typography from '@material-ui/core/Typography';
-import Menu from './ProfileMenu.js';
-import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
-import Avatar from '@material-ui/core/Avatar';
-import CardContent from '@material-ui/core/CardContent';
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
-
-
-
+import styles from "./main.module.css";
+import profilePic from "./commentPhoto.jpg";
+import Typography from "@material-ui/core/Typography";
+import Menu from "./ProfileMenu.js";
+import Button from "@material-ui/core/Button";
+import Card from "@material-ui/core/Card";
+import Grid from "@material-ui/core/Grid";
+import Avatar from "@material-ui/core/Avatar";
+import CardContent from "@material-ui/core/CardContent";
+import ThumbUpIcon from "@material-ui/icons/ThumbUp";
+import { Link } from "@material-ui/core";
 
 class friend extends Component {
   constructor(props) {
@@ -24,9 +21,8 @@ class friend extends Component {
     this.state = {
       bio: "",
       username: "",
-      profilePic: ""
-    }
-
+      profilePic: "",
+    };
   }
   componentDidMount() {
     axios
@@ -51,55 +47,54 @@ class friend extends Component {
 
   render() {
     const theme = createMuiTheme({
-      '@global': {
+      "@global": {
         body: {
           backgroundColor: "white",
-        }
-      }
+        },
+      },
     });
 
     const paperStyle = {
       marginTop: 8,
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-    }
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+    };
 
     const avatarStyle = {
       margin: 1,
       backgroundColor: "gray",
-    }
+    };
 
     const formStyle = {
-      width: '100%', // Fix IE 11 issue.
+      width: "100%", // Fix IE 11 issue.
       marginTop: 3,
-    }
+    };
 
     return (
       <Grid container spacing={8}>
-        <Grid item>
-        </Grid>
+        <Grid item></Grid>
         <Grid item xs={11}>
           <Grid container spacing={8}>
             <Grid item xs={1}>
-              <Avatar src={this.state.profilePic} className={styles.smallSize} />
-
+              <Avatar
+                src={this.state.profilePic}
+                className={styles.smallSize}
+              />
             </Grid>
             <Grid item xs={10}>
-              {/* use this for hyperlink below <Link href={`/profile/${this.props.author}`}>{this.props.author}</Link> */}
-              <Typography className={styles.friendUsername} display="inline" >{this.state.username} </Typography>
-              <Typography variant='body1' className={styles.commentBody}>
+              <Typography className={styles.friendUsername} display="inline">
+                <Link href={`/profile/${this.state.username}`}>
+                  {this.state.username}
+                </Link>{" "}
+              </Typography>
+              <Typography variant="body1" className={styles.commentBody}>
                 {this.state.bio}
               </Typography>
-
             </Grid>
           </Grid>
         </Grid>
       </Grid>
-
-
-
-
     );
   }
 }

@@ -23,7 +23,7 @@ router.get('/', function (req, res) {
 router.get('/:name', function (req, res) {
     var queryName = req.params.name;
     GameTagModel.findOne({
-        name: queryName
+        game_tag: queryName
     }, function (err, obj) {
         if (err) return res.json({
             success: false,
@@ -37,10 +37,10 @@ router.get('/:name', function (req, res) {
 router.post('/create', function (req, res) {
     let gameTag = new GameTagModel();
     const {
-        name
+        game_tag
     } = req.body;
 
-    if (!name) {
+    if (!game_tag) {
         return res.json({
             created: false,
             error: 'INVALID INPUTS'
@@ -48,7 +48,7 @@ router.post('/create', function (req, res) {
     }
     //name = name.trim();
     GameTagModel.countDocuments({
-        name: name
+        game_tag: game_tag
     }, function (err, count) {
         if (err) {
             return res.send({
@@ -61,7 +61,7 @@ router.post('/create', function (req, res) {
                 message: 'Error: Tag Name Already Exists, Please select from created tags.'
             });
         }
-        gameTag.name = name;
+        gameTag.game_tag = game_tag;
         gameTag.save((err, gameTag) => {
             if (err) {
                 return res.send({
@@ -71,7 +71,7 @@ router.post('/create', function (req, res) {
             }
             return res.send({
                 success: true,
-                name: gameTag,
+                game_tag: gameTag,
                 message: 'Tag Created'
             });
         });
@@ -82,7 +82,7 @@ router.post('/create', function (req, res) {
 router.delete("/:name", function(req, res){
     var queryName = req.params.name;
     GameTagModel.findOneAndDelete({
-        name: queryName
+        game_tag: queryName
     }, function (err, obj) {
         if (err) return res.json({
             success: false,
