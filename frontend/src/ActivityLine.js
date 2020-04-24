@@ -13,23 +13,72 @@ import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import CardContent from '@material-ui/core/CardContent';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
+import Link from '@material-ui/core/Link'
 
 
 
 
-class friend extends Component
-{
+class friend extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      id: "",
+      title: "",
+      timePosted: "",
+      body: "",
+      game: "",
+      username: "",
+      parent: "",
+      profilePic: ""
+    }
   }
 
-   
- 
-  render()
-  {
+  componentDidMount() {
+    axios
+      .get(`http://localhost:3001/forum/${this.props.postID}`)
+      .then((json) => {
+        if (!json) {
+          console.log("error getting forum post");
+        }
+        else {
+          if (json.data.title) {
+            this.setState({ title: json.data.title });
+          }
+          if (json.data.timePosted) {
+            this.setState({ timePosted: json.data.timePosted });
+          }
+          if (json.data.body) {
+            this.setState({ body: json.data.body });
+          }
+          if (json.data.game) {
+            this.setState({ game: json.data.game });
+          }
+          if (json.data.username) {
+            this.setState({ username: json.data.username });
+          }
+          if (json.data.parentID ) {
+            this.setState({ parent: json.data.parentID});
+          }
+          axios
+            .get(`http://localhost:3001/users/${this.state.username}`)
+            .then((json)=> {
+              if (!json) {
+                console.log("error getting following");
+              }
+              else {
+                if (json.data.profilePhoto) {
+                  this.setState({ profilePic: json.data.profilePhoto });
+                }
+              }
+            })
+        }
+      })
+  }
+
+  render() {
     const theme = createMuiTheme({
-      '@global' : {
+      '@global': {
         body: {
           backgroundColor: "white",
         }
@@ -54,36 +103,29 @@ class friend extends Component
     }
 
     return (
-     <Grid container spacing = {8}>
-     <Grid item>
-</Grid>
-     <Grid item xs ={11}>
-        <Grid container spacing = {8}>
-      <Grid item xs ={1}>
-      <Avatar src= {profilePic} className = {styles.smallSize} />
+      <Grid container spacing={8}>
+        <Grid item>
+        </Grid>
+        <Grid item xs={11}>
+          <Grid container spacing={8}>
+            <Grid item xs={1}>
+              <Avatar src={this.state.profilePic} className={styles.smallSize} />
 
+            </Grid>
+            <Grid item xs={10}>
+              <Typography className={styles.friendUsername} display="inline" >{this.state.username} </Typography>
+              <Typography className={styles.timeStamp} display="inline" >{this.state.timePosted}</Typography>
+              {this.state.parent === "0" ? (<Typography variant='body1' className={styles.commentBody}>
+                  Created a<Typography className={styles.commentThread}>post:</Typography>
+                  <Typography className={styles.commentThreadText}>{this.state.title}</Typography>
+                </Typography>) : (<Typography variant='body1' className={styles.commentBody}>
+                Replied to a <Link component="button" variant="body1" onClick ={() => {this.props.history.push(`/forum/${this.state.parent}`)}} >thread:</Link>
+                <Typography className={styles.commentThreadText}>{this.state.body}</Typography>
+              </Typography>)}
+            </Grid>
+          </Grid>
+        </Grid>
       </Grid>
-      <Grid item xs = {10}>
-      <Typography className = {styles.friendUsername} display = "inline" >HelloHydra </Typography>
-      <Typography  className = {styles.timeStamp} display = "inline" >Added 2 days ago</Typography>
-      {this.props.activity == "reply"?  (<Typography variant = 'body1' className = {styles.commentBody}>
-      Replied to a<Typography className = {styles.commentThread}>thread:</Typography>
-      <Typography className = {styles.commentThreadText}>I really don't think you should be saying that...</Typography>
-        </Typography>) :
-        (<Typography variant = 'body1' className = {styles.commentBody}>
-        Created a<Typography className = {styles.commentThread}>post:</Typography>
-        <Typography className = {styles.commentThreadText}>"How to get out of silver"</Typography>
-          </Typography>) }
-     
-      
-      </Grid>
-      </Grid>
-      </Grid>
-      </Grid>
-   
-
-   
-  
     );
   }
 }

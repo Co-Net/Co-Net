@@ -28,26 +28,26 @@ class friend extends Component {
     }
 
   }
-    componentDidMount(){
-      axios
-        .get(`http://localhost:3001/users/${this.props.username}`)
-        .then((json) => {
-          if(!json){
-            console.log("error getting following");
+  componentDidMount() {
+    axios
+      .get(`http://localhost:3001/users/${this.props.username}`)
+      .then((json) => {
+        if (!json) {
+          console.log("error getting following");
+        }
+        else {
+          if (json.data.bio) {
+            this.setState({ bio: json.data.bio });
           }
-          else{
-            if(json.data.bio){
-              this.setState({bio: json.data.bio});
-            }
-            if(json.data.username){
-              this.setState({username: json.data.username});
-            }
-            if(json.data.profilePhoto){
-              this.setState({profilePic: json.data.profilePhoto});
-            }
+          if (json.data.username) {
+            this.setState({ username: json.data.username });
           }
-        })
-    }
+          if (json.data.profilePhoto) {
+            this.setState({ profilePic: json.data.profilePhoto });
+          }
+        }
+      })
+  }
 
   render() {
     const theme = createMuiTheme({
@@ -90,7 +90,7 @@ class friend extends Component {
               <Typography className={styles.friendUsername} display="inline" >{this.state.username} </Typography>
               <Typography variant='body1' className={styles.commentBody}>
                 {this.state.bio}
-        </Typography>
+              </Typography>
 
             </Grid>
           </Grid>
