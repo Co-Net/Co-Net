@@ -40,6 +40,8 @@ import AutoGame from "./autoGame";
 import CreatableSelect from "react-select/creatable";
 import Select from "@material-ui/core/Select";
 import CheckIcon from "@material-ui/icons/Check";
+import { Multiselect } from 'multiselect-react-dropdown';
+
 
 class CreateForumPost extends Component {
   constructor(props) {
@@ -191,13 +193,42 @@ class CreateForumPost extends Component {
       marginLeft: 8,
     };
 
-    const gameList = [
-      "League of Legends",
-      "Counter Strike",
-      "Fortnite",
-      "Portal",
-      "Minecraft",
-    ];
+    const state = {
+      options:[
+        { key: "League", },
+        { key: "Minecraft", },
+        { key: "Valorant", },
+        { key: "CSGO", },
+        { key: "Mario Kart", },
+        { key: "Animal Crossing", },
+        { key: "Tic Tac Toe", }
+      ],
+    };
+
+    const style = {
+      multiselectContainer: { 
+        textAlign: 'center',
+        width: '70%',
+        marginLeft: '10px',
+      },
+      chips: {
+      },
+      searchBox: {
+        fontSize: '15px',
+        fontFamily: 'Segoe UI',
+        width: '69%',
+        marginLeft: '10px',
+        height: '40px',
+      },
+      inputField: { 
+        fontSize: '15px',
+        marginTop: '10px',
+
+    },
+      multiselectContainer: {
+      }
+    };
+  
 
     const dividerGridStyle = {
       root: {
@@ -248,8 +279,15 @@ class CreateForumPost extends Component {
             variant="outlined"
           />
 
-          <AutoGame onGameSelect={this.handleGameSelect}></AutoGame>
-          <div style={{ marginRight: 20 }}>
+          <Multiselect
+          options={state.options}
+          displayValue="key"
+          style={style}
+          className = {mainStyles.multiselectGame}
+          placeholder = "Choose Game"
+          selectionLimit = {1}
+
+        />           <div style={{ marginRight: 20 }}>
             <TextField
               id="outlined-multiline-static"
               label="What's your post about?"

@@ -538,7 +538,7 @@ class Profile extends Component {
       setTagsE = (
         <div className={styles.tags}>
           <Grid style={{ marginTop: 10 }} container spacing={1}>
-            <Grid item xs={4} style={{ marginRight: "11%" }}></Grid>
+            <Grid item xs={4}></Grid>
             <Grid item xs={2} style={{ flexBasis: "auto" }}>
               <Typography className={styles.tagTitle}>Tags:</Typography>
             </Grid>
