@@ -551,9 +551,9 @@ class Profile extends Component {
                 onSelect={this.onTagSelect}
                 onRemove={this.onTagRemove}
                 style={this.style}
+                selectionLimit	= {5}
               />
-            </Grid>
-          <Grid item xs={1} ><AddTags></AddTags></Grid>
+            </Grid><AddTags></AddTags>
 
           </Grid>
         </div>
