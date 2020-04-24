@@ -31,7 +31,7 @@ class UserCard extends Component
   {
 
     return (
-        <Card raised = "true" variant="outlined">
+        <Card>
         <CardContent className = {styles.userCard}>
         <Grid container>
         <Grid item xs = {2}>

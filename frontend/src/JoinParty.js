@@ -21,11 +21,16 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import UserCard from './UserCard';
 
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
 
 
 export default function AlertDialog(props) {
   const [open1,setOpen1] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
+  const [joined, setJoined] = React.useState(false);
+
 
   const { history } = props;
 
@@ -37,7 +42,24 @@ export default function AlertDialog(props) {
 
   const handleClose = () => {
     setOpen1(false);
+   
   };
+
+
+  const handleCloseJoinedParty = () => {
+    setOpen1(false);
+    setJoined(true);
+  };
+
+  const handleLeaveParty = () =>{
+    setJoined(false);
+  }
+
+
+
+  function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
 
   const state = {
     options:[
@@ -122,8 +144,10 @@ export default function AlertDialog(props) {
 
   return (
     <div style= {{display: 'inline',}}>
-    <Button  onClick={handleClickOpenUp} variant = 'contained' style= {{float: 'right',}}>Join</Button>
-      <Dialog
+    {!joined ?     <Button  onClick={handleClickOpenUp} color = "secondary" variant = 'contained' style= {{float: 'right',}}>Join</Button>
+  : <Button  onClick={handleLeaveParty} variant = 'contained' style= {{float: 'right',}}>Leave</Button>}
+
+    <Dialog
       maxWidth = 'sm'
         open={open1}
         fullWidth
@@ -195,9 +219,10 @@ export default function AlertDialog(props) {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleClose} color="primary" autoFocus>
+          <Button onClick={handleCloseJoinedParty} color="primary" autoFocus>
             Join Party
           </Button>
+       
         </DialogActions>
       </Dialog>
       
