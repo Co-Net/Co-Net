@@ -458,15 +458,6 @@ class Profile extends Component {
       multiselectContainer: {},
     };
 
-    // Active, In-Game, Full, Offline, Away
-    const statusColorCodes = {
-      active: "#26AD00",
-      ingame: "4ACFF9",
-      full: "FF3200",
-      offline: "C4C4C4",
-      away: "FFE614",
-    };
-
     const {
       allTags,
       userTags,
@@ -475,6 +466,15 @@ class Profile extends Component {
       ownProfile,
       status,
     } = this.state;
+
+    // Active, In-Game, Full, Offline, Away
+    const statusColorCodes = {
+      active: "#26AD00",
+      ingame: "4ACFF9",
+      full: "FF3200",
+      offline: "C4C4C4",
+      away: "FFE614",
+    };
 
     // Set Status Color
     var statusColor;
