@@ -116,7 +116,7 @@ export default function AlertDialog() {
     <div style= {{display: 'inline',}}>
     <Typography
     className="menuButtons"
-    onClick={handleClickOpenUp}> Party</Typography>
+    onClick={handleClickOpenUp}>Create Party</Typography>
       <Dialog
       maxWidth = 'sm'
         open={open1}

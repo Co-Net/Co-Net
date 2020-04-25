@@ -4,6 +4,8 @@
 const express = require("express");
 const router = express.Router();
 const PartyModel = require("../models/partyModel");
+const UserModel = require("../models/userModel");
+const GameModel = require("../models/gameModel");
 
 // Create a party
 router.post("/create", function (req, res) {
@@ -36,20 +38,30 @@ router.post("/create", function (req, res) {
                     message: "Error: Party with this host already exists.",
                 });
             }
-            party.partyLeader = partyLeader;
-            party.gameID = gameID;
-            party.maxPlayers = maxPlayers;
-            party.save((err, party) => {
+            // Get and set Game Name
+            GameModel.findById(gameID, function (err, doc) {
                 if (err) {
-                    return res.send({
+                    return res.json({
                         success: false,
-                        message: "Error: Server error",
+                        error: err,
                     });
                 }
-                return res.send({
-                    success: true,
-                    name: party,
-                    message: "Party Created",
+                party.partyLeader = partyLeader;
+                party.gameID = gameID;
+                party.maxPlayers = maxPlayers;
+                party.game = doc.gameObj.name;
+                party.save((err, party) => {
+                    if (err) {
+                        return res.send({
+                            success: false,
+                            message: "Error: Server error",
+                        });
+                    }
+                    return res.send({
+                        success: true,
+                        name: party,
+                        message: "Party Created",
+                    });
                 });
             });
         }
@@ -73,21 +85,23 @@ router.get("/id/:id", function (req, res) {
 router.get("/game/:id", function (req, res) {
     var queryID = req.params.id;
     PartyModel.find({
-        'gameID': {
-            $in: [queryID]
-        }
-    }, (err, doc) => {
-        if (err) {
+            gameID: {
+                $in: [queryID],
+            },
+        },
+        (err, doc) => {
+            if (err) {
+                return res.json({
+                    success: false,
+                    error: err,
+                });
+            }
             return res.json({
-                success: false,
-                error: err,
+                success: true,
+                parties: doc,
             });
         }
-        return res.json({
-            success: true,
-            parties: doc,
-        });
-    })
+    );
 });
 
 // Get all parties
@@ -127,7 +141,7 @@ router.put("/addPartyMember/:id", function (req, res) {
     var queryID = req.params.id;
     var body = req.body;
     var username = body.username;
-    
+
     if (!username) {
         return res.json({
             created: false,
@@ -144,17 +158,37 @@ router.put("/addPartyMember/:id", function (req, res) {
             $push: {
                 partyMembers: playerObj,
             },
+        }, {
+            new: true,
         },
-        function (err) {
+        function (err, doc) {
             if (err)
                 return res.json({
                     success: false,
                     error: err,
                 });
-            return res.json({
-                success: true,
-                party: body,
-            });
+            // If success, add party id to user
+            UserModel.findOneAndUpdate({
+                    username: username,
+                }, {
+                    currentPartyId: queryID,
+                }, {
+                    new: true,
+                },
+                function (err, doc2) {
+                    if (err) {
+                        return res.json({
+                            success: false,
+                            error: err,
+                        });
+                    }
+                    return res.json({
+                        success: true,
+                        party: doc,
+                        user: doc2,
+                    });
+                }
+            );
         }
     );
 });
@@ -173,17 +207,37 @@ router.put("/removePartyMember/:id", function (req, res) {
             $pull: {
                 partyMembers: playerObj,
             },
+        }, {
+            new: true
         },
-        function (err) {
+        function (err, doc) {
             if (err)
                 return res.json({
                     success: false,
                     error: err,
                 });
-            return res.json({
-                success: true,
-                party: body,
-            });
+            // If success, remove party id to user
+            UserModel.findOneAndUpdate({
+                    username: username,
+                }, {
+                    currentPartyId: "",
+                }, {
+                    new: true,
+                },
+                function (err, doc2) {
+                    if (err) {
+                        return res.json({
+                            success: false,
+                            error: err,
+                        });
+                    }
+                    return res.json({
+                        success: true,
+                        party: doc,
+                        user: doc2,
+                    });
+                }
+            );
         }
     );
 });
