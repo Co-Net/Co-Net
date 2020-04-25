@@ -119,7 +119,7 @@ class friend extends Component {
                   Created a<Typography className={styles.commentThread}>post:</Typography>
                   <Typography className={styles.commentThreadText}>{this.state.title}</Typography>
                 </Typography>) : (<Typography variant='body1' className={styles.commentBody}>
-                Replied to a <Link component="button" variant="body1" onClick ={() => {this.props.history.push(`/forum/${this.state.parent}`)}} >thread:</Link>
+                Replied to a <Link component="button" variant="body1" to={`http://localhost:3000/forumPost/${this.state.parent}`}  activeClassName='active'>thread:</Link>
                 <Typography className={styles.commentThreadText}>{this.state.body}</Typography>
               </Typography>)}
             </Grid>
