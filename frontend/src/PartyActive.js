@@ -52,7 +52,7 @@ export default function AlertDialog(props) {
         // Leader's avatar
         // Max Players
         // Members
-        const party = json.data;
+        const party = json.data.party;
         const game = party.game;
         const maxPlayers = party.maxPlayers;
         const members = party.partyMembers;
@@ -84,18 +84,6 @@ export default function AlertDialog(props) {
       });
   }, [props.partyID, props.username]);
 
-  const state = {
-    options: [
-      { key: "League" },
-      { key: "Minecraft" },
-      { key: "Valorant" },
-      { key: "CSGO" },
-      { key: "Mario Kart" },
-      { key: "Animal Crossing" },
-      { key: "Tic Tac Toe" },
-    ],
-  };
-
   const style = {
     multiselectContainer: {
       textAlign: "center",
@@ -110,53 +98,6 @@ export default function AlertDialog(props) {
     },
     multiselectContainer: {},
   };
-
-  const marks = [
-    {
-      value: 0,
-      label: "0",
-    },
-    {
-      value: 10,
-      label: "1",
-    },
-    {
-      value: 20,
-      label: "2",
-    },
-    {
-      value: 30,
-      label: "3",
-    },
-    {
-      value: 40,
-      label: "4",
-    },
-    {
-      value: 50,
-      label: "5",
-    },
-    {
-      value: 60,
-      label: "6",
-    },
-    {
-      value: 70,
-      label: "7",
-    },
-    {
-      value: 80,
-      label: "8",
-    },
-    {
-      value: 90,
-      label: "9",
-    },
-    {
-      value: 100,
-      label: "10",
-    },
-  ];
 
   return (
     <div style={{ display: "inline" }}>
@@ -194,7 +135,7 @@ export default function AlertDialog(props) {
                     className={styles.friendUsername}
                     display="inline"
                   >
-                    <Link href={`/profile/${leader}`}>{leader}</Link>{" "}
+                    <Link href={`/profile/${leader}`}>{leader}</Link>
                   </Typography>
                   <Typography className={styles.timeStamp} display="inline">
                     Party Owner

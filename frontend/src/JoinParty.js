@@ -31,10 +31,10 @@ export default function AlertDialog(props) {
   // const [joined, setJoined] = React.useState(false);
 
   const handleClickOpenUp = () => {
-    if (props.currentUser === 'Guest') {
-      alert('You must be signed in to join a party.');
+    if (props.currentUser === "Guest") {
+      alert("You must be signed in to join a party.");
       return;
-  }
+    }
     setOpen1(true);
   };
 
@@ -44,27 +44,44 @@ export default function AlertDialog(props) {
 
   const handleCloseJoinedParty = () => {
     // axios call add party member
-    axios.put(`http://localhost:3000/party/addPartyMember/${props.party._id}`, {
-      username: props.currentUser
-    })
-    .then((json) => {
-      if (json.data.success) {
-        setOpen1(false);
-        window.location.reload(false);
-      }
-    });
+    axios
+      .put(`http://localhost:3000/party/addPartyMember/${props.party._id}`, {
+        username: props.currentUser,
+      })
+      .then((json) => {
+        if (json.data.success) {
+          setOpen1(false);
+          window.location.reload(false);
+        }
+      });
   };
 
   const handleLeaveParty = () => {
-    // axios call remove member
-    axios.put(`http://localhost:3000/party/removePartyMember/${props.party._id}`, {
-      username: props.currentUser
-    })
-    .then((json) => {
-      if (json.data.success) {
-        window.location.reload(false);
-      }
-    });
+    // Check if user is party leader. If is, then delete party
+    // Deleting member's currentPartyId is handled on backend
+    if (props.currentUser === props.party.partyLeader) {
+      axios.delete(`http://localhost:3001/party/${props.currentUser}`)
+      .then((json) => {
+        console.log(json.data);
+        if (json.data.success) {
+          window.location.reload(false);
+        }
+      })
+    } else {
+      // axios call remove member
+      axios
+        .put(
+          `http://localhost:3000/party/removePartyMember/${props.party._id}`,
+          {
+            username: props.currentUser,
+          }
+        )
+        .then((json) => {
+          if (json.data.success) {
+            window.location.reload(false);
+          }
+        });
+    }
   };
 
   function Alert(props) {
@@ -195,7 +212,9 @@ export default function AlertDialog(props) {
                     className={styles.friendUsername}
                     display="inline"
                   >
-                    <Link href={`/profile/${props.party.partyLeader}`}>{props.party.partyLeader}</Link>
+                    <Link href={`/profile/${props.party.partyLeader}`}>
+                      {props.party.partyLeader}
+                    </Link>
                   </Typography>
                   <Typography className={styles.timeStamp} display="inline">
                     Party Owner

@@ -374,7 +374,7 @@ export default function PrimarySearchAppBar(props) {
           </div>
 
           <IconButton color="inherit">
-            {isInParty ? <PartyActive username={username} partyID={partyID} history={history}></PartyActive> : <PartyButton username={username}></PartyButton>}
+            {isInParty ? <PartyActive username={username} partyID={partyID} history={history}></PartyActive> : <PartyButton username={username} history={history}></PartyButton>}
           </IconButton>
 
           <div className={classes.grow} />

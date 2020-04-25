@@ -49,19 +49,36 @@ router.post("/create", function (req, res) {
                 party.partyLeader = partyLeader;
                 party.gameID = gameID;
                 party.maxPlayers = maxPlayers;
-                party.game = doc.gameObj.name;
-                party.save((err, party) => {
+                party.game = doc.name;
+                party.save((err, partyObj) => {
                     if (err) {
                         return res.send({
                             success: false,
                             message: "Error: Server error",
                         });
                     }
-                    return res.send({
-                        success: true,
-                        name: party,
-                        message: "Party Created",
-                    });
+                    // If success, add party id to party leader
+                    UserModel.findOneAndUpdate({
+                            username: partyLeader,
+                        }, {
+                            currentPartyId: partyObj._id,
+                        }, {
+                            new: true,
+                        },
+                        function (err, doc2) {
+                            if (err) {
+                                return res.json({
+                                    success: false,
+                                    error: err,
+                                });
+                            }
+                            return res.json({
+                                success: true,
+                                party: partyObj,
+                                user: doc2,
+                            });
+                        }
+                    );
                 });
             });
         }
@@ -77,7 +94,10 @@ router.get("/id/:id", function (req, res) {
                 success: false,
                 error: err,
             });
-        return res.send(doc);
+        return res.json({
+            success: true,
+            party: doc
+        });
     });
 });
 
@@ -126,12 +146,42 @@ router.delete("/:partyLeader", function (req, res) {
             partyLeader: queryPartyLeader,
         },
         function (err, obj) {
-            if (err)
+            if (err) {
                 return res.json({
                     success: false,
                     error: err,
                 });
-            return res.send(obj);
+            }
+            // Once deleted, clear all member's currentPartyId
+            UserModel.find({
+                currentPartyId: obj._id
+            }, function(err, users) {
+                if (err) {
+                    return res.json({
+                        success: false,
+                        error: err
+                    });
+                }
+                users.forEach((userObj) => {
+                    // console.log(userObj);
+                    UserModel.findOneAndUpdate({
+                        username: userObj.username
+                    }, {
+                        currentPartyId: "",
+                    }, { new: true }, function(err, doc) {
+                        if (err) {
+                            return res.json({
+                                success: false,
+                                error: err
+                            });
+                        }
+                    });
+                });
+                return res.json({
+                    success: true,
+                    party: obj
+                });
+            });
         }
     );
 });

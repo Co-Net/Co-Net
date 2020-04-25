@@ -34,7 +34,8 @@ class PartyCard extends Component {
           this.setState({ avatar: json.data.profilePhoto });
         }
       });
-    if (this.props.party.partyMembers.filter((member) => member.username === this.props.currentUser).length != 0) {
+    if (this.props.leader === this.props.currentUser) this.setState({ isInParty: true });
+    else if (this.props.party.partyMembers.filter((member) => member.username === this.props.currentUser).length != 0) {
       this.setState({ isInParty: true });
     }
   }
