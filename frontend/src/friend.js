@@ -30,7 +30,8 @@ class friend extends Component {
       .then((json) => {
         if (!json) {
           console.log("error getting following");
-        } else {
+        }
+        else {
           if (json.data.bio) {
             this.setState({ bio: json.data.bio });
           }
@@ -41,7 +42,7 @@ class friend extends Component {
             this.setState({ profilePic: json.data.profilePhoto });
           }
         }
-      });
+      })
   }
 
   render() {

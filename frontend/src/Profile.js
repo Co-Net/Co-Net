@@ -61,6 +61,7 @@ class Profile extends Component {
       followText: "Follow",
       followList: [],
       currentFollowList: [],
+      activityList: [],
       error: false
     };
   }
@@ -89,7 +90,6 @@ class Profile extends Component {
         if (json.data.profilePhoto) {
           this.setState({ avatar: json.data.profilePhoto });
         }
-        console.log(json.data.friends);
         if (json.data.friends) {
           this.setState({ currentFollowList: json.data.friends });
         }
@@ -127,8 +127,12 @@ class Profile extends Component {
           if (json.data.status) {
             this.setState({ status: json.data.status });
           }
-          if(json.data.friends){
-            this.setState({followList: json.data.friends})
+          if (json.data.friends) {
+            this.setState({ followList: json.data.friends })
+          }
+          console.log(json.data.forumPosts);
+          if (json.data.forumPosts) {
+            this.setState({ activityList: json.data.forumPosts });
           }
         } else {
           // If not own profile, get the other user's data
@@ -165,10 +169,13 @@ class Profile extends Component {
             if (json.data.friends) {
               this.setState({ followList: json.data.friends });
             }
+            if (json.data.forumPosts) {
+              this.setState({ activityList: json.data.forumPosts });
+            }
             if (this.state.currentFollowList.some(user => user.username === this.state.username)) {
               this.setState({ followText: 'Unfollow' });
             }
-            else{
+            else {
               //console.log("smol wang");
               this.setState({ followText: 'Follow' });
             }
@@ -178,9 +185,11 @@ class Profile extends Component {
 
     axios.get("http://localhost:3001/userTags/").then((json) => {
       // Get Tag Object Array and set it
-      this.setState({ allTags: json.data.tagObj.sort( function ( a, b) {
-        return  a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
-      }) });
+      this.setState({
+        allTags: json.data.tagObj.sort(function (a, b) {
+          return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
+        })
+      });
     });
   }
 
@@ -497,7 +506,7 @@ class Profile extends Component {
       else otherTags = otherTags + tag.name + ", ";
     });
     if (otherTags.length == 0) otherTags = "None";
-    
+
     // Conditional Rendering
     var editProfileE;
     var setStatusE;
@@ -551,7 +560,7 @@ class Profile extends Component {
                 onSelect={this.onTagSelect}
                 onRemove={this.onTagRemove}
                 style={this.style}
-                selectionLimit	= {5}
+                selectionLimit={5}
               />
             </Grid><AddTags></AddTags>
 
@@ -622,21 +631,21 @@ class Profile extends Component {
           <TopMenu history={this.props.history}></TopMenu>
           <div className={styles.bgColor}>
             <div className={styles.profilePhoto}> </div>
-            <Grid item xs = {4} className = {styles.profileCard}>
-            <Card className = {styles.profileCardPadding}>
-            <CardContent className = {styles.forumCard}>
-            <Typography>
-            Time Zone: {this.state.timeZone} </Typography>
-            <Typography>Currently Playing: <Typography className = {styles.gameName} style ={{color:'#3f51b5', display: 'inline',}}>League of Legends</Typography></Typography>
-            <Typography>Current Status: </Typography>
-            {setStatusE}
+            <Grid item xs={4} className={styles.profileCard}>
+              <Card className={styles.profileCardPadding}>
+                <CardContent className={styles.forumCard}>
+                  <Typography>
+                    Time Zone: {this.state.timeZone} </Typography>
+                  <Typography>Currently Playing: <Typography className={styles.gameName} style={{ color: '#3f51b5', display: 'inline', }}>League of Legends</Typography></Typography>
+                  <Typography>Current Status: </Typography>
+                  {setStatusE}
 
-              </CardContent>
+                </CardContent>
               </Card>
 
-      </Grid>
-     
-         
+            </Grid>
+
+
             <Avatar src={this.state.photo} className={styles.large} />
             {followE}
             {editProfileE}
@@ -668,7 +677,8 @@ class Profile extends Component {
               allRep={this.state.allRep}
               timeZone={this.state.timeZone}
               currentUser={this.state.currentUser === this.state.username}
-              allFollowers = {this.state.followList}
+              allFollowers={this.state.followList}
+              allActivity={this.state.activityList}
             ></Menu>
           </div>
         </div>
