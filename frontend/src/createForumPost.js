@@ -195,13 +195,13 @@ class CreateForumPost extends Component {
 
     const state = {
       options:[
-        { key: "League", },
-        { key: "Minecraft", },
-        { key: "Valorant", },
-        { key: "CSGO", },
-        { key: "Mario Kart", },
-        { key: "Animal Crossing", },
-        { key: "Tic Tac Toe", }
+        { name: "League", },
+        { name: "Minecraft", },
+        { name: "Valorant", },
+        { name: "CSGO", },
+        { name: "Mario Kart", },
+        { name: "Animal Crossing", },
+        { name: "Tic Tac Toe", }
       ],
     };
 
@@ -281,8 +281,9 @@ class CreateForumPost extends Component {
 
           <Multiselect
           options={state.options}
-          displayValue="key"
+          displayValue="name"
           style={style}
+          onSelect={(l, i) => this.setState({ game: i.name })}
           className = {mainStyles.multiselectGame}
           placeholder = "Choose Game"
           selectionLimit = {1}

@@ -550,14 +550,14 @@ router.put('/removePost/:username', function (req, res) {
         $pull: {
             forumPosts: postobj
         }
-    }, function (err) {
+    }, { new: true }, function (err, doc) {
         if (err) return res.json({
             success: false,
             error: err
         });
         return res.json({
             success: true,
-            user: body
+            user: doc
         });
     });
 })

@@ -17,6 +17,7 @@ import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import EditIcon from "@material-ui/icons/Edit";
 import EditForumPost from "./editForumPost";
+import Error404 from './Error404';
 
 const monthNames = [
   "January",
@@ -70,6 +71,7 @@ class ForumPost extends Component {
       numOfReplies: 0,
       hasUpVoted: false,
       hasDownVoted: false,
+      error: false
     };
   }
 
@@ -93,6 +95,10 @@ class ForumPost extends Component {
         axios
           .get(`http://localhost:3001/forum/${this.props.match.params.postID}`)
           .then((json) => {
+            if (!json.data) {
+              this.setState({ error: true });
+              return;
+            }
             this.setState({
               timePosted: json.data.timePosted,
               title: json.data.title,
@@ -201,6 +207,7 @@ class ForumPost extends Component {
             `http://localhost:3001/forum/addReply/${this.props.match.params.postID}`,
             {
               childID: res._id,
+              username: this.state.currentUser,
             }
           )
           .then((json) => {
@@ -213,13 +220,13 @@ class ForumPost extends Component {
                   }
                 )
                 .then((json) => {
-                  console.log(json.data);
+                  if (json.data.success) {
+                    this.setState({
+                      comment: "",
+                      numOfReplies: this.state.numOfReplies + 1,
+                    });
+                  }
                 });
-              console.log("Comment Posted Successfully");
-              this.setState({
-                comment: "",
-                numOfReplies: this.state.numOfReplies + 1,
-              });
             }
           });
       });
@@ -335,12 +342,23 @@ class ForumPost extends Component {
           )
           .then((json) => {
             if (json.data.success) {
-              console.log("Comment Deleted");
+              // Remove from user's forumPosts
+              axios
+                .put(
+                  `http://localhost:3001/users/removePost/${this.state.currentUser}`
+                )
+                .then((json) => {
+                  if (json.data.success) {
+                    console.log("Comment Deleted");
+                    this.setState({
+                      numOfReplies: this.state.numOfReplies - 1,
+                    });
+                  }
+                });
             }
           });
       }
     });
-    this.setState({ numOfReplies: this.state.numOfReplies - 1 });
   }
 
   handleEditPost(e) {
@@ -376,12 +394,13 @@ class ForumPost extends Component {
         if (json.data.success) {
           console.log("Post Deleted");
           this.setState({ editing: false });
-          this.props.push("/Forum");
+          this.props.history.push("/Forum");
         }
       });
   }
 
   render() {
+    if (this.state.error) return <Error404></Error404>;
     const theme = createMuiTheme({
       "@global": {
         body: {
@@ -563,8 +582,10 @@ class ForumPost extends Component {
                     <Typography
                       className={styles.userNameForum}
                       display="inline"
-                      style={{cursor: 'pointer', color: "#0755ca"}}
-                      onClick={() => this.props.history.push(`/profile/${author}`)}
+                      style={{ cursor: "pointer", color: "#0755ca" }}
+                      onClick={() =>
+                        this.props.history.push(`/profile/${author}`)
+                      }
                     >
                       {author},{" "}
                     </Typography>
@@ -628,7 +649,7 @@ class ForumPost extends Component {
             </Card>
           </Grid>
 
-          <Grid item xs={4}>
+          {/* <Grid item xs={4}>
             <Card className={styles.postSpacing}>
               <CardContent>
                 <Typography variant="h6" className={styles.forumPostTitle}>
@@ -697,7 +718,7 @@ class ForumPost extends Component {
                 </div>
               </CardContent>
             </Card>
-          </Grid>
+          </Grid> */}
         </Grid>
       </div>
     );
