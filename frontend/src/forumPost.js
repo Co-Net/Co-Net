@@ -484,8 +484,8 @@ class ForumPost extends Component {
           <EditIcon></EditIcon>
         </Button>
       ) : (
-        ""
-      );
+          ""
+        );
 
     const upVoteButton = hasUpVoted ? (
       <ExpandLessIcon
@@ -494,12 +494,12 @@ class ForumPost extends Component {
         onClick={() => this.clearVote("+")}
       ></ExpandLessIcon>
     ) : (
-      <ExpandLessIcon
-        className={styles.upDownVote}
-        fontsize="large"
-        onClick={this.onUpVote}
-      ></ExpandLessIcon>
-    );
+        <ExpandLessIcon
+          className={styles.upDownVote}
+          fontsize="large"
+          onClick={this.onUpVote}
+        ></ExpandLessIcon>
+      );
 
     const downVoteButton = hasDownVoted ? (
       <ExpandMoreIcon
@@ -508,12 +508,12 @@ class ForumPost extends Component {
         onClick={() => this.clearVote("-")}
       ></ExpandMoreIcon>
     ) : (
-      <ExpandMoreIcon
-        className={styles.upDownVote}
-        fontsize="large"
-        onClick={this.onDownVote}
-      ></ExpandMoreIcon>
-    );
+        <ExpandMoreIcon
+          className={styles.upDownVote}
+          fontsize="large"
+          onClick={this.onDownVote}
+        ></ExpandMoreIcon>
+      );
 
     const forumPostUI = this.state.editing ? (
       <EditForumPost
@@ -526,130 +526,130 @@ class ForumPost extends Component {
         onSave={this.handleSavePost}
       ></EditForumPost>
     ) : (
-      <div className="content">
-        <Grid container spacing={1}>
-          <Grid item xs={8}>
-            <Card className={styles.postSpacing}>
-              <CardContent className={styles.mainPostSpacing}>
-                <Grid container spacing={1}>
-                  <Grid item xs={2}>
-                    <Avatar src={avatar} className={styles.avatarForum} />
-                    <div className={styles.postStats}>
-                      <div>
-                        <Typography
-                          className={styles.statsText}
-                          display="inline"
-                        >
-                          Votes:{" "}
-                        </Typography>
-                        <Typography
-                          className={styles.statsNumber}
-                          display="inline"
-                        >
+        <div className="content">
+          <Grid container spacing={1}>
+            <Grid item xs={8}>
+              <Card className={styles.postSpacing}>
+                <CardContent className={styles.mainPostSpacing}>
+                  <Grid container spacing={1}>
+                    <Grid item xs={2}>
+                      <Avatar src={avatar} className={styles.avatarForum} />
+                      <div className={styles.postStats}>
+                        <div>
+                          <Typography
+                            className={styles.statsText}
+                            display="inline"
+                          >
+                            Votes:{" "}
+                          </Typography>
+                          <Typography
+                            className={styles.statsNumber}
+                            display="inline"
+                          >
+                            {votes}
+                          </Typography>
+                        </div>
+
+                        <div>
+                          <Typography
+                            className={styles.statsText}
+                            display="inline"
+                          >
+                            Replies:{" "}
+                          </Typography>
+                          <Typography
+                            className={styles.statsNumber}
+                            display="inline"
+                          >
+                            {numOfReplies}
+                          </Typography>
+                        </div>
+                      </div>
+                      <div className={styles.arrows}>
+                        {upVoteButton}
+                        <Typography className={styles.voteNumber}>
                           {votes}
                         </Typography>
+                        {downVoteButton}
                       </div>
+                    </Grid>
+                    <Grid item xs={10}>
+                      {editButton}
 
-                      <div>
-                        <Typography
-                          className={styles.statsText}
-                          display="inline"
-                        >
-                          Replies:{" "}
-                        </Typography>
-                        <Typography
-                          className={styles.statsNumber}
-                          display="inline"
-                        >
-                          {numOfReplies}
-                        </Typography>
-                      </div>
-                    </div>
-                    <div className={styles.arrows}>
-                      {upVoteButton}
-                      <Typography className={styles.voteNumber}>
-                        {votes}
+                      <Typography variant="h6" className={styles.forumPostTitle}>
+                        {title}
                       </Typography>
-                      {downVoteButton}
-                    </div>
-                  </Grid>
-                  <Grid item xs={10}>
-                    {editButton}
+                      <Typography
+                        className={styles.userNameForum}
+                        display="inline"
+                        style={{ cursor: "pointer", color: "#0755ca" }}
+                        onClick={() =>
+                          this.props.history.push(`/profile/${author}`)
+                        }
+                      >
+                        {author},{" "}
+                      </Typography>
+                      <Typography className={styles.timeStamp} display="inline">
+                        {timePosted}
+                      </Typography>
+                      <hr
+                        style={{
+                          color: "#ababab",
+                          backgroundColor: "#ababab",
+                          height: 0.5,
+                          marginTop: 20,
+                          marginBottom: 20,
+                        }}
+                      />
+                      <Typography variant="body1" className={styles.forumBody}>
+                        {body}
+                      </Typography>
 
-                    <Typography variant="h6" className={styles.forumPostTitle}>
-                      {title}
+                      <Typography className={styles.commentNumber}>
+                        {numOfReplies} Comments
                     </Typography>
-                    <Typography
-                      className={styles.userNameForum}
-                      display="inline"
-                      style={{ cursor: "pointer", color: "#0755ca" }}
-                      onClick={() =>
-                        this.props.history.push(`/profile/${author}`)
-                      }
-                    >
-                      {author},{" "}
-                    </Typography>
-                    <Typography className={styles.timeStamp} display="inline">
-                      {timePosted}
-                    </Typography>
-                    <hr
-                      style={{
-                        color: "#ababab",
-                        backgroundColor: "#ababab",
-                        height: 0.5,
-                        marginTop: 20,
-                        marginBottom: 20,
-                      }}
-                    />
-                    <Typography variant="body1" className={styles.forumBody}>
-                      {body}
-                    </Typography>
+                      <hr
+                        style={{
+                          color: "#ababab",
+                          backgroundColor: "#ababab",
+                          height: 0.5,
+                          marginTop: 20,
+                          marginBottom: 20,
+                        }}
+                      />
 
-                    <Typography className={styles.commentNumber}>
-                      {numOfReplies} Comments
-                    </Typography>
-                    <hr
-                      style={{
-                        color: "#ababab",
-                        backgroundColor: "#ababab",
-                        height: 0.5,
-                        marginTop: 20,
-                        marginBottom: 20,
-                      }}
-                    />
+                      {replies}
 
-                    {replies}
-
-                    <Grid container spacing={8}>
-                      <Grid item xs={1}>
-                        <Avatar src={ownAvatar} className={styles.smallSize} />
-                      </Grid>
-                      <Grid item xs={10}>
-                        <TextField
-                          id="standard-textarea"
-                          label="Leave a Comment"
-                          className={styles.commentBox}
-                          value={comment}
-                          onChange={this.handleEditComment}
-                          multiline
-                        />
-                        <Button
-                          className={styles.postComment}
-                          variant="contained"
-                          color="primary"
-                          onClick={this.handlePostComment}
-                        >
-                          Post Comment
+                      <Grid container spacing={8}>
+                        <Grid item xs={1}>
+                          <Avatar src={ownAvatar} className={styles.smallSize} />
+                        </Grid>
+                        <Grid item xs={10}>
+                          <TextField
+                            id="standard-textarea"
+                            label="Leave a Comment"
+                            className={styles.commentBox}
+                            value={comment}
+                            onChange={this.handleEditComment}
+                            multiline
+                          />
+                          <Button
+                            className={styles.postComment}
+                            variant="contained"
+                            color="primary"
+                            onClick={this.handlePostComment}
+                          >
+                            Post Comment
                         </Button>
+                        </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
-          </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
 
-          {/* <Grid item xs={4}>
+            {/* <Grid item xs={4}>
             <Card className={styles.postSpacing}>
               <CardContent>
                 <Typography variant="h6" className={styles.forumPostTitle}>
@@ -719,9 +719,9 @@ class ForumPost extends Component {
               </CardContent>
             </Card>
           </Grid> */}
-        </Grid>
-      </div>
-    );
+          </Grid>
+        </div>
+      );
 
     return (
       <div>

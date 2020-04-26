@@ -60,6 +60,7 @@ class friend extends Component {
           if (json.data.parentID ) {
             this.setState({ parent: json.data.parentID});
           }
+          if(json.data._id){this.setState({id: json.data._id})}
           axios
             .get(`http://localhost:3001/users/${this.state.username}`)
             .then((json)=> {
@@ -116,7 +117,7 @@ class friend extends Component {
               <Typography className={styles.friendUsername} display="inline" >{this.state.username} </Typography>
               <Typography className={styles.timeStamp} display="inline" >{this.state.timePosted}</Typography>
               {this.state.parent === "0" ? (<Typography variant='body1' className={styles.commentBody}>
-                  Created a <Link variant="body1" href={`forumPost/${this.state.parent}`}  activeClassName='active'>post:</Link>
+                  Created a <Link variant="body1" href={`forumPost/${this.state.id}`}  activeClassName='active'>post:</Link>
                   <Typography className={styles.commentThreadText}>{this.state.title}</Typography>
                 </Typography>) : (<Typography variant='body1' className={styles.commentBody}>
                 Replied to a <Link variant="body1" href={`/forumPost/${this.state.parent}`}  activeClassName='active'>thread:</Link>
