@@ -20,7 +20,7 @@ class player extends Component {
     super(props);
 
     this.state = {
-      avatar: "",
+      avatar: "https://res.cloudinary.com/co-net-pix/image/upload/v1586238488/default_user_avatar.jpg",
       bio: "",
       userTags: [],
       status: ""

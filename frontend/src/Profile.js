@@ -380,7 +380,9 @@ class Profile extends Component {
   }
 
   render() {
-    console.log("render");
+    if (this.state.error) {
+      return <Error404></Error404>;
+    }
     const theme = createMuiTheme({
       "@global": {
         body: {
@@ -617,9 +619,7 @@ class Profile extends Component {
         );
     }
 
-    if (this.state.error) {
-      return <Error404></Error404>;
-    } else if (!this.state.editing) {
+      if (!this.state.editing) {
       return (
         <div>
           <TopMenu history={this.props.history}></TopMenu>

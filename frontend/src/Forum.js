@@ -76,7 +76,7 @@ class Forum extends Component {
   }
 
   createPost() {
-    if (this.state.username === 'Guest') alert("You must be signed in to post");
+    if (this.state.username === "Guest") alert("You must be signed in to post");
     this.props.history.push("/createForumPost");
   }
 
@@ -264,7 +264,9 @@ class Forum extends Component {
     // Render each card
     cards.forEach((card) => {
       const postTimestamp = this.convertTime(card.timePosted, false);
-      const replyTimestamp = card.replyDate ? this.convertTime(card.replyDate, true) : "";
+      const replyTimestamp = card.replyDate
+        ? this.convertTime(card.replyDate, true)
+        : "";
 
       const renderCard = (
         <Card key={card.postID} className={mainStyles.postSpacing}>
@@ -289,7 +291,8 @@ class Forum extends Component {
                   </Typography>
                   <Typography
                     onClick={() => {
-                      if (this.state.username === 'Guest') alert("You must be signed in to view a thread.");
+                      if (this.state.username === "Guest")
+                        alert("You must be signed in to view a thread.");
                       else this.props.history.push(`/forumPost/${card.postID}`);
                     }}
                     className={mainStyles.forumTitle}
@@ -302,7 +305,14 @@ class Forum extends Component {
                     {card.title}
                   </Typography>
                 </div>
-                <Typography onClick={() => this.props.history.push(`/profile/${card.user}`)} style={{cursor: 'pointer', color: '#3f51b5'}} className={mainStyles.userName} display="inline">
+                <Typography
+                  onClick={() =>
+                    this.props.history.push(`/profile/${card.user}`)
+                  }
+                  style={{ cursor: "pointer", color: "#3f51b5" }}
+                  className={mainStyles.userName}
+                  display="inline"
+                >
                   {card.user}{" "}
                 </Typography>
                 <Typography className={mainStyles.timeStamp} display="inline">
@@ -353,8 +363,19 @@ class Forum extends Component {
                       <Typography
                         className={mainStyles.userName}
                         display="inline"
-                        style={card.replyUser ? {cursor: 'pointer', color: '#3f51b5'} : null}
-                        onClick={card.replyUser ? () => this.props.history.push(`/profile/${card.replyUser}`) : null}
+                        style={
+                          card.replyUser
+                            ? { cursor: "pointer", color: "#3f51b5" }
+                            : null
+                        }
+                        onClick={
+                          card.replyUser
+                            ? () =>
+                                this.props.history.push(
+                                  `/profile/${card.replyUser}`
+                                )
+                            : null
+                        }
                       >
                         {card.replyUser ? card.replyUser : "No comments"}{" "}
                       </Typography>
