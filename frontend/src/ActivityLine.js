@@ -60,7 +60,9 @@ class friend extends Component {
           if (json.data.parentID ) {
             this.setState({ parent: json.data.parentID});
           }
-          if(json.data._id){this.setState({id: json.data._id})}
+          if(json.data._id){
+            this.setState({id: json.data._id})
+          }
           axios
             .get(`http://localhost:3001/users/${this.state.username}`)
             .then((json)=> {
