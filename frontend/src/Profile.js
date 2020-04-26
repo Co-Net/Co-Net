@@ -62,6 +62,7 @@ class Profile extends Component {
       followList: [],
       currentFollowList: [],
       activityList: [],
+      allActiveGames: [],
       game: "",
       gameID: "",
       error: false,
@@ -114,7 +115,8 @@ class Profile extends Component {
             status: json.data.status,
             followList: json.data.friends,
             activityList: json.data.forumPosts,
-            isInParty: json.data.currentPartyId != ""
+            isInParty: json.data.currentPartyId != "",
+            allActiveGames: json.data.games
           });
           this.analyzeRep(json.data.playerRep);
           if (json.data.currentPartyId) {
@@ -142,6 +144,7 @@ class Profile extends Component {
               status: json.data.status,
               followList: json.data.friends,
               activityList: json.data.forumPosts,
+              allActiveGames: json.data.games
             });
             if (
               this.state.currentFollowList.some(
@@ -682,6 +685,7 @@ class Profile extends Component {
               currentUser={this.state.currentUser === this.state.username}
               allFollowers={this.state.followList}
               allActivity={this.state.activityList}
+              allActiveGames={this.state.allActiveGames}
             ></Menu>
           </div>
         </div>

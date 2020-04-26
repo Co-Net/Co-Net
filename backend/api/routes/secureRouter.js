@@ -37,7 +37,8 @@ router.get('/currentuser', (req, res) => {
       friends: req.user.friends,
       status: req.user.status,
       forumPosts: req.user.forumPosts,
-      currentPartyId: req.user.currentPartyId
+      currentPartyId: req.user.currentPartyId,
+      games: req.user.games
     });
   }
 });

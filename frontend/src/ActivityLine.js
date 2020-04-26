@@ -116,10 +116,10 @@ class friend extends Component {
               <Typography className={styles.friendUsername} display="inline" >{this.state.username} </Typography>
               <Typography className={styles.timeStamp} display="inline" >{this.state.timePosted}</Typography>
               {this.state.parent === "0" ? (<Typography variant='body1' className={styles.commentBody}>
-                  Created a<Typography className={styles.commentThread}>post:</Typography>
+                  Created a <Link variant="body1" href={`forumPost/${this.state.parent}`}  activeClassName='active'>post:</Link>
                   <Typography className={styles.commentThreadText}>{this.state.title}</Typography>
                 </Typography>) : (<Typography variant='body1' className={styles.commentBody}>
-                Replied to a <Link component="button" variant="body1" to={`http://localhost:3000/forumPost/${this.state.parent}`}  activeClassName='active'>thread:</Link>
+                Replied to a <Link variant="body1" href={`/forumPost/${this.state.parent}`}  activeClassName='active'>thread:</Link>
                 <Typography className={styles.commentThreadText}>{this.state.body}</Typography>
               </Typography>)}
             </Grid>
