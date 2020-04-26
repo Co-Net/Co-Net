@@ -82,11 +82,10 @@ class player extends Component {
 
     const status = this.state.status;
     
-    // Active, In-Game, Full, Offline, Away
+    // Active, In-Game, Offline, Away
     const statusColorCodes = {
       active: "#26AD00",
       ingame: "4ACFF9",
-      full: "FF3200",
       offline: "C4C4C4",
       away: "FFE614",
     };
@@ -97,8 +96,6 @@ class player extends Component {
       statusColor = statusColorCodes.active;
     } else if (status === "In-Game") {
       statusColor = statusColorCodes.ingame;
-    } else if (status === "Full") {
-      statusColor = statusColorCodes.full;
     } else if (status === "Away") {
       statusColor = statusColorCodes.away;
     } else {

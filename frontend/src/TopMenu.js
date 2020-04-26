@@ -160,15 +160,18 @@ export default function PrimarySearchAppBar(props) {
           setIsGuest(true);
         } else {
           // If logged in, set username and guest to false
+          var status = json.data.status;
+          var inParty = false;
           if (json.data.currentPartyId) {
             setIsInParty(true);
             setPartyID(json.data.currentPartyId);
+            inParty = true;
           }
           setUsername(json.data.username);
           setIsGuest(false);
           const socket = socketIOClient("http://localhost:3001");
           socket.on("connected", () => {
-            socket.emit("login", json.data.username);
+            socket.emit("login", json.data.username, inParty, status);
           });
         }
       });
@@ -374,7 +377,15 @@ export default function PrimarySearchAppBar(props) {
           </div>
 
           <IconButton color="inherit">
-            {isInParty ? <PartyActive username={username} partyID={partyID} history={history}></PartyActive> : <PartyButton username={username} history={history}></PartyButton>}
+            {isInParty ? (
+              <PartyActive
+                username={username}
+                partyID={partyID}
+                history={history}
+              ></PartyActive>
+            ) : (
+              <PartyButton username={username} history={history}></PartyButton>
+            )}
           </IconButton>
 
           <div className={classes.grow} />

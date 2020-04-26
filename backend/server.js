@@ -17,17 +17,27 @@ var timeouts = {};
 io.on("connection", function (socket) {
   // console.log("Client connected");
   socket.emit("connected");
-  socket.on("login", (username) => {
+  socket.on("login", (username, inParty, status) => {
     connectedUsers[socket.id] = username;
     // If user refreshed, set to false to prevent timeout
     if (timeouts[username]) {
       // console.log(`${username} refreshed`);
       timeouts[username] = false;
     } else {
+      var setStatus = "";
+      if (status === "Invisible") {
+        setStatus = "Invisible";
+      } else if (inParty) {
+        setStatus = "In-Game";
+      } else if (status === "Away") {
+        setStatus = "Away";
+      } else {
+        setStatus = "Active";
+      }
       // If timeout for id doesnt exist, user was timedout and is trying to reconnect or is first time joining
       axios
         .put(`http://localhost:3001/users/${username}`, {
-          status: "Active",
+          status: setStatus
         })
         .then(() => {
           // console.log("logged in as " + username);

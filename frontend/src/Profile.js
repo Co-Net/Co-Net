@@ -65,6 +65,7 @@ class Profile extends Component {
       game: "",
       gameID: "",
       error: false,
+      isInParty: false
     };
   }
 
@@ -113,6 +114,7 @@ class Profile extends Component {
             status: json.data.status,
             followList: json.data.friends,
             activityList: json.data.forumPosts,
+            isInParty: json.data.currentPartyId != ""
           });
           this.analyzeRep(json.data.playerRep);
           if (json.data.currentPartyId) {
@@ -369,9 +371,13 @@ class Profile extends Component {
   }
 
   handleStatusChange(e) {
+    var setStatus = e.target.value;
+    if (this.state.status === e.target.value || (this.state.status === 'In-Game' && e.target.value != 'Invisible')) return;
+    if (!this.state.isInParty && e.target.value === 'In-Game') return;
+    if (this.state.status === 'Invisible' && this.state.isInParty) setStatus = "In-Game"
     axios
       .put(`http://localhost:3001/users/${this.state.currentUser}`, {
-        status: e.target.value,
+        status: setStatus
       })
       .then((json) => {
         console.log("Status set to: " + json.data.user.status);
@@ -460,14 +466,15 @@ class Profile extends Component {
       ownProfile,
       status,
       game,
-      gameID
+      gameID,
+      username,
+      currentUser
     } = this.state;
 
-    // Active, In-Game, Full, Offline, Away
+    // Active, In-Game, Offline, Away
     const statusColorCodes = {
       active: "#26AD00",
       ingame: "4ACFF9",
-      full: "FF3200",
       offline: "C4C4C4",
       away: "FFE614",
     };
@@ -478,8 +485,6 @@ class Profile extends Component {
       statusColor = statusColorCodes.active;
     } else if (status === "In-Game") {
       statusColor = statusColorCodes.ingame;
-    } else if (status === "Full") {
-      statusColor = statusColorCodes.full;
     } else if (status === "Away") {
       statusColor = statusColorCodes.away;
     } else {
@@ -635,7 +640,7 @@ class Profile extends Component {
                       className={styles.gameName}
                       style={{ color: "#3f51b5", display: "inline" }}
                     >
-                      <Link href={`/game/${gameID}`}>{game}</Link>{" "}
+                      {status === 'Invisible' && currentUser !== username ? "None" : <Link href={`/game/${gameID}`}>{game}</Link> }
                     </Typography>
                   </Typography>
                   <Typography>Current Status: </Typography>

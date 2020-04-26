@@ -48,13 +48,6 @@ export default function SimpleSelect(props) {
             ></Brightness1Icon>
             In-Game
           </MenuItem>
-          <MenuItem value={"Full"}>
-            <Brightness1Icon
-              className={mainStyles.statusDot}
-              style={{ color: "#FF3200" }}
-            ></Brightness1Icon>
-            Full
-          </MenuItem>
           <MenuItem value={"Invisible"}>
             <Brightness1Icon
               className={mainStyles.statusDot}
