@@ -58,7 +58,7 @@ class PartyCard extends Component {
               {this.props.leader}
                   </Link>
               </Typography>
-              <JoinParty inParty={this.state.isInParty} currentUser={this.props.currentUser} leaderAvatar={this.state.avatar} gameID={this.props.gameID} game={this.props.game} party={this.props.party}></JoinParty>
+              <JoinParty inParty={this.state.isInParty} inOtherParty={this.props.inOtherParty} currentUser={this.props.currentUser} leaderAvatar={this.state.avatar} gameID={this.props.gameID} game={this.props.game} party={this.props.party}></JoinParty>
               <Typography>Max Players: {this.props.maxPlayers}</Typography>
               <Typography>
                 Current Players: {this.props.currentPlayers}{" "}

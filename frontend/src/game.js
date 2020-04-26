@@ -61,7 +61,8 @@ class Game extends Component {
       parties: [],
       playersPlaying: [],
       error: false,
-      currentUser: ""
+      currentUser: "",
+      inOtherParty : false
     };
   }
 
@@ -80,6 +81,7 @@ class Game extends Component {
               return;
             }
             const game = json.data.gameObj;
+            // Code to grab game image using app id and url
             var appID = game.url.search("/app/");
             var imageURL = "";
             if (appID !== -1) {
@@ -98,7 +100,8 @@ class Game extends Component {
               release_date: game.releaseDate,
               name: game.name,
               image: imageURL,
-              currentUser: userJson.data.username
+              currentUser: userJson.data.username,
+              inOtherParty: userJson.data.currentPartyId.length != 0
             });
 
             // Get parties playing this game
@@ -201,7 +204,8 @@ class Game extends Component {
       image,
       parties,
       error,
-      currentUser
+      currentUser,
+      inOtherParty
     } = this.state;
 
     if (error) return <Error404></Error404>;
@@ -248,7 +252,7 @@ class Game extends Component {
               </Card>
             </Grid>
           </Grid>
-          <GameMenu currentUser={currentUser} game={name} gameID={this.props.match.params.gameID} parties={parties}></GameMenu>
+          <GameMenu currentUser={currentUser} inOtherParty={inOtherParty} game={name} gameID={this.props.match.params.gameID} parties={parties}></GameMenu>
 
           {/* <Typography variant="h5" className={mainStyles.gametitleBig}>
             Parties playing:

@@ -24,6 +24,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import { Link } from "@material-ui/core";
 import axios from "axios";
+import mainStyles from "./main.module.css";
 
 export default function AlertDialog(props) {
   const [open1, setOpen1] = React.useState(false);
@@ -33,6 +34,9 @@ export default function AlertDialog(props) {
   const handleClickOpenUp = () => {
     if (props.currentUser === "Guest") {
       alert("You must be signed in to join a party.");
+      return;
+    } else if (props.inOtherParty) {
+      alert("You must leave your current party first before joining.");
       return;
     }
     setOpen1(true);
@@ -60,13 +64,14 @@ export default function AlertDialog(props) {
     // Check if user is party leader. If is, then delete party
     // Deleting member's currentPartyId is handled on backend
     if (props.currentUser === props.party.partyLeader) {
-      axios.delete(`http://localhost:3001/party/${props.currentUser}`)
-      .then((json) => {
-        console.log(json.data);
-        if (json.data.success) {
-          window.location.reload(false);
-        }
-      })
+      axios
+        .delete(`http://localhost:3001/party/${props.currentUser}`)
+        .then((json) => {
+          console.log(json.data);
+          if (json.data.success) {
+            window.location.reload(false);
+          }
+        });
     } else {
       // axios call remove member
       axios
@@ -103,52 +108,11 @@ export default function AlertDialog(props) {
     multiselectContainer: {},
   };
 
-  const marks = [
-    {
-      value: 0,
-      label: "0",
-    },
-    {
-      value: 10,
-      label: "1",
-    },
-    {
-      value: 20,
-      label: "2",
-    },
-    {
-      value: 30,
-      label: "3",
-    },
-    {
-      value: 40,
-      label: "4",
-    },
-    {
-      value: 50,
-      label: "5",
-    },
-    {
-      value: 60,
-      label: "6",
-    },
-    {
-      value: 70,
-      label: "7",
-    },
-    {
-      value: 80,
-      label: "8",
-    },
-    {
-      value: 90,
-      label: "9",
-    },
-    {
-      value: 100,
-      label: "10",
-    },
-  ];
+  const gameDesc = {
+    color: "#535353",
+    marginTop: 5,
+    marginLeft: 8,
+  };
 
   var renderUserCards = [];
   props.party.partyMembers.forEach((member) => {
@@ -160,26 +124,40 @@ export default function AlertDialog(props) {
     renderUserCards.push(cmp);
   });
 
+  // Show Join, Leave, or Full
+  var partyButton;
+  if (props.inParty) {
+    partyButton = (
+      <Button
+        onClick={handleLeaveParty}
+        variant="contained"
+        style={{ float: "right" }}
+      >
+        Leave
+      </Button>
+    );
+  } else if (props.party.partyMembers.length + 1 >= props.party.maxPlayers) {
+    partyButton = (
+      <Typography variant="contained" className={mainStyles.gameTags} style={{ float: "right" }}>
+        Party is Full
+      </Typography>
+    );
+  } else {
+    partyButton = (
+      <Button
+        onClick={handleClickOpenUp}
+        color="secondary"
+        variant="contained"
+        style={{ float: "right" }}
+      >
+        Join
+      </Button>
+    );
+  }
+
   return (
     <div style={{ display: "inline" }}>
-      {!props.inParty ? (
-        <Button
-          onClick={handleClickOpenUp}
-          color="secondary"
-          variant="contained"
-          style={{ float: "right" }}
-        >
-          Join
-        </Button>
-      ) : (
-        <Button
-          onClick={handleLeaveParty}
-          variant="contained"
-          style={{ float: "right" }}
-        >
-          Leave
-        </Button>
-      )}
+      {partyButton}
 
       <Dialog
         maxWidth="sm"

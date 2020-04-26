@@ -103,7 +103,7 @@ export default function ScrollableTabsButtonForce(props) {
     party.partyMembers.forEach((member) => {
       members.unshift(<Player key={member._id} username={member.username}></Player>);
     });
-    partyCards.unshift(<PartyCard key={party._id} currentUser={props.currentUser} gameID={props.gameID} game={props.game} party={party} leader={party.partyLeader} currentPlayers={party.partyMembers.length + 1} maxPlayers={party.maxPlayers}></PartyCard>);
+    partyCards.unshift(<PartyCard key={party._id} inOtherParty={props.inOtherParty} currentUser={props.currentUser} gameID={props.gameID} game={props.game} party={party} leader={party.partyLeader} currentPlayers={party.partyMembers.length + 1} maxPlayers={party.maxPlayers}></PartyCard>);
   });
 
   const handleChange = (event, newValue) => {
