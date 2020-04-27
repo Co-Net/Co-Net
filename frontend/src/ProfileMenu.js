@@ -80,7 +80,7 @@ export default function ScrollableTabsButtonForce(props) {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <Games title = {`${props.username}'s Active Games`} allActiveGames = {props.allActiveGames}></Games>
+        <Games title = {`${props.username}'s Active Games`} username={props.username} isCurrentUser={props.currentUser} allActiveGames = {props.allActiveGames}></Games>
       </TabPanel>
       <TabPanel value={value} index={1}>
         <Activity title = {`${props.username}'s Activity`} allActivity = {props.allActivity} ></Activity>
