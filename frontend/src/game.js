@@ -226,7 +226,7 @@ class Game extends Component {
                   style={{ color: "#26AD00", marginTop: "4" }}
                 ></Brightness1Icon>
                 <Typography style={gameDesc}>
-                  {numOfPlayersPlaying} players playing now
+                  {numOfPlayersPlaying == 1 ? "1 player playing now" : numOfPlayersPlaying + " players playing now"}
                 </Typography>
               </div>
               <Typography className={mainStyles.gameTags} style={gameDesc}>
