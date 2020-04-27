@@ -93,7 +93,11 @@ class Feed extends Component {
                   </Typography>
                   <div style={{ display: "inline-flex" }}>
                     <Brightness1Icon
-                      style={{ color: "#26AD00", marginTop: "4" }}
+                      style={
+                        eGame.numOfPlayers == 0
+                          ? { color: "FF3200", marginTop: "4" }
+                          : { color: "#26AD00", marginTop: "4" }
+                      }
                     ></Brightness1Icon>
                     <Typography
                       style={{

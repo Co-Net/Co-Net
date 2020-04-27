@@ -13,7 +13,7 @@ import TextField from "@material-ui/core/TextField";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import Typography from "@material-ui/core/Typography";
 import algoliasearch from "algoliasearch/lite";
-import Tags, { fakeObjectIDGenerator } from "./lib/Tags";
+import Tags from "./lib/Tags";
 import "./tags.css";
 import axios from "axios";
 
@@ -64,10 +64,10 @@ class AddGames extends Component {
         gameList: gameSaves,
       })
       .then((json) => {
-        console.log(json.data);
         if (json.data.success) {
           console.log("Game Library updated successfully");
           this.setState({ open1: false });
+          this.props.onGameAdd();
         }
       });
   }
@@ -81,13 +81,6 @@ class AddGames extends Component {
     var selectedGames = [];
 
     const onAddTag = (hit) => {
-      if (typeof hit === "string") {
-        return {
-          objectID: fakeObjectIDGenerator(),
-          iata_code: hit,
-        };
-      }
-
       return hit;
     };
 
