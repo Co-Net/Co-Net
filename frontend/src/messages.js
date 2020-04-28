@@ -46,11 +46,37 @@ class editForumPost extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      threads: [],
+      avatar: "",
+      currentUser: ""
+    };
   }
 
   componentDidMount() {
-    // Retreive user data
+    axios
+      .get("http://localhost:3001/user/currentuser", { withCredentials: true })
+      .then((userJson) => {
+        if (userJson.data.username === "Guest") {
+          alert("Please sign in first");
+          return;
+        }
+        // Retrieve user's inbox
+        axios
+          .get(`http://localhost:3001/messageThread/${userJson.data.username}`)
+          .then((json) => {
+            if (!json.data) {
+              console.log("Error retrieving inbox");
+            } else {
+              const threads = json.data;
+              this.setState({
+                threads: threads,
+                avatar: userJson.data.profilePhoto,
+                currentUser: userJson.data.username
+              });
+            }
+          });
+      });
   }
 
   render() {
@@ -139,7 +165,11 @@ class editForumPost extends Component {
               </Typography>
             </Grid>
           </Grid>
-          <MessageBox></MessageBox>
+          <MessageBox
+            avatar={this.state.avatar}
+            threads={this.state.threads}
+            currentUser={this.state.currentUser}
+          ></MessageBox>
         </div>
       </div>
     );
