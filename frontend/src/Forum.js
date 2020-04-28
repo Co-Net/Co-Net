@@ -144,6 +144,7 @@ class Forum extends Component {
               const title = post.title;
               const timePosted = post.timePosted;
               const game = post.game;
+              const gameID = post.gameID;
               const user = post.username;
               const postID = post._id;
               const votes = post.votes;
@@ -164,6 +165,7 @@ class Forum extends Component {
                 title: title,
                 timePosted: timePosted,
                 game: game,
+                gameID: gameID,
                 user: user,
                 replyUser: replyUser,
                 replyDate: replyDate,
@@ -287,8 +289,8 @@ class Forum extends Component {
                     className={mainStyles.gameName}
                     id="server-modal-title"
                   >
-                    {card.game}{" "}
-                  </Typography>
+                    <Link href={`/game/${card.gameID}`}>{card.game}</Link>
+                  </Typography>{" "}
                   <Typography
                     onClick={() => {
                       if (this.state.username === "Guest")

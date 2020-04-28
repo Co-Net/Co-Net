@@ -24,6 +24,9 @@ const ForumPostModelSchema = new Schema({
     game: {
         type: String
     },
+    gameID: {
+        type: String
+    },
     username: { 
         type: String,
         required: [true, "Please enter the username of the user who created this post!"]
