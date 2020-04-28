@@ -11,6 +11,7 @@ router.post('/createPostOrReply', function (req, res) {
         body,
         game,
         gameID,
+        appID,
         parentID,
         username
     } = req.body;
@@ -26,6 +27,7 @@ router.post('/createPostOrReply', function (req, res) {
     post.body = body;
     post.game = game;
     post.gameID = gameID;
+    post.appID = appID;
     post.username = username;
     post.parentID = parentID;
     post.save((err, post) => {

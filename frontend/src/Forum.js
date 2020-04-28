@@ -148,6 +148,8 @@ class Forum extends Component {
               const user = post.username;
               const postID = post._id;
               const votes = post.votes;
+              // Base: steamcdn-a.akamaihd.net/steam/apps/{app_id}/header.jpg
+              const imageURL = `https://steamcdn-a.akamaihd.net/steam/apps/${post.appID}/header.jpg`;
               if (post.allReplyIDs.length > 0) {
                 const json = await axios.get(
                   `http://localhost:3001/forum/${
@@ -166,6 +168,7 @@ class Forum extends Component {
                 timePosted: timePosted,
                 game: game,
                 gameID: gameID,
+                url: imageURL,
                 user: user,
                 replyUser: replyUser,
                 replyDate: replyDate,
@@ -275,7 +278,7 @@ class Forum extends Component {
           <CardContent className={mainStyles.forumCard}>
             <Grid container spacing={1}>
               <Grid item xs={2}>
-                <img className={mainStyles.photo} src={leaguePhoto} />
+                <img className={mainStyles.photo} src={card.url} />
               </Grid>
               <Grid item xs={6}>
                 <div className={mainStyles.gameAndTitle}>

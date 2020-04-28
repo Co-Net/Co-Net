@@ -93,6 +93,14 @@ class CreateForumPost extends Component {
       alert("Please fill in required fields");
       return;
     }
+    // Get the app ID
+    const url = this.state.game.url;
+    var appID = url.search("/app/");
+    if (appID !== -1) {
+      var begin = url.substring(appID + 5);
+      var end = begin.indexOf("/");
+      appID = begin.substring(0, end);
+    }
     // Create Post
     axios
       .post("http://localhost:3001/forum/createPostOrReply", {
@@ -100,6 +108,7 @@ class CreateForumPost extends Component {
         body: this.state.body,
         game: this.state.game.name,
         gameID: this.state.game._id,
+        appID: appID,
         title: this.state.title,
       })
       .then((json) => {
