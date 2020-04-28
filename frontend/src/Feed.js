@@ -79,7 +79,7 @@ class Feed extends Component {
               // Base: steamcdn-a.akamaihd.net/steam/apps/{app_id}/header.jpg
               var imageURL = `https://steamcdn-a.akamaihd.net/steam/apps/${appID}/header.jpg`;
               const cmp = (
-                <Grid item xs={4}>
+                <Grid item xs={4} key={appID}>
                   <img className="photos" src={imageURL} />
                   <Typography
                     className={mainStyles.gametitle}
