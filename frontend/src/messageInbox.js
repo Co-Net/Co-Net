@@ -112,7 +112,7 @@ export default function VerticalTabs(props) {
         {tabsCmp.length != 0 ? (
           tabsCmp
         ) : (
-          <Tab label="No receipients"> {a11yProps(0)} </Tab>
+          <Tab label="No recipients"> {a11yProps(0)} </Tab>
         )}
       </Tabs>
       {threadsCmp.length != 0 ? (
