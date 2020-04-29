@@ -141,11 +141,12 @@ class forumComment extends Component {
       marginTop: 3,
     };
 
+
     return (
       <div>
         {this.state.messages}
         {this.state.newMessage ? this.state.newMessage : null}
-        <Grid container spacing={8}>
+        {this.state.messages.length != 0 ? (<Grid container spacing={8}>
           <Grid item xs={1}>
             <Avatar src={this.props.ownAvatar} className={styles.smallSize} />
           </Grid>
@@ -167,7 +168,7 @@ class forumComment extends Component {
               Send
             </Button>
           </Grid>
-        </Grid>
+        </Grid>) : "Loading..."}
       </div>
     );
   }
