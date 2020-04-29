@@ -15,9 +15,25 @@ import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 import Link from "@material-ui/core/Link";
 import mainStyles from "./main.module.css";
 
+const monthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
 class friend extends Component {
   constructor(props) {
     super(props);
+    this.convertTime = this.convertTime.bind(this);
 
     this.state = {
       id: "",
@@ -30,6 +46,13 @@ class friend extends Component {
       profilePic: "",
       imageURL: "",
     };
+  }
+
+  // Return Month Day, Year
+  convertTime(time) {
+    var d = new Date(time);
+    const month = monthNames[d.getMonth()];
+    return `${month} ${d.getDate()}, ${d.getFullYear()}`;
   }
 
   componentDidMount() {
@@ -120,7 +143,7 @@ class friend extends Component {
                 {this.state.username}{" "}
               </Typography>
               <Typography className={styles.timeStamp} display="inline">
-                {this.state.timePosted}
+                {this.convertTime(this.state.timePosted)}
               </Typography>
               {this.state.parent === "0" ? (
                 <Typography variant="body1" className={styles.commentBody}>
