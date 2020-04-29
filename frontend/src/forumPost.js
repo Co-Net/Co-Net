@@ -233,12 +233,19 @@ class ForumPost extends Component {
       });
   }
 
-  onUpVote() {
-    this.setState({ votes: ++this.state.votes }, this.handleVote("+"));
+  onUpVote(twice) {
+    if (twice) {
+      this.state.votes += 2;
+    } else {
+      this.state.votes++;
+    }
+    this.handleVote("+");
   }
 
-  onDownVote() {
-    this.setState({ votes: --this.state.votes }, this.handleVote("-"));
+  onDownVote(twice) {
+    if (twice) this.state.votes -= 2;
+    else this.state.votes--;
+    this.handleVote("-");
   }
 
   clearVote(type) {
@@ -488,33 +495,65 @@ class ForumPost extends Component {
         ""
       );
 
-    const upVoteButton = hasUpVoted ? (
-      <ExpandLessIcon
-        className={styles.upVoteOn}
-        fontsize="large"
-        onClick={() => this.clearVote("+")}
-      ></ExpandLessIcon>
-    ) : (
-      <ExpandLessIcon
-        className={styles.upDownVote}
-        fontsize="large"
-        onClick={this.onUpVote}
-      ></ExpandLessIcon>
-    );
+    // If already upvoted and click upvote, clear '+' vote
+    // If already downvoted and click upvote, clear '-' vote AND upvote
+    // If haven't upvoted, then upvote
+    var upVoteButton;
+    if (hasUpVoted) {
+      upVoteButton = (
+        <ExpandLessIcon
+          className={styles.upVoteOn}
+          fontsize="large"
+          onClick={() => this.clearVote("+")}
+        ></ExpandLessIcon>
+      );
+    } else if (hasDownVoted) {
+      upVoteButton = (
+        <ExpandLessIcon
+          className={styles.upDownVote}
+          fontsize="large"
+          onClick={() => this.onUpVote(true)}
+        ></ExpandLessIcon>
+      );
+    } else {
+      upVoteButton = (
+        <ExpandLessIcon
+          className={styles.upDownVote}
+          fontsize="large"
+          onClick={() => this.onUpVote(false)}
+        ></ExpandLessIcon>
+      );
+    }
 
-    const downVoteButton = hasDownVoted ? (
-      <ExpandMoreIcon
-        className={styles.downVoteOn}
-        fontsize="large"
-        onClick={() => this.clearVote("-")}
-      ></ExpandMoreIcon>
-    ) : (
-      <ExpandMoreIcon
-        className={styles.upDownVote}
-        fontsize="large"
-        onClick={this.onDownVote}
-      ></ExpandMoreIcon>
-    );
+    // If already downvoted and click downvote, clear '-' vote
+    // If already upvoted and click downvote, clear '+' vote AND downvote
+    // If haven't downvoted, then downvote
+    var downVoteButton;
+    if (hasDownVoted) {
+      downVoteButton = (
+        <ExpandMoreIcon
+          className={styles.downVoteOn}
+          fontsize="large"
+          onClick={() => this.clearVote("-")}
+        ></ExpandMoreIcon>
+      );
+    } else if (hasUpVoted) {
+      downVoteButton = (
+        <ExpandMoreIcon
+          className={styles.upDownVote}
+          fontsize="large"
+          onClick={() => this.onDownVote(true)}
+        ></ExpandMoreIcon>
+      );
+    } else {
+      downVoteButton = (
+        <ExpandMoreIcon
+          className={styles.upDownVote}
+          fontsize="large"
+          onClick={() => this.onDownVote(false)}
+        ></ExpandMoreIcon>
+      );
+    }
 
     const forumPostUI = this.state.editing ? (
       <EditForumPost
@@ -588,7 +627,9 @@ class ForumPost extends Component {
                     <Typography
                       className={styles.userNameForum}
                       display="inline"
-                    >,{" "}</Typography>
+                    >
+                      ,{" "}
+                    </Typography>
                     <Typography className={styles.timeStamp} display="inline">
                       {timePosted}
                     </Typography>
