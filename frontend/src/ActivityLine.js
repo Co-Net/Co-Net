@@ -15,12 +15,26 @@ import CardContent from '@material-ui/core/CardContent';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import Link from '@material-ui/core/Link'
 
-
+const monthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
 
 class friend extends Component {
   constructor(props) {
     super(props);
+    this.convertTime = this.convertTime.bind(this);
 
     this.state = {
       id: "",
@@ -32,6 +46,13 @@ class friend extends Component {
       parent: "",
       profilePic: ""
     }
+  }
+
+  // Return Month Day, Year
+  convertTime(time) {
+    var d = new Date(time);
+    const month = monthNames[d.getMonth()];
+    return `${month} ${d.getDate()}, ${d.getFullYear()}`;
   }
 
   componentDidMount() {
@@ -117,7 +138,7 @@ class friend extends Component {
             </Grid>
             <Grid item xs={10}>
               <Typography className={styles.friendUsername} display="inline" >{this.state.username} </Typography>
-              <Typography className={styles.timeStamp} display="inline" >{this.state.timePosted}</Typography>
+              <Typography className={styles.timeStamp} display="inline" >{this.convertTime(this.state.timePosted)}</Typography>
               {this.state.parent === "0" ? (<Typography variant='body1' className={styles.commentBody}>
                   Created a <Link variant="body1" href={`forumPost/${this.state.id}`}  activeClassName='active'>post:</Link>
                   <Typography className={styles.commentThreadText}>{this.state.title}</Typography>
