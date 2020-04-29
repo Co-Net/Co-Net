@@ -65,6 +65,12 @@ class Feed extends Component {
         });
         // Go through the list of all active games and create a card for each
         var gameCards = [];
+
+        // Sort games by num of players first
+        updatedExistingGames.sort(function (a, b) {
+          return a.numOfPlayers < b.numOfPlayers ? 1 : -1;
+        });
+
         let promArr = updatedExistingGames.map(async function (eGame) {
           const json = await axios.get(
             `http://localhost:3001/games/id/${eGame.gameID}`
