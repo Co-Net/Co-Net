@@ -22,6 +22,13 @@ import { browserHistory } from "react-router";
 import PartyButton from "./Party";
 import PartyActive from "./PartyActive";
 import socketIOClient from "socket.io-client";
+import algoliasearch from "algoliasearch/lite";
+import { InstantSearch, Hits, connectSearchBox } from "react-instantsearch-dom";
+
+const searchClient = algoliasearch(
+  "T7MES4D4M7",
+  "3fc5bf346a8a53b2ef1c596cf747cb02"
+);
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -85,6 +92,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// const SearchBox = ({ onChange, query }) => {
+//   return (
+//     <InputBase
+//       placeholder="Search…"
+//       classes={{
+//         root: classes.inputRoot,
+//         input: classes.inputInput,
+//       }}
+//       inputProps={{ "aria-label": "search" }}
+//       value={query}
+//       onChange={event => {
+//         const query = event.target.value;
+//         console.log(query);
+//         onChange(query);
+//       }}
+//     />
+//   );
+// };
+// const CustomSearchBox = connectSearchBox(SearchBox);
+
 export default function PrimarySearchAppBar(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -97,6 +124,7 @@ export default function PrimarySearchAppBar(props) {
   const [isGuest, setIsGuest] = useState(false);
   const [isInParty, setIsInParty] = useState(false);
   const [partyID, setPartyID] = useState("");
+  // const [query, setQuery] = useState("");
 
   // // Runs on refresh and every component load/change
   // // Use this to check if still Active
@@ -198,6 +226,10 @@ export default function PrimarySearchAppBar(props) {
     </Menu>
   );
 
+  function Hit(props) {
+    return <div>{props.hit.username}</div>;
+  }
+
   const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (
     <Menu
@@ -277,7 +309,6 @@ export default function PrimarySearchAppBar(props) {
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
-
             <InputBase
               placeholder="Search…"
               classes={{
@@ -365,7 +396,10 @@ export default function PrimarySearchAppBar(props) {
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
-
+            {/* <InstantSearch searchClient={searchClient} indexName="co-net_users">
+              <CustomSearchBox onChange={setQuery} query={query} />
+              <Hits hitComponent={Hit} />
+            </InstantSearch> */}
             <InputBase
               placeholder="Search…"
               classes={{
