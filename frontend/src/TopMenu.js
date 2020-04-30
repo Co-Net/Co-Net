@@ -23,7 +23,7 @@ import PartyButton from "./Party";
 import PartyActive from "./PartyActive";
 import socketIOClient from "socket.io-client";
 import algoliasearch from "algoliasearch/lite";
-import { InstantSearch, Hits, connectSearchBox } from "react-instantsearch-dom";
+import { InstantSearch, Hits, connectSearchBox, connectStateResults } from "react-instantsearch-dom";
 
 const searchClient = algoliasearch(
   "T7MES4D4M7",
@@ -92,25 +92,31 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// const SearchBox = ({ onChange, query }) => {
-//   return (
-//     <InputBase
-//       placeholder="Search…"
-//       classes={{
-//         root: classes.inputRoot,
-//         input: classes.inputInput,
-//       }}
-//       inputProps={{ "aria-label": "search" }}
-//       value={query}
-//       onChange={event => {
-//         const query = event.target.value;
-//         console.log(query);
-//         onChange(query);
-//       }}
-//     />
-//   );
-// };
-// const CustomSearchBox = connectSearchBox(SearchBox);
+const SearchBox = ({ currentRefinement, refine, onSubmit }) => {
+  return (
+    <InputBase
+      placeholder="Search…"
+      classes={{
+        root: useStyles().inputRoot,
+        input: useStyles().inputInput,
+      }}
+      inputProps={{ "aria-label": "search" }}
+      value={currentRefinement}
+      onChange={event => {
+        // console.log(currentRefinement);
+        refine(event.currentTarget.value);
+      }}
+      onKeyPress={(event) => {
+        if (event.key === 'Enter') {
+          onSubmit(currentRefinement);
+          event.preventDefault();
+        }
+      }}
+    />
+  );
+};
+
+const CustomSearchBox = connectSearchBox(SearchBox);
 
 export default function PrimarySearchAppBar(props) {
   const classes = useStyles();
@@ -124,7 +130,10 @@ export default function PrimarySearchAppBar(props) {
   const [isGuest, setIsGuest] = useState(false);
   const [isInParty, setIsInParty] = useState(false);
   const [partyID, setPartyID] = useState("");
-  // const [query, setQuery] = useState("");
+
+  const handleSubmit = (submission) => {
+    console.log(`Submit ${submission}`);
+  };
 
   // // Runs on refresh and every component load/change
   // // Use this to check if still Active
@@ -227,6 +236,8 @@ export default function PrimarySearchAppBar(props) {
   );
 
   function Hit(props) {
+    console.log('hit');
+    console.log(props.hit.username);
     return <div>{props.hit.username}</div>;
   }
 
@@ -396,18 +407,18 @@ export default function PrimarySearchAppBar(props) {
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
-            {/* <InstantSearch searchClient={searchClient} indexName="co-net_users">
-              <CustomSearchBox onChange={setQuery} query={query} />
-              <Hits hitComponent={Hit} />
-            </InstantSearch> */}
-            <InputBase
+            <InstantSearch searchClient={searchClient} indexName="co-net_users">
+              <CustomSearchBox defaultRefinement={""} onSubmit={handleSubmit} />
+              {/* <Hits hitComponent={Hit} /> */}
+            </InstantSearch>
+            {/* <InputBase
               placeholder="Search…"
               classes={{
                 root: classes.inputRoot,
                 input: classes.inputInput,
               }}
               inputProps={{ "aria-label": "search" }}
-            />
+            /> */}
           </div>
 
           <IconButton color="inherit">
