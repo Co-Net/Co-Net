@@ -20,8 +20,7 @@ function logTitle() {
   });
 }
 
-// Start Test Cases
-// Test Case 1 - Sign Up Page
+// Start Tests
 describe("Sign Up Page", function () {
   // Check Home Page Title
   it("Should load home page and get title", function () {
@@ -68,7 +67,7 @@ describe("Sign Up Page", function () {
     });
   });
 
-  // End Test Case 1
+  // End Tests
   after(function () {
     browser.quit();
   });
