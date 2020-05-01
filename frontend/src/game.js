@@ -196,21 +196,7 @@ class Game extends Component
     </Grid>
     <GameMenu></GameMenu>
 
-    <Typography variant = 'h5' className = {mainStyles.gametitleBig} >Players playing:</Typography>
-
-    <Multiselect
-    options={this.state.options}
-    displayValue="key"
-    style={this.style}
-    placeholder = 'Search by Tag'
-
-  /> 
-      <Player tags= "fun, omomo, tea" username = "HelloHydra" theme_color = {online}></Player>
-      <Player tags= "fun, hi" username = "Destroyer392" theme_color = {online}></Player>
-      <Player tags= "omomo, tea" username = "Hey" theme_color = {online}></Player>
-      <Player tags= "omomo, sup" username = "Testing" theme_color = {away}></Player>
-      <Player tags= "fun, testing123, hello" username = "123" theme_color = {inGame}></Player>
-
+   
 
 
     </div>
