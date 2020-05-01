@@ -1,8 +1,10 @@
+// Command: npm run testies -- ./tests/login_test
 var assert = require("assert").strict;
 var webdriver = require("selenium-webdriver");
+const until = webdriver.until;
 
 // App Server
-const serverUri = `http://localhost:3000`;
+const serverUri = `http://localhost:3000/signin`;
 
 // Chrome Browser Config
 var browser = new webdriver.Builder()
@@ -12,46 +14,27 @@ var browser = new webdriver.Builder()
 
 // Start Tests
 describe("Login Page", function () {
-  // Check Home Page Title
-  it("Should load home page and get title", function () {
+  // Check Sign In UI Loaded
+  it("Should load Sign In UI", function () {
     return new Promise((resolve, reject) => {
+      browser.get(serverUri);
       browser
-        .get(serverUri)
-        .then(logTitle)
-        .then((title) => {
-          assert.strictEqual(title, appTitle);
-          resolve();
-        })
+        .findElement({ id: "signinForm" })
+        .then(() => resolve())
         .catch((err) => reject(err));
     });
   });
 
-  // Check Sign Up UI Loaded
-  it("Should load Sign Up UI", function () {
-    return new Promise((resolve, reject) => {
-      browser
-        .findElement({ id: "server-modal-description" })
-        .then((elem) => resolve())
-        .catch((err) => reject(err));
-    });
-  });
-
-  // Check Sign Up Successful with
-  // seleniboi
+  // Check Login with
+  // leoboi@gmail.com
   // password
-  it("Should Sign Up new user", function () {
+  it("Should login", function () {
     return new Promise((resolve, reject) => {
-      browser.navigate().to("http://localhost:3000/signup");
-      browser.findElement({ id: "firstName" }).sendKeys("selenium");
-      browser.findElement({ id: "lastName" }).sendKeys("boi");
-      browser.findElement({ id: "username" }).sendKeys("seleniboi");
-      browser.findElement({ id: "email" }).sendKeys("seleniboi@gmail.com");
-      browser.findElement({ id: "cEmail" }).sendKeys("seleniboi@gmail.com");
-      browser.findElement({ id: "password" }).sendKeys("password!");
-      browser.findElement({ id: "cPassword" }).sendKeys("password!");
+      browser.findElement({ id: "email" }).sendKeys("leoboi@gmail.com");
+      browser.findElement({ id: "password" }).sendKeys("password");
+      browser.findElement({ id: "signinButton" }).click();
       browser
-        .findElement({ id: "signupButton" })
-        .click()
+        .wait(until.elementLocated({ id: "TopMenu" }))
         .then(() => resolve())
         .catch((err) => reject(err));
     });

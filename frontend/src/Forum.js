@@ -267,6 +267,7 @@ class Forum extends Component {
 
     const renderCards = [];
     // Render each card
+    let index = 0;
     cards.forEach((card) => {
       const postTimestamp = this.convertTime(card.timePosted, false);
       const replyTimestamp = card.replyDate
@@ -274,7 +275,7 @@ class Forum extends Component {
         : "";
 
       const renderCard = (
-        <Card key={card.postID} className={mainStyles.postSpacing}>
+        <Card key={card.postID} className={mainStyles.postSpacing} id={"post" + index}>
           <CardContent className={mainStyles.forumCard}>
             <Grid container spacing={1}>
               <Grid item xs={2}>
@@ -295,19 +296,13 @@ class Forum extends Component {
                     <Link href={`/game/${card.gameID}`}>{card.game}</Link>
                   </Typography>{" "}
                   <Typography
-                    onClick={() => {
-                      if (this.state.username === "Guest")
-                        alert("You must be signed in to view a thread.");
-                      else this.props.history.push(`/forumPost/${card.postID}`);
-                    }}
                     className={mainStyles.forumTitle}
                     display="inline"
                     component="h2"
                     fontsize={18}
                     align="center"
-                    id="server-modal-title"
                   >
-                    {card.title}
+                    <Link id={"title" + index++} style={{color: "#A4A4A4"}} href={`/forumPost/${card.postID}`}>{card.title}</Link>
                   </Typography>
                 </div>
                 <Typography
@@ -408,6 +403,7 @@ class Forum extends Component {
           <Grid container spacing={3}>
             <Grid item xs={5}>
               <Typography
+                id="Forum"
                 style={titleStyle}
                 align="Left"
                 variant="h4"
@@ -419,6 +415,7 @@ class Forum extends Component {
             <Grid item xs={4}>
               <Button
                 onClick={this.createPost}
+                id="createForumPost"
                 style={{
                   textTransform: "none",
                   marginTop: 28,
