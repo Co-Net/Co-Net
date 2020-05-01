@@ -9,7 +9,16 @@ const PartySchema = new Schema({
         type: String,
         required: [true, "The username of the party leader is required!"]
     },
-    partyMembers: [player]
+    partyMembers: [player],
+    gameID: {
+        type: String,
+        required: [true, "The game ID is required"]
+    },
+    maxPlayers: {
+        type: Number,
+        required: [true, "The max player slot is required!"]
+    },
+    game: String
 });
 
 module.exports = mongoose.model('Party', PartySchema);

@@ -53,6 +53,11 @@ export default function friendList(props) {
     marginLeft: 8,
 
   }
+  var activityList = [];
+  props.allActivity.forEach((activity) => {
+    const postID = activity.postID;
+      activityList.unshift(<ActivityLine postID={postID}></ActivityLine>);
+  });
   return (
 
     <div className="content">
@@ -61,13 +66,7 @@ export default function friendList(props) {
         <Typography style={titleStyle} align='Left' variant="h6" component="h2" >
           {props.title}</Typography>
       </Grid>
-      <ActivityLine activity = "reply"></ActivityLine>
-      <ActivityLine activity = "create"></ActivityLine>
-      <ActivityLine></ActivityLine>
-      <ActivityLine></ActivityLine>
-      <ActivityLine></ActivityLine>
-
-     
+      {activityList}
 
     </div>
   );

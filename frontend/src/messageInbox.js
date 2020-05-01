@@ -1,15 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import ForumComment from './forumComment.js';
-import styles from './main.module.css';
-import ChatThread from './chatThread';
-
-
+import React from "react";
+import PropTypes from "prop-types";
+import { makeStyles } from "@material-ui/core/styles";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
+import styles from "./main.module.css";
+import ChatThread from "./chatThread";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -37,15 +34,15 @@ TabPanel.propTypes = {
 function a11yProps(index) {
   return {
     id: `vertical-tab-${index}`,
-    'aria-controls': `vertical-tabpanel-${index}`,
+    "aria-controls": `vertical-tabpanel-${index}`,
   };
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
-    display: 'flex',
+    display: "flex",
     height: 700,
   },
   tabs: {
@@ -53,13 +50,54 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function VerticalTabs() {
+export default function VerticalTabs(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
+  const [tabsCmp, setTabsCmp] = React.useState([]);
+  const [threadsCmp, setThreadsCmp] = React.useState("");
 
   const handleChange = (event, newValue) => {
+    var index = 0;
+    var threads = [];
+    props.threads.forEach((thread) => {
+      const threadCmp = (
+        <TabPanel className={styles.tabPanel} key={index} value={newValue} index={index++}>
+          <ChatThread
+            sharedMessages={thread.sharedMessages}
+            currentUser={props.currentUser}
+            recipient={thread.username2 != props.currentUser ? thread.username2 : thread.username1 }
+            ownAvatar={props.avatar}
+            threadID={thread._id}
+          ></ChatThread>
+        </TabPanel>
+      );
+      threads.push(threadCmp);
+    });
+    setThreadsCmp(threads);
     setValue(newValue);
   };
+
+  React.useEffect(() => {
+    if (props.threads.length == 0) return;
+    var tabs = [];
+    var index = 0;
+    props.threads.forEach((thread) => {
+      tabs.push(<Tab key={index} label={thread.username2} {...a11yProps(index++)} />);
+    });
+    var threadCmp = (
+      <TabPanel className={styles.tabPanel} value={value} index={value}>
+        <ChatThread
+          sharedMessages={props.threads[value].sharedMessages}
+          currentUser={props.currentUser}
+          ownAvatar={props.avatar}
+          recipient={props.threads[value].username2 != props.currentUser ? props.threads[value].username2 : props.threads[value].username1 }
+          threadID={props.threads[value]._id}
+        ></ChatThread>
+      </TabPanel>
+    );
+    setTabsCmp(tabs);
+    setThreadsCmp(threadCmp);
+  }, [props.threads]);
 
   return (
     <div className={classes.root}>
@@ -71,57 +109,19 @@ export default function VerticalTabs() {
         aria-label="Vertical tabs example"
         className={classes.tabs}
       >
-        <Tab label="conetuser" {...a11yProps(0)} />
-        <Tab label="destroyer392" {...a11yProps(1)} />
-        <Tab label="heythere" {...a11yProps(2)} />
-        <Tab label="conetbodies" {...a11yProps(3)} />
-        <Tab label="csgoPlayer" {...a11yProps(4)} />
-        <Tab label="xxAngelxx" {...a11yProps(5)} />
-        <Tab label="friendlynood" {...a11yProps(6)} />
-        <Tab label="im_discrete" {...a11yProps(7)} />
-        <Tab label="ohsopeachiee" {...a11yProps(8)} />
-        <Tab label="kkleee" {...a11yProps(9)} />
-        <Tab label="cuteboy" {...a11yProps(10)} />
-        <Tab label="cutegirl" {...a11yProps(11)} />
-
+        {tabsCmp.length != 0 ? (
+          tabsCmp
+        ) : (
+          <Tab label="No recipients"> {a11yProps(0)} </Tab>
+        )}
       </Tabs>
-      <TabPanel className = {styles.tabPanel} value={value} index={0}>
-      <ChatThread></ChatThread>
-
-      </TabPanel>
-      <TabPanel className = {styles.tabPanel} value={value} index={1}>
-      <ChatThread></ChatThread>
-      </TabPanel>
-      <TabPanel className = {styles.tabPanel} value={value} index={2}>
-      <ChatThread></ChatThread>
-      </TabPanel>
-      <TabPanel className = {styles.tabPanel} value={value} index={3}>
-      <ChatThread></ChatThread>
-      </TabPanel>
-      <TabPanel className = {styles.tabPanel} value={value} index={4}>
-      <ChatThread></ChatThread>
-      </TabPanel>
-      <TabPanel className = {styles.tabPanel} value={value} index={5}>
-      <ChatThread></ChatThread>
-      </TabPanel>
-      <TabPanel className = {styles.tabPanel} value={value} index={6}>
-      <ChatThread></ChatThread>
-      </TabPanel>
-      <TabPanel className = {styles.tabPanel} value={value} index={7}>
-      <ChatThread></ChatThread>
-      </TabPanel>
-      <TabPanel className = {styles.tabPanel} value={value} index={8}>
-      <ChatThread></ChatThread>
-      </TabPanel>
-      <TabPanel className = {styles.tabPanel} value={value} index={9}>
-      <ChatThread></ChatThread>
-      </TabPanel>
-      <TabPanel className = {styles.tabPanel} value={value} index={10}>
-      <ChatThread></ChatThread>
-      </TabPanel>
-      <TabPanel className = {styles.tabPanel} value={value} index={11}>
-      <ChatThread></ChatThread>
-      </TabPanel>
+      {threadsCmp.length != 0 ? (
+        threadsCmp
+      ) : (
+        <TabPanel className={styles.tabPanel} value={value} index={0}>
+          You have no messages
+        </TabPanel>
+      )}
     </div>
   );
 }

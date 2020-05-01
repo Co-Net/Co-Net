@@ -66,7 +66,7 @@ class forumComment extends Component {
     return `${month} ${d.getDate()}, ${d.getFullYear()}`;
   }
 
-  // Really inefficient way to deal with updated user avatars because a call is made for every review on the page which is inefficient
+  // Really inefficient way to deal with updated user avatars because a call is made for every review on the page
   // A better way is when a user updates user photo, update every review by this user with the new avatar url
   // For now, we will keep avatar props for future implementation
   componentDidMount() {

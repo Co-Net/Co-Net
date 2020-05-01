@@ -35,7 +35,10 @@ router.get('/currentuser', (req, res) => {
       playerRep: req.user.playerRep,
       votedPosts: req.user.votedPosts,
       friends: req.user.friends,
-      status: req.user.status
+      status: req.user.status,
+      forumPosts: req.user.forumPosts,
+      currentPartyId: req.user.currentPartyId,
+      games: req.user.games
     });
   }
 });

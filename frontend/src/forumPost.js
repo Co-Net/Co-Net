@@ -17,6 +17,8 @@ import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import EditIcon from "@material-ui/icons/Edit";
 import EditForumPost from "./editForumPost";
+import Error404 from "./Error404";
+import Link from "@material-ui/core/Link";
 
 const monthNames = [
   "January",
@@ -70,6 +72,7 @@ class ForumPost extends Component {
       numOfReplies: 0,
       hasUpVoted: false,
       hasDownVoted: false,
+      error: false,
     };
   }
 
@@ -93,6 +96,10 @@ class ForumPost extends Component {
         axios
           .get(`http://localhost:3001/forum/${this.props.match.params.postID}`)
           .then((json) => {
+            if (!json.data) {
+              this.setState({ error: true });
+              return;
+            }
             this.setState({
               timePosted: json.data.timePosted,
               title: json.data.title,
@@ -201,6 +208,7 @@ class ForumPost extends Component {
             `http://localhost:3001/forum/addReply/${this.props.match.params.postID}`,
             {
               childID: res._id,
+              username: this.state.currentUser,
             }
           )
           .then((json) => {
@@ -213,24 +221,31 @@ class ForumPost extends Component {
                   }
                 )
                 .then((json) => {
-                  console.log(json.data);
+                  if (json.data.success) {
+                    this.setState({
+                      comment: "",
+                      numOfReplies: this.state.numOfReplies + 1,
+                    });
+                  }
                 });
-              console.log("Comment Posted Successfully");
-              this.setState({
-                comment: "",
-                numOfReplies: this.state.numOfReplies + 1,
-              });
             }
           });
       });
   }
 
-  onUpVote() {
-    this.setState({ votes: ++this.state.votes }, this.handleVote("+"));
+  onUpVote(twice) {
+    if (twice) {
+      this.state.votes += 2;
+    } else {
+      this.state.votes++;
+    }
+    this.handleVote("+");
   }
 
-  onDownVote() {
-    this.setState({ votes: --this.state.votes }, this.handleVote("-"));
+  onDownVote(twice) {
+    if (twice) this.state.votes -= 2;
+    else this.state.votes--;
+    this.handleVote("-");
   }
 
   clearVote(type) {
@@ -335,12 +350,23 @@ class ForumPost extends Component {
           )
           .then((json) => {
             if (json.data.success) {
-              console.log("Comment Deleted");
+              // Remove from user's forumPosts
+              axios
+                .put(
+                  `http://localhost:3001/users/removePost/${this.state.currentUser}`
+                )
+                .then((json) => {
+                  if (json.data.success) {
+                    console.log("Comment Deleted");
+                    this.setState({
+                      numOfReplies: this.state.numOfReplies - 1,
+                    });
+                  }
+                });
             }
           });
       }
     });
-    this.setState({ numOfReplies: this.state.numOfReplies - 1 });
   }
 
   handleEditPost(e) {
@@ -376,12 +402,13 @@ class ForumPost extends Component {
         if (json.data.success) {
           console.log("Post Deleted");
           this.setState({ editing: false });
-          this.props.push("/Forum");
+          this.props.history.push("/Forum");
         }
       });
   }
 
   render() {
+    if (this.state.error) return <Error404></Error404>;
     const theme = createMuiTheme({
       "@global": {
         body: {
@@ -468,33 +495,65 @@ class ForumPost extends Component {
         ""
       );
 
-    const upVoteButton = hasUpVoted ? (
-      <ExpandLessIcon
-        className={styles.upVoteOn}
-        fontsize="large"
-        onClick={() => this.clearVote("+")}
-      ></ExpandLessIcon>
-    ) : (
-      <ExpandLessIcon
-        className={styles.upDownVote}
-        fontsize="large"
-        onClick={this.onUpVote}
-      ></ExpandLessIcon>
-    );
+    // If already upvoted and click upvote, clear '+' vote
+    // If already downvoted and click upvote, clear '-' vote AND upvote
+    // If haven't upvoted, then upvote
+    var upVoteButton;
+    if (hasUpVoted) {
+      upVoteButton = (
+        <ExpandLessIcon
+          className={styles.upVoteOn}
+          fontsize="large"
+          onClick={() => this.clearVote("+")}
+        ></ExpandLessIcon>
+      );
+    } else if (hasDownVoted) {
+      upVoteButton = (
+        <ExpandLessIcon
+          className={styles.upDownVote}
+          fontsize="large"
+          onClick={() => this.onUpVote(true)}
+        ></ExpandLessIcon>
+      );
+    } else {
+      upVoteButton = (
+        <ExpandLessIcon
+          className={styles.upDownVote}
+          fontsize="large"
+          onClick={() => this.onUpVote(false)}
+        ></ExpandLessIcon>
+      );
+    }
 
-    const downVoteButton = hasDownVoted ? (
-      <ExpandMoreIcon
-        className={styles.downVoteOn}
-        fontsize="large"
-        onClick={() => this.clearVote("-")}
-      ></ExpandMoreIcon>
-    ) : (
-      <ExpandMoreIcon
-        className={styles.upDownVote}
-        fontsize="large"
-        onClick={this.onDownVote}
-      ></ExpandMoreIcon>
-    );
+    // If already downvoted and click downvote, clear '-' vote
+    // If already upvoted and click downvote, clear '+' vote AND downvote
+    // If haven't downvoted, then downvote
+    var downVoteButton;
+    if (hasDownVoted) {
+      downVoteButton = (
+        <ExpandMoreIcon
+          className={styles.downVoteOn}
+          fontsize="large"
+          onClick={() => this.clearVote("-")}
+        ></ExpandMoreIcon>
+      );
+    } else if (hasUpVoted) {
+      downVoteButton = (
+        <ExpandMoreIcon
+          className={styles.upDownVote}
+          fontsize="large"
+          onClick={() => this.onDownVote(true)}
+        ></ExpandMoreIcon>
+      );
+    } else {
+      downVoteButton = (
+        <ExpandMoreIcon
+          className={styles.upDownVote}
+          fontsize="large"
+          onClick={() => this.onDownVote(false)}
+        ></ExpandMoreIcon>
+      );
+    }
 
     const forumPostUI = this.state.editing ? (
       <EditForumPost
@@ -556,17 +615,20 @@ class ForumPost extends Component {
                   </Grid>
                   <Grid item xs={10}>
                     {editButton}
-
                     <Typography variant="h6" className={styles.forumPostTitle}>
                       {title}
                     </Typography>
                     <Typography
                       className={styles.userNameForum}
                       display="inline"
-                      style={{cursor: 'pointer', color: "#0755ca"}}
-                      onClick={() => this.props.history.push(`/profile/${author}`)}
                     >
-                      {author},{" "}
+                      <Link href={`/profile/${author}`}>{author}</Link>
+                    </Typography>
+                    <Typography
+                      className={styles.userNameForum}
+                      display="inline"
+                    >
+                      ,{" "}
                     </Typography>
                     <Typography className={styles.timeStamp} display="inline">
                       {timePosted}
@@ -583,7 +645,6 @@ class ForumPost extends Component {
                     <Typography variant="body1" className={styles.forumBody}>
                       {body}
                     </Typography>
-
                     <Typography className={styles.commentNumber}>
                       {numOfReplies} Comments
                     </Typography>
@@ -596,9 +657,7 @@ class ForumPost extends Component {
                         marginBottom: 20,
                       }}
                     />
-
                     {replies}
-
                     <Grid container spacing={8}>
                       <Grid item xs={1}>
                         <Avatar src={ownAvatar} className={styles.smallSize} />
@@ -628,7 +687,7 @@ class ForumPost extends Component {
             </Card>
           </Grid>
 
-          <Grid item xs={4}>
+          {/* <Grid item xs={4}>
             <Card className={styles.postSpacing}>
               <CardContent>
                 <Typography variant="h6" className={styles.forumPostTitle}>
@@ -697,7 +756,7 @@ class ForumPost extends Component {
                 </div>
               </CardContent>
             </Card>
-          </Grid>
+          </Grid> */}
         </Grid>
       </div>
     );

@@ -49,7 +49,7 @@ const routing = (
       <Route path="/editForumPost" component={editForumPost} />
       <Route path="/myaccount" component={AccountSettings} />
       <Route path="/messages" component={Messages} />
-      <Route path="/game" component={Game} />
+      <Route exact path="/game/:gameID" render={(props) => <Game {...props} />}/>
     </div>
   </Router>
 );

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const ForumPostModel = require('../models/forumPostModel');
+const UserModel = require('../models/userModel');
 
 //create a post or reply
 router.post('/createPostOrReply', function (req, res) {
@@ -9,6 +10,8 @@ router.post('/createPostOrReply', function (req, res) {
         title,
         body,
         game,
+        gameID,
+        appID,
         parentID,
         username
     } = req.body;
@@ -23,6 +26,8 @@ router.post('/createPostOrReply', function (req, res) {
     post.title = title;
     post.body = body;
     post.game = game;
+    post.gameID = gameID;
+    post.appID = appID;
     post.username = username;
     post.parentID = parentID;
     post.save((err, post) => {
@@ -64,6 +69,21 @@ router.delete('/:id', function (req, res) {
                     error: err
                 });
             }
+            // Go through allReplyIds and remove each reply from corresponding user
+            obj.allReplyIDs.forEach((reply) => {
+                UserModel.findOneAndUpdate({
+                    username: reply.username
+                }, {
+                    $pull: {
+                        forumPosts: {postID: reply.childID}
+                    }
+                }, { new: true }, function (err, doc) {
+                    if (err) return res.json({
+                        success: false,
+                        error: err
+                    });
+                });
+            });
             return res.json({
                 success: true,
                 forumPostObj: obj
@@ -162,9 +182,16 @@ router.get('/:id', function (req, res) {
 router.put('/addReply/:id', function (req, res) {
     var queryID = req.params.id;        // Parent Post ID
     var body = req.body;
-    var child = body.childID;
+    const { childID, username } = body;
+    if (!childID || !username) {
+        return res.json({
+            success: false,
+            error: "INVALID INPUTS",
+        });
+    }
     var childObj = {
-        "childID": child
+        "childID": childID,
+        "username": username
     };
     // Add reply to post
     ForumPostModel.findOneAndUpdate({
@@ -180,7 +207,7 @@ router.put('/addReply/:id', function (req, res) {
         });
         // Update reply (child) to have parent ID
         ForumPostModel.findOneAndUpdate({
-            _id: child
+            _id: childID
         }, {
             "$set": {
                 "parentID": queryID

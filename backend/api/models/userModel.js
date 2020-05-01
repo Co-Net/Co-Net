@@ -4,9 +4,15 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const Schema = mongoose.Schema;
+const mongooseAlgolia = require('mongoose-algolia');
 
 const UserTagSchema = new Schema({name: String}); // need to add schema for postID
-const UsersGamesSchema = new Schema({name: String});
+const UsersGamesSchema = new Schema({
+    name: String,
+    url: String,
+    gameTags: String,
+    gameID: String
+});
 const FriendSchema = new Schema({username: String});
 const PostIDSchema = new Schema({postID: String});
 const MessageThreadIDSchema = new Schema({threadID: String});
@@ -85,4 +91,16 @@ UserSchema.methods.validPassword = function (password) {
     return bcrypt.compareSync(password, this.password);
 };
 
-module.exports = mongoose.model('User', UserSchema);
+UserSchema.plugin(mongooseAlgolia, {
+    appId: 'T7MES4D4M7',
+    apiKey: '527cf23a995edb665d518b0cdf72b7b9',
+    indexName: 'co-net_users'
+})
+
+let UserModel = mongoose.model('User', UserSchema);
+UserModel.SyncToAlgolia().then(console.log('Users synced with Algolia'));
+UserModel.SetAlgoliaSettings({
+    searchableAttributes: ['username']
+})
+
+module.exports = UserModel;

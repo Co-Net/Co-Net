@@ -406,6 +406,52 @@ router.put('/removeFriend/:username', function (req, res) {
     });
 })
 
+// Update game list
+router.put('/updateGames/:username', function (req, res) {
+    var queryUsername = req.params.username;
+    var body = req.body;
+    if (!body.gameList) {
+        return res.json({
+            success: false,
+            message: "MISSING GAME LIST"
+        });
+    }
+    const games = body.gameList;        // Array of games to insert into user game library
+    UserModel.findOne({
+        username: queryUsername
+    }, function (err, obj) {
+        if (err) return res.json({
+            success: false,
+            error: err
+        });
+        // Get user's game library
+        var library = obj.games;
+        games.forEach((game) => {
+            // If library doesn't contain game already, add to library
+            if (library.length === 0) {
+                library.push(game);
+            } else if (library.some(x => x.gameID !== game.gameID)) {
+                library.push(game);
+            }
+        });
+        // Then update user's library
+        UserModel.findOneAndUpdate({
+            username: queryUsername
+        }, {
+            games: library
+        }, function (err) {
+            if (err) return res.json({
+                success: false,
+                error: err
+            });
+            return res.json({
+                success: true,
+                library: library
+            });
+        });
+    });
+});
+
 //add a game to game list
 router.put('/addGame/:username', function (req, res) {
     var queryUsername = req.params.username;
@@ -550,14 +596,14 @@ router.put('/removePost/:username', function (req, res) {
         $pull: {
             forumPosts: postobj
         }
-    }, function (err) {
+    }, { new: true }, function (err, doc) {
         if (err) return res.json({
             success: false,
             error: err
         });
         return res.json({
             success: true,
-            user: body
+            user: doc
         });
     });
 })

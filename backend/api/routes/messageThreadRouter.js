@@ -4,6 +4,7 @@
 const express = require('express');
 const router = express.Router();
 const MessageThreadModel = require('../models/messageThreadModel');
+const UserModel = require('../models/userModel');
 
 //no need for getr all message threads
 
@@ -17,7 +18,19 @@ router.get('/:username', function (req, res) {
             success: false,
             error: err
         });
-        return res.send(obj);
+        if (obj.length == 0) {
+            MessageThreadModel.find({
+                username2: queryUsername
+            }, function (err, obj) {
+                if (err) return res.json({
+                    success: false,
+                    error: err
+                });
+                return res.send(obj);
+            });
+        } else {
+            return res.send(obj);
+        }
     });
 })
 
@@ -70,17 +83,51 @@ router.post('/create', function (req, res) {
                     message: 'Error: Server error'
                 });
             }
-            return res.send({
-                success: true,
-                name: messageThread,
-                message: 'Thread Created'
+            // Add message thread to user 1 and user 2
+            var messageThreadID = messageThread._id;
+            var messageIDobj = {
+                "threadID": messageThreadID
+            };
+            UserModel.findOneAndUpdate({
+                username: username1
+            }, {
+                $push: {
+                    allMessageThreads: messageIDobj
+                }
+            }, {
+                new: true
+            }, function (err, doc) {
+                if (err) return res.json({
+                    success: false,
+                    error: err
+                });
+                UserModel.findOneAndUpdate({
+                    username: username2
+                }, {
+                    $push: {
+                        allMessageThreads: messageIDobj
+                    }
+                }, {
+                    new: true
+                }, function (err, doc2) {
+                    if (err) return res.json({
+                        success: false,
+                        error: err
+                    });
+                    return res.json({
+                        success: true,
+                        user1: doc,
+                        user2: doc2,
+                        thread: messageThread
+                    });
+                });
             });
         });
     });
 })
 
 //delete a thread
-router.delete("/:id", function(req, res){
+router.delete("/:id", function (req, res) {
     var queryID = req.params.id;
     MessageThreadModel.findOneAndDelete({
         _id: queryID
@@ -119,7 +166,7 @@ router.put('/addMessageToThread/:id', function (req, res) {
         });
         return res.json({
             success: true,
-            messageThread: body
+            messageObj: messageObj
         });
     });
 })

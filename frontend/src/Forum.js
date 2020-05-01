@@ -76,7 +76,7 @@ class Forum extends Component {
   }
 
   createPost() {
-    if (this.state.username === 'Guest') alert("You must be signed in to post");
+    if (this.state.username === "Guest") alert("You must be signed in to post");
     this.props.history.push("/createForumPost");
   }
 
@@ -144,9 +144,12 @@ class Forum extends Component {
               const title = post.title;
               const timePosted = post.timePosted;
               const game = post.game;
+              const gameID = post.gameID;
               const user = post.username;
               const postID = post._id;
               const votes = post.votes;
+              // Base: steamcdn-a.akamaihd.net/steam/apps/{app_id}/header.jpg
+              const imageURL = `https://steamcdn-a.akamaihd.net/steam/apps/${post.appID}/header.jpg`;
               if (post.allReplyIDs.length > 0) {
                 const json = await axios.get(
                   `http://localhost:3001/forum/${
@@ -164,6 +167,8 @@ class Forum extends Component {
                 title: title,
                 timePosted: timePosted,
                 game: game,
+                gameID: gameID,
+                url: imageURL,
                 user: user,
                 replyUser: replyUser,
                 replyDate: replyDate,
@@ -264,14 +269,16 @@ class Forum extends Component {
     // Render each card
     cards.forEach((card) => {
       const postTimestamp = this.convertTime(card.timePosted, false);
-      const replyTimestamp = card.replyDate ? this.convertTime(card.replyDate, true) : "";
+      const replyTimestamp = card.replyDate
+        ? this.convertTime(card.replyDate, true)
+        : "";
 
       const renderCard = (
         <Card key={card.postID} className={mainStyles.postSpacing}>
           <CardContent className={mainStyles.forumCard}>
             <Grid container spacing={1}>
               <Grid item xs={2}>
-                <img className={mainStyles.photo} src={leaguePhoto} />
+                <img className={mainStyles.photo} src={card.url} />
               </Grid>
               <Grid item xs={6}>
                 <div className={mainStyles.gameAndTitle}>
@@ -285,11 +292,12 @@ class Forum extends Component {
                     className={mainStyles.gameName}
                     id="server-modal-title"
                   >
-                    {card.game}{" "}
-                  </Typography>
+                    <Link href={`/game/${card.gameID}`}>{card.game}</Link>
+                  </Typography>{" "}
                   <Typography
                     onClick={() => {
-                      if (this.state.username === 'Guest') alert("You must be signed in to view a thread.");
+                      if (this.state.username === "Guest")
+                        alert("You must be signed in to view a thread.");
                       else this.props.history.push(`/forumPost/${card.postID}`);
                     }}
                     className={mainStyles.forumTitle}
@@ -302,7 +310,14 @@ class Forum extends Component {
                     {card.title}
                   </Typography>
                 </div>
-                <Typography onClick={() => this.props.history.push(`/profile/${card.user}`)} style={{cursor: 'pointer', color: '#3f51b5'}} className={mainStyles.userName} display="inline">
+                <Typography
+                  onClick={() =>
+                    this.props.history.push(`/profile/${card.user}`)
+                  }
+                  style={{ cursor: "pointer", color: "#3f51b5" }}
+                  className={mainStyles.userName}
+                  display="inline"
+                >
                   {card.user}{" "}
                 </Typography>
                 <Typography className={mainStyles.timeStamp} display="inline">
@@ -353,8 +368,19 @@ class Forum extends Component {
                       <Typography
                         className={mainStyles.userName}
                         display="inline"
-                        style={card.replyUser ? {cursor: 'pointer', color: '#3f51b5'} : null}
-                        onClick={card.replyUser ? () => this.props.history.push(`/profile/${card.replyUser}`) : null}
+                        style={
+                          card.replyUser
+                            ? { cursor: "pointer", color: "#3f51b5" }
+                            : null
+                        }
+                        onClick={
+                          card.replyUser
+                            ? () =>
+                                this.props.history.push(
+                                  `/profile/${card.replyUser}`
+                                )
+                            : null
+                        }
                       >
                         {card.replyUser ? card.replyUser : "No comments"}{" "}
                       </Typography>

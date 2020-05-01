@@ -14,12 +14,12 @@ import { Multiselect } from "multiselect-react-dropdown";
 import Grid from "@material-ui/core/Grid";
 import Brightness1Icon from "@material-ui/icons/Brightness1";
 import Error404 from "./Error404";
-import AddCircleIcon from '@material-ui/icons/AddCircle';
-import AddTags from './AddTags';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-
+import AddCircleIcon from "@material-ui/icons/AddCircle";
+import AddTags from "./AddTags";
+import Card from "@material-ui/core/Card";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+import { Link } from "@material-ui/core";
 
 class Profile extends Component {
   constructor(props) {
@@ -61,18 +61,22 @@ class Profile extends Component {
       followText: "Follow",
       followList: [],
       currentFollowList: [],
-      error: false
+      activityList: [],
+      allActiveGames: [],
+      game: "",
+      gameID: "",
+      error: false,
+      isInParty: false
     };
   }
 
   componentDidMount() {
-    // Check if profile exists, if not alert them and redirect to Own Profile
+    // Check if profile exists, if not show error page
     if (!this.props.ownProfile) {
       axios
         .get(`http://localhost:3001/users/${this.props.match.params.username}`)
         .then((json) => {
           if (!json.data) {
-            // this.props.history.push('/error');
             this.setState({ error: true });
           }
         });
@@ -84,93 +88,83 @@ class Profile extends Component {
         withCredentials: true,
       })
       .then((json) => {
-        if (json.data.username === "Guest") this.props.history.push("/signin");
-        else this.setState({ currentUser: json.data.username });
-        if (json.data.profilePhoto) {
-          this.setState({ avatar: json.data.profilePhoto });
+        if (json.data.username === "Guest") {
+          this.props.history.push("/signin");
+          return;
         }
-        console.log(json.data.friends);
-        if (json.data.friends) {
-          this.setState({ currentFollowList: json.data.friends });
-        }
+        this.setState({
+          currentUser: json.data.username,
+          currentFollowList: json.data.friends,
+          avatar: json.data.profilePhoto,
+        });
         // If own profile, get rest of data
         if (
           this.props.ownProfile ||
           this.props.match.params.username === json.data.username
         ) {
-          this.setState({ ownProfile: true });
-          if (json.data.username) {
-            this.setState({ username: json.data.username });
-          }
-          if (json.data.bio) {
-            this.setState({ bio: json.data.bio });
-          }
-          if (json.data.firstName) {
-            this.setState({ firstName: json.data.firstName });
-          }
-          if (json.data.lastName) {
-            this.setState({ lastName: json.data.lastName });
-          }
-          if (json.data.profilePhoto) {
-            this.setState({ photo: json.data.profilePhoto });
-          }
-          if (json.data.timeZone) {
-            this.setState({ timeZone: json.data.timeZone });
-          }
-          if (json.data.userTags) {
-            this.setState({ userTags: json.data.userTags });
-          }
-          if (json.data.playerRep) {
-            this.setState({ allRep: json.data.playerRep });
-            this.analyzeRep(json.data.playerRep);
-          }
-          if (json.data.status) {
-            this.setState({ status: json.data.status });
-          }
-          if(json.data.friends){
-            this.setState({followList: json.data.friends})
+          this.setState({
+            ownProfile: true,
+            username: json.data.username,
+            bio: json.data.bio,
+            firstName: json.data.firstName,
+            lastName: json.data.lastName,
+            photo: json.data.profilePhoto,
+            timeZone: json.data.timeZone,
+            userTags: json.data.userTags,
+            allRep: json.data.playerRep,
+            status: json.data.status,
+            followList: json.data.friends,
+            activityList: json.data.forumPosts,
+            isInParty: json.data.currentPartyId != "",
+            allActiveGames: json.data.games
+          });
+          this.analyzeRep(json.data.playerRep);
+          if (json.data.currentPartyId) {
+            axios
+              .get(`http://localhost:3001/party/id/${json.data.currentPartyId}`)
+              .then((json) => {
+                if (json.data.success) {
+                  this.setState({ game: json.data.party.game, gameID: json.data.party.gameID });
+                }
+              });
           }
         } else {
           // If not own profile, get the other user's data
           route = `http://localhost:3001/users/${this.props.match.params.username}`;
           axios.get(route).then((json) => {
-            if (json.data.username) {
-              this.setState({ username: json.data.username });
+            this.setState({
+              username: json.data.username,
+              bio: json.data.bio,
+              firstName: json.data.firstName,
+              lastName: json.data.lastName,
+              photo: json.data.profilePhoto,
+              timeZone: json.data.timeZone,
+              userTags: json.data.userTags,
+              allRep: json.data.playerRep,
+              status: json.data.status,
+              followList: json.data.friends,
+              activityList: json.data.forumPosts,
+              allActiveGames: json.data.games
+            });
+            if (
+              this.state.currentFollowList.some(
+                (user) => user.username === this.state.username
+              )
+            ) {
+              this.setState({ followText: "Unfollow" });
+            } else {
+              this.setState({ followText: "Follow" });
             }
-            if (json.data.bio) {
-              this.setState({ bio: json.data.bio });
-            }
-            if (json.data.firstName) {
-              this.setState({ firstName: json.data.firstName });
-            }
-            if (json.data.lastName) {
-              this.setState({ lastName: json.data.lastName });
-            }
-            if (json.data.profilePhoto) {
-              this.setState({ photo: json.data.profilePhoto });
-            }
-            if (json.data.timeZone) {
-              this.setState({ timeZone: json.data.timeZone });
-            }
-            if (json.data.userTags) {
-              this.setState({ userTags: json.data.userTags });
-            }
-            if (json.data.playerRep) {
-              this.setState({ allRep: json.data.playerRep });
-              this.analyzeRep(json.data.playerRep);
-            }
-            if (json.data.status) {
-              this.setState({ status: json.data.status });
-            }
-            if (json.data.friends) {
-              this.setState({ followList: json.data.friends });
-            }
-            if (this.state.currentFollowList.some(user => user.username === this.state.username)) {
-              this.setState({ followText: 'Unfollow' });
-            }
-            else{
-              //console.log("smol wang");
-              this.setState({ followText: 'Follow' });
+            if (json.data.currentPartyId) {
+              axios
+                .get(
+                  `http://localhost:3001/party/id/${json.data.currentPartyId}`
+                )
+                .then((json) => {
+                  if (json.data.success) {
+                    this.setState({ game: json.data.party.game, gameID: json.data.party.gameID });
+                  }
+                });
             }
           });
         }
@@ -178,9 +172,11 @@ class Profile extends Component {
 
     axios.get("http://localhost:3001/userTags/").then((json) => {
       // Get Tag Object Array and set it
-      this.setState({ allTags: json.data.tagObj.sort( function ( a, b) {
-        return  a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
-      }) });
+      this.setState({
+        allTags: json.data.tagObj.sort(function (a, b) {
+          return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
+        }),
+      });
     });
   }
 
@@ -199,8 +195,10 @@ class Profile extends Component {
         this.setState({ pastFeedback: review, oldFeedback: review });
       }
     });
-    this.setState({ positiveRep: positiveRepCount });
-    this.setState({ negativeRep: negativeRepCount });
+    this.setState({
+      positiveRep: positiveRepCount,
+      negativeRep: negativeRepCount,
+    });
   }
 
   handleBioChange(newBio) {
@@ -346,41 +344,43 @@ class Profile extends Component {
 
   handleFollow() {
     axios
-      .put(
-        `http://localhost:3001/users/addFriend/${this.state.currentUser}`, {
-        username: this.state.username
+      .put(`http://localhost:3001/users/addFriend/${this.state.currentUser}`, {
+        username: this.state.username,
       })
       .then((json) => {
         console.log(json.data);
         if (json.data.success) {
-          this.setState({ followText: 'Unfollow' });
+          this.setState({ followText: "Unfollow" });
           console.log("Follow Request Success!");
-        }
-        else alert("Something went wrong. Please try again");
-      })
+        } else alert("Something went wrong. Please try again");
+      });
   }
 
   handleUnfollow() {
     axios
       .put(
-        `http://localhost:3001/users/removeFriend/${this.state.currentUser}`, {
-        username: this.state.username
-      })
+        `http://localhost:3001/users/removeFriend/${this.state.currentUser}`,
+        {
+          username: this.state.username,
+        }
+      )
       .then((json) => {
         console.log(json.data);
         if (json.data.success) {
-          this.setState({ followText: 'Follow' });
+          this.setState({ followText: "Follow" });
           console.log("Unfollow Request Success!");
-        }
-        else alert("Something went wrong. Please try again");
-      })
+        } else alert("Something went wrong. Please try again");
+      });
   }
 
   handleStatusChange(e) {
+    var setStatus = e.target.value;
+    if (this.state.status === e.target.value || (this.state.status === 'In-Game' && e.target.value != 'Invisible')) return;
+    if (!this.state.isInParty && e.target.value === 'In-Game') return;
+    if (this.state.status === 'Invisible' && this.state.isInParty) setStatus = "In-Game"
     axios
-      .put(
-        `http://localhost:3001/users/${this.state.currentUser}`, {
-        status: e.target.value
+      .put(`http://localhost:3001/users/${this.state.currentUser}`, {
+        status: setStatus
       })
       .then((json) => {
         console.log("Status set to: " + json.data.user.status);
@@ -389,6 +389,9 @@ class Profile extends Component {
   }
 
   render() {
+    if (this.state.error) {
+      return <Error404></Error404>;
+    }
     const theme = createMuiTheme({
       "@global": {
         body: {
@@ -458,15 +461,6 @@ class Profile extends Component {
       multiselectContainer: {},
     };
 
-    // Active, In-Game, Full, Offline, Away
-    const statusColorCodes = {
-      active: "#26AD00",
-      ingame: "4ACFF9",
-      full: "FF3200",
-      offline: "C4C4C4",
-      away: "FFE614",
-    };
-
     const {
       allTags,
       userTags,
@@ -474,7 +468,19 @@ class Profile extends Component {
       negativeRep,
       ownProfile,
       status,
+      game,
+      gameID,
+      username,
+      currentUser
     } = this.state;
+
+    // Active, In-Game, Offline, Away
+    const statusColorCodes = {
+      active: "#26AD00",
+      ingame: "4ACFF9",
+      offline: "C4C4C4",
+      away: "FFE614",
+    };
 
     // Set Status Color
     var statusColor;
@@ -482,8 +488,6 @@ class Profile extends Component {
       statusColor = statusColorCodes.active;
     } else if (status === "In-Game") {
       statusColor = statusColorCodes.ingame;
-    } else if (status === "Full") {
-      statusColor = statusColorCodes.full;
     } else if (status === "Away") {
       statusColor = statusColorCodes.away;
     } else {
@@ -497,7 +501,7 @@ class Profile extends Component {
       else otherTags = otherTags + tag.name + ", ";
     });
     if (otherTags.length == 0) otherTags = "None";
-    
+
     // Conditional Rendering
     var editProfileE;
     var setStatusE;
@@ -520,7 +524,10 @@ class Profile extends Component {
 
       // Allow edit
       setStatusE = (
-        <Status status={status} onStatusChange={this.handleStatusChange}></Status>
+        <Status
+          status={status}
+          onStatusChange={this.handleStatusChange}
+        ></Status>
       );
 
       // Clicking will open the reviews page tab
@@ -551,10 +558,10 @@ class Profile extends Component {
                 onSelect={this.onTagSelect}
                 onRemove={this.onTagRemove}
                 style={this.style}
-                selectionLimit	= {5}
+                selectionLimit={5}
               />
-            </Grid><AddTags></AddTags>
-
+            </Grid>
+            <AddTags></AddTags>
           </Grid>
         </div>
       );
@@ -566,7 +573,7 @@ class Profile extends Component {
             className={styles.statusGuest}
             style={{ color: statusColor }}
           ></Brightness1Icon>
-          {status === 'Invisible' ? "Offline" : status}
+          {status === "Invisible" ? "Offline" : status}
         </Typography>
       );
 
@@ -594,49 +601,57 @@ class Profile extends Component {
       );
 
       // Show Follow Button
-      followE = this.state.followText === 'Follow' ? (
-        <Button
-          onClick={() => this.handleFollow()}
-          variant="contained"
-          color="primary"
-          size="large"
-          className={styles.editProfile}
-        > {this.state.followText}
-        </Button>
-      ) : <Button
-        onClick={() => this.handleUnfollow()}
-        variant="contained"
-        color="primary"
-        size="large"
-        className={styles.editProfile}
-      > {this.state.followText}
-        </Button>
+      followE =
+        this.state.followText === "Follow" ? (
+          <Button
+            onClick={() => this.handleFollow()}
+            variant="contained"
+            color="primary"
+            size="large"
+            className={styles.editProfile}
+          >
+            {" "}
+            {this.state.followText}
+          </Button>
+        ) : (
+          <Button
+            onClick={() => this.handleUnfollow()}
+            variant="contained"
+            color="primary"
+            size="large"
+            className={styles.editProfile}
+          >
+            {" "}
+            {this.state.followText}
+          </Button>
+        );
     }
 
-    if (this.state.error) {
-      return <Error404></Error404>
-    }
-    else if (!this.state.editing) {
+      if (!this.state.editing) {
       return (
         <div>
           <TopMenu history={this.props.history}></TopMenu>
           <div className={styles.bgColor}>
             <div className={styles.profilePhoto}> </div>
-            <Grid item xs = {4} className = {styles.profileCard}>
-            <Card className = {styles.profileCardPadding}>
-            <CardContent className = {styles.forumCard}>
-            <Typography>
-            Time Zone: {this.state.timeZone} </Typography>
-            <Typography>Currently Playing: <Typography className = {styles.gameName} style ={{color:'#3f51b5', display: 'inline',}}>League of Legends</Typography></Typography>
-            <Typography>Current Status: </Typography>
-            {setStatusE}
-
-              </CardContent>
+            <Grid item xs={4} className={styles.profileCard}>
+              <Card className={styles.profileCardPadding}>
+                <CardContent className={styles.forumCard}>
+                  <Typography>Time Zone: {this.state.timeZone} </Typography>
+                  <Typography>
+                    Currently Playing:{" "}
+                    <Typography
+                      className={styles.gameName}
+                      style={{ color: "#3f51b5", display: "inline" }}
+                    >
+                      {status === 'Invisible' && currentUser !== username ? "None" : <Link href={`/game/${gameID}`}>{game}</Link> }
+                    </Typography>
+                  </Typography>
+                  <Typography>Current Status: </Typography>
+                  {setStatusE}
+                </CardContent>
               </Card>
+            </Grid>
 
-      </Grid>
-     
-         
             <Avatar src={this.state.photo} className={styles.large} />
             {followE}
             {editProfileE}
@@ -668,7 +683,9 @@ class Profile extends Component {
               allRep={this.state.allRep}
               timeZone={this.state.timeZone}
               currentUser={this.state.currentUser === this.state.username}
-              allFollowers = {this.state.followList}
+              allFollowers={this.state.followList}
+              allActivity={this.state.activityList}
+              allActiveGames={this.state.allActiveGames}
             ></Menu>
           </div>
         </div>

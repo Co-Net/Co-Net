@@ -290,6 +290,7 @@ export default function ServerModal(props) {
                     fullWidth
                     variant="contained"
                     color="primary first"
+                    id="signupButton"
                     onClick={(e) =>
                       onSignUp(
                         e,

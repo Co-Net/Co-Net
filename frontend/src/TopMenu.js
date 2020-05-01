@@ -22,6 +22,18 @@ import { browserHistory } from "react-router";
 import PartyButton from "./Party";
 import PartyActive from "./PartyActive";
 import socketIOClient from "socket.io-client";
+import algoliasearch from "algoliasearch/lite";
+import {
+  InstantSearch,
+  Hits,
+  connectSearchBox,
+  connectStateResults,
+} from "react-instantsearch-dom";
+
+const searchClient = algoliasearch(
+  "T7MES4D4M7",
+  "3fc5bf346a8a53b2ef1c596cf747cb02"
+);
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -85,6 +97,32 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const SearchBox = ({ currentRefinement, refine, onSubmit }) => {
+  return (
+    <InputBase
+      placeholder="Search…"
+      classes={{
+        root: useStyles().inputRoot,
+        input: useStyles().inputInput,
+      }}
+      inputProps={{ "aria-label": "search" }}
+      value={currentRefinement}
+      onChange={(event) => {
+        // console.log(currentRefinement);
+        refine(event.currentTarget.value);
+      }}
+      onKeyPress={(event) => {
+        if (event.key === "Enter") {
+          onSubmit(currentRefinement);
+          event.preventDefault();
+        }
+      }}
+    />
+  );
+};
+
+const CustomSearchBox = connectSearchBox(SearchBox);
+
 export default function PrimarySearchAppBar(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -95,24 +133,12 @@ export default function PrimarySearchAppBar(props) {
 
   const [username, setUsername] = useState("Guest");
   const [isGuest, setIsGuest] = useState(false);
+  const [isInParty, setIsInParty] = useState(false);
+  const [partyID, setPartyID] = useState("");
 
-  // // Runs on refresh and every component load/change
-  // // Use this to check if still Active
-  // const getUser = () => {
-  //   axios
-  //     .get("http://localhost:3001/user/currentuser", { withCredentials: true })
-  //     .then((json) => {
-  //       // If already logged in, don't run
-  //       if (isGuest) {
-  //         setUsername(json.data.username);
-  //         setIsGuest(false);
-  //         const socket = socketIOClient("http://localhost:3001");
-  //         socket.on("connected", () => {
-  //           socket.emit("login", json.data.username);
-  //         });
-  //       }
-  //     });
-  // };
+  const handleSubmit = (submission) => {
+    console.log(`Submit ${submission}`);
+  };
 
   const { history } = props;
 
@@ -158,11 +184,18 @@ export default function PrimarySearchAppBar(props) {
           setIsGuest(true);
         } else {
           // If logged in, set username and guest to false
+          var status = json.data.status;
+          var inParty = false;
+          if (json.data.currentPartyId) {
+            setIsInParty(true);
+            setPartyID(json.data.currentPartyId);
+            inParty = true;
+          }
           setUsername(json.data.username);
           setIsGuest(false);
           const socket = socketIOClient("http://localhost:3001");
           socket.on("connected", () => {
-            socket.emit("login", json.data.username);
+            socket.emit("login", json.data.username, inParty, status);
           });
         }
       });
@@ -188,6 +221,12 @@ export default function PrimarySearchAppBar(props) {
       <MenuItem onClick={() => handleMenuClose("logout")}>Logout</MenuItem>
     </Menu>
   );
+
+  function Hit(props) {
+    console.log("hit");
+    console.log(props.hit.username);
+    return <div>{props.hit.username}</div>;
+  }
 
   const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (
@@ -268,7 +307,6 @@ export default function PrimarySearchAppBar(props) {
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
-
             <InputBase
               placeholder="Search…"
               classes={{
@@ -356,22 +394,30 @@ export default function PrimarySearchAppBar(props) {
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
-
-            <InputBase
+            <InstantSearch searchClient={searchClient} indexName="co-net_users">
+              <CustomSearchBox defaultRefinement={""} onSubmit={handleSubmit} />
+              {/* <Hits hitComponent={Hit} /> */}
+            </InstantSearch>
+            {/* <InputBase
               placeholder="Search…"
               classes={{
                 root: classes.inputRoot,
                 input: classes.inputInput,
               }}
               inputProps={{ "aria-label": "search" }}
-            />
+            /> */}
           </div>
 
           <IconButton color="inherit">
-            <PartyButton></PartyButton>
-          </IconButton>
-          <IconButton color="inherit">
-            <PartyActive history={history}></PartyActive>
+            {isInParty ? (
+              <PartyActive
+                username={username}
+                partyID={partyID}
+                history={history}
+              ></PartyActive>
+            ) : (
+              <PartyButton username={username} history={history}></PartyButton>
+            )}
           </IconButton>
 
           <div className={classes.grow} />
@@ -406,154 +452,3 @@ export default function PrimarySearchAppBar(props) {
     </div>
   );
 }
-/*
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  
-
-  return (
-    <Typography
-      component="div"
-      role="tabpanel"
-      hidden={value !== index}
-      id={`nav-tabpanel-${index}`}
-      aria-labelledby={`nav-tab-${index}`}
-      {...other}
-    >
-      <Box p={3}>{children}</Box>
-    </Typography>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
-
-function a11yProps(index) {
-  return {
-    id: `nav-tab-${index}`,
-    'aria-controls': `nav-tabpanel-${index}`,
-  };
-}
-
-function LinkTab(props) {
-  return (
-    <Tab
-      component="a"
-      onClick={event => {
-        //event.SignIn();
-      }}
-      {...props}
-    />
-  );
-}
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: 'white',
-    textColor: 'black',
-    maxwidth: 500,
-  },
-
-}));
-const useStyles1 = makeStyles({
-  list: {
-    width: 250,
-  },
-  fullList: {
-    width: 'auto',
-  },
-});
-
- 
-
-export default function NavTabs() {
-  const classes = useStyles();
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-  const classes1 = useStyles1();
-  const [state, setState] = React.useState({
-    top: false,
-    left: false,
-    bottom: false,
-    right: false,
-  });
-
-  const toggleDrawer = (side, open) => event => {
-    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-      return;
-    }
-
-    setState({ ...state, [side]: open });
-  };
-
-  const sideList = side => (
-    <div
-      className={classes1.list}
-      role="presentation"
-      onClick={toggleDrawer(side, false)}
-      onKeyDown={toggleDrawer(side, false)}
-    >
-      <List>
-        {['Sign Up', 'Login', 'My Profile', 'Trending'].map((text, index) => (
-          <MenuItem button key={text} href="/signModal">
-            <ListItemText primary={text} href="/signModal"/>
-          </MenuItem>
-        ))}
-      </List>
-      <Divider />
-     
-    </div>
-  );
-
-  return (
-    <div className={classes.root}>
-    <div style = {{display: 'inline-flex',}}>
-    <img src = {logo} alt = "Logo" style = {{width: '16%', height: 76, marginTop: 5,}}/>
-
-    <Search />
-    
-    </div>
-    {/*<div style = {{display: 'inline-block', float: 'right', marginTop: 27, marginRight: 10,}}>
-    <Button onClick={toggleDrawer('right', true)}><MenuIcon></MenuIcon></Button>
-    <Drawer anchor="right" open={state.right} onClose={toggleDrawer('right', false)}>
-    {sideList('right')}
-  </Drawer>
-  </div>
-  }
-      <AppBar position="static" elevation={0}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          tabItemContainerStyle={{width: '400px'}}
-          aria-label="nav tabs example"
-          
-          TabIndicatorProps={{
-            style: {
-              backgroundColor: "white "
-
-            }
-          }}
-          style = {{backgroundColor: 'white', color: 'black'}}
-        >
-        
-          <LinkTab label="My Profile" href="/" {...a11yProps(3)} />
-          <LinkTab label="Trending" href="/Feed" {...a11yProps(4)} />
-          <LinkTab label="Create Post" href="/CreatePost" {...a11yProps(5)} />
-          <LinkTab label="My Feed" href="/MyFeed" {...a11yProps(6)} />
-
-        </Tabs>
-      </AppBar>
-      
-    </div>
-  );
-}
-*/
-// ReactDOM.render(routing, document.getElementById('root'))

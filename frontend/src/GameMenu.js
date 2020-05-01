@@ -1,22 +1,19 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import React from "react";
+import PropTypes from "prop-types";
+import { makeStyles } from "@material-ui/core/styles";
+import AppBar from "@material-ui/core/AppBar";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
 
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import Games from './Games.js';
-import ReviewTab from './reviewTab.js';
-import FriendsList from './friendsList.js';
-import Activity from './Activity.js';
-import { Multiselect } from 'multiselect-react-dropdown';
-import Player from './player.js';
-import PartyCard from './PartyCard';
-
-
-
+import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
+import Games from "./Games.js";
+import ReviewTab from "./reviewTab.js";
+import FriendsList from "./friendsList.js";
+import Activity from "./Activity.js";
+import { Multiselect } from "multiselect-react-dropdown";
+import Player from "./player.js";
+import PartyCard from "./PartyCard";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -44,39 +41,32 @@ TabPanel.propTypes = {
 function a11yProps(index) {
   return {
     id: `scrollable-force-tab-${index}`,
-    'aria-controls': `scrollable-force-tabpanel-${index}`,
+    "aria-controls": `scrollable-force-tabpanel-${index}`,
   };
 }
 
-
-
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    width: '100%',
+    width: "100%",
     backgroundColor: theme.palette.background.paper,
-    shadows: ["none"]
+    shadows: ["none"],
   },
 }));
 
-
 const style = {
-    multiselectContainer: { 
-        marginBottom: '40px',
-        width: '800px',
-        marginLeft: '2%',
-    },
-    chips: {
-    },
-    searchBox: {
-      fontSize: '15px',
-      fontFamily: 'Segoe UI',
-
-    },
-    inputField: { 
-      fontSize: '15px',
-
-
+  multiselectContainer: {
+    marginBottom: "40px",
+    width: "800px",
+    marginLeft: "2%",
+  },
+  chips: {},
+  searchBox: {
+    fontSize: "15px",
+    fontFamily: "Segoe UI",
+  },
+  inputField: {
+    fontSize: "15px",
   },
 };
 
@@ -87,29 +77,42 @@ const offline = "#c4c4c4";
 const away = "#ffe712";
 
 const state = {
-    options:[
-      { key: "League", },
-      { key: "Minecraft", },
-      { key: "Valorant", },
-      { key: "CSGO", },
-      { key: "Mario Kart", },
-      { key: "Animal Crossing", },
-      { key: "Tic Tac Toe", }
-    ],
-  };
-
+  options: [
+    { key: "League" },
+    { key: "Minecraft" },
+    { key: "Valorant" },
+    { key: "CSGO" },
+    { key: "Mario Kart" },
+    { key: "Animal Crossing" },
+    { key: "Tic Tac Toe" },
+  ],
+};
 
 export default function ScrollableTabsButtonForce(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
+  const parties = props.parties;
+
+  // Get all players and party info
+  var members = [];
+  var partyCards = [];
+  parties.forEach((party) => {
+    members.unshift(
+      <Player key={party._id} username={party.partyLeader}></Player>
+    );
+    party.partyMembers.forEach((member) => {
+      members.unshift(<Player key={member._id} username={member.username}></Player>);
+    });
+    partyCards.unshift(<PartyCard key={party._id} inOtherParty={props.inOtherParty} currentUser={props.currentUser} gameID={props.gameID} game={props.game} party={party} leader={party.partyLeader} currentPlayers={party.partyMembers.length + 1} maxPlayers={party.maxPlayers}></PartyCard>);
+  });
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
   return (
-    <div style = {{marginTop: 20}} className={classes.root}>
-      <AppBar elevation = {0} position="static" color="white">
+    <div style={{ marginTop: 20 }} className={classes.root}>
+      <AppBar elevation={0} position="static" color="white">
         <Tabs
           value={value}
           onChange={handleChange}
@@ -117,37 +120,22 @@ export default function ScrollableTabsButtonForce(props) {
           indicatorColor="primary"
           textColor="primary"
         >
-          <Tab label="Players Playing"  {...a11yProps(0)} />
-          <Tab label="Parties Looking"  {...a11yProps(1)} />
-
+          <Tab label="Players Playing" {...a11yProps(0)} />
+          <Tab label="Parties Looking" {...a11yProps(1)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-      <Multiselect
-      options={state.options}
-      displayValue="key"
-      style={style}
-      placeholder = 'Search by Tag'
-  
-    /> 
-        <Player tags= "fun, omomo, tea" username = "HelloHydra" theme_color = {online}></Player>
-        <Player tags= "fun, hi" username = "Destroyer392" theme_color = {online}></Player>
-        <Player tags= "omomo, tea" username = "Hey" theme_color = {online}></Player>
-        <Player tags= "omomo, sup" username = "Testing" theme_color = {away}></Player>
-        <Player tags= "fun, testing123, hello" username = "123" theme_color = {inGame}></Player>
-  
-  
-  
+        <Multiselect
+          options={state.options}
+          displayValue="key"
+          style={style}
+          placeholder="Search by Tag"
+        />
+        {members.length > 0 ? members : "No players playing"}
       </TabPanel>
       <TabPanel value={value} index={1}>
-      <PartyCard></PartyCard>
-      <PartyCard></PartyCard>
-      <PartyCard></PartyCard>
-      <PartyCard></PartyCard>
-
-    
+        {partyCards.length > 0 ? partyCards : "No parties available"}
       </TabPanel>
-     
     </div>
   );
 }

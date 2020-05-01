@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -24,7 +24,6 @@ import TopMenu from "./TopMenu";
 import axios from "axios";
 import { createMuiTheme } from "@material-ui/core/styles";
 import styles from "./App.css";
-import leaguePhoto from "./leaguePhoto.jpg";
 import Brightness1Icon from "@material-ui/icons/Brightness1";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import Menu from "@material-ui/core/Menu";
@@ -40,14 +39,25 @@ import AutoGame from "./autoGame";
 import CreatableSelect from "react-select/creatable";
 import Select from "@material-ui/core/Select";
 import CheckIcon from "@material-ui/icons/Check";
-import { Multiselect } from 'multiselect-react-dropdown';
+import algoliasearch from "algoliasearch/lite";
+import Tags from "./lib/Tags";
+import "./tags.css";
+import { InstantSearch, Index } from "react-instantsearch-dom";
 
+export const TagSelectedComponent = ({ hit }) => (
+  <Fragment>
+    <code>{hit.name}</code>
+  </Fragment>
+);
+
+export const TagSuggestionComponent = ({ hit }) => (
+  <Fragment>{hit.name}</Fragment>
+);
 
 class CreateForumPost extends Component {
   constructor(props) {
     super(props);
     this.handleBodyEdit = this.handleBodyEdit.bind(this);
-    this.handleGameSelect = this.handleGameSelect.bind(this);
     this.handleTitleEdit = this.handleTitleEdit.bind(this);
     this.handlePostCreate = this.handlePostCreate.bind(this);
 
@@ -56,8 +66,6 @@ class CreateForumPost extends Component {
       title: "",
       body: "",
       game: "",
-      gamesLoading: true,
-      gameList: [],
     };
   }
 
@@ -68,31 +76,6 @@ class CreateForumPost extends Component {
       .then((json) => {
         if (json.data.username === "Guest") this.props.history.push("/Forum");
         this.setState({ username: json.data.username });
-        // console.log("loading games");
-        // axios.get("http://localhost:3001/games").then((json) => {
-        //   let gamesArr = json.data.gameObj;
-        //   let gameNamesCmps = [];
-        //   let key = 1;
-        //   for (let i = 0; i < 20; i++) {
-        //     const cmp = (
-        //       <MenuItem key={key} value={gamesArr[i].name}>
-        //         {gamesArr[i].name}
-        //       </MenuItem>
-        //     );
-        //     gameNamesCmps.push(cmp);
-        //   }
-        //   // gamesArr.forEach((game) => {
-        //   //   const cmp = (
-        //   //     <MenuItem key={key} value={game.name}>
-        //   //       {game.name}
-        //   //     </MenuItem>
-        //   //   );
-        //   //   gameNamesCmps.push(cmp);
-        //   // });
-        //   this.setState({ gameList: gameNamesCmps });
-        //   this.setState({ gamesLoading: false });
-        //   console.log("done loading");
-        // });
       });
   }
 
@@ -104,42 +87,58 @@ class CreateForumPost extends Component {
     this.setState({ body: e.target.value });
   }
 
-  handleGameSelect(e) {
-    let game = e.target.value;
-    this.setState({ game: game });
-  }
-
   handlePostCreate() {
     // Validate fields
     if (!this.state.game || !this.state.body || !this.state.title) {
-      alert('Please fill in required fields');
+      alert("Please fill in required fields");
       return;
+    }
+    // Get the app ID
+    const url = this.state.game.url;
+    var appID = url.search("/app/");
+    if (appID !== -1) {
+      var begin = url.substring(appID + 5);
+      var end = begin.indexOf("/");
+      appID = begin.substring(0, end);
     }
     // Create Post
     axios
       .post("http://localhost:3001/forum/createPostOrReply", {
         username: this.state.username,
         body: this.state.body,
-        game: this.state.game,
+        game: this.state.game.name,
+        gameID: this.state.game._id,
+        appID: appID,
         title: this.state.title,
       })
       .then((json) => {
-        console.log(json.data);
         if (json.data.success) {
           axios
-          .put(`http://localhost:3001/users/addPost/${this.state.username}`, {
-            postID: json.data.forumPostObj._id
-          })
-          .then((json) => {
-            console.log(json.data);
-            if(json.data.success) this.props.history.push("/forum");
-          })
-        }
-        else alert("Something went wrong. Please try again");
+            .put(`http://localhost:3001/users/addPost/${this.state.username}`, {
+              postID: json.data.forumPostObj._id,
+            })
+            .then((json2) => {
+              if (json2.data.success)
+                this.props.history.push(`/forum/${json.data.forumPostObj._id}`);
+            });
+        } else alert("Something went wrong. Please try again");
       });
   }
 
   render() {
+    const client = algoliasearch(
+      "T7MES4D4M7",
+      "3fc5bf346a8a53b2ef1c596cf747cb02"
+    );
+
+    const onAddTag = (hit) => {
+      return hit;
+    };
+
+    const onTagsUpdated = (actualTags, previousTags) => {
+      this.setState({ game: actualTags[0] });
+    };
+
     const theme = createMuiTheme({
       "@global": {
         body: {
@@ -193,42 +192,38 @@ class CreateForumPost extends Component {
       marginLeft: 8,
     };
 
-    const state = {
-      options:[
-        { key: "League", },
-        { key: "Minecraft", },
-        { key: "Valorant", },
-        { key: "CSGO", },
-        { key: "Mario Kart", },
-        { key: "Animal Crossing", },
-        { key: "Tic Tac Toe", }
-      ],
-    };
+    // const state = {
+    //   options:[
+    //     { name: "League", },
+    //     { name: "Minecraft", },
+    //     { name: "Valorant", },
+    //     { name: "CSGO", },
+    //     { name: "Mario Kart", },
+    //     { name: "Animal Crossing", },
+    //     { name: "Tic Tac Toe", }
+    //   ],
+    // };
 
     const style = {
-      multiselectContainer: { 
-        textAlign: 'center',
-        width: '70%',
-        marginLeft: '10px',
-      },
-      chips: {
-      },
-      searchBox: {
-        fontSize: '15px',
-        fontFamily: 'Segoe UI',
-        width: '69%',
-        marginLeft: '10px',
-        height: '40px',
-      },
-      inputField: { 
-        fontSize: '15px',
-        marginTop: '10px',
-
-    },
       multiselectContainer: {
-      }
+        textAlign: "center",
+        width: "70%",
+        marginLeft: "10px",
+      },
+      chips: {},
+      searchBox: {
+        fontSize: "15px",
+        fontFamily: "Segoe UI",
+        width: "69%",
+        marginLeft: "10px",
+        height: "40px",
+      },
+      inputField: {
+        fontSize: "15px",
+        marginTop: "10px",
+      },
+      multiselectContainer: {},
     };
-  
 
     const dividerGridStyle = {
       root: {
@@ -278,16 +273,24 @@ class CreateForumPost extends Component {
             className={mainStyles.titleInput}
             variant="outlined"
           />
-
-          <Multiselect
-          options={state.options}
-          displayValue="key"
-          style={style}
-          className = {mainStyles.multiselectGame}
-          placeholder = "Choose Game"
-          selectionLimit = {1}
-
-        />           <div style={{ marginRight: 20 }}>
+          <div>
+            <InstantSearch searchClient={client} indexName="co-net_games">
+              <Index indexName="co-net_games">
+                <Tags
+                  selectedTagComponent={TagSelectedComponent}
+                  suggestedTagComponent={TagSuggestionComponent}
+                  onAddTag={onAddTag}
+                  onUpdate={onTagsUpdated}
+                  limitTo={1}
+                  translations={{
+                    placeholder: "Game Name",
+                    noResult: "Game not found.",
+                  }}
+                />
+              </Index>
+            </InstantSearch>
+          </div>
+          <div style={{ marginRight: 20 }}>
             <TextField
               id="outlined-multiline-static"
               label="What's your post about?"
