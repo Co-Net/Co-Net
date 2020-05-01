@@ -508,6 +508,7 @@ class Profile extends Component {
     var setTagsE;
     var feedbackE;
     var followE;
+
     if (ownProfile) {
       // Allow edit
       editProfileE = (
@@ -521,6 +522,8 @@ class Profile extends Component {
           Edit Profile
         </Button>
       );
+    
+
 
       // Allow edit
       setStatusE = (
@@ -632,10 +635,12 @@ class Profile extends Component {
         <div>
           <TopMenu history={this.props.history}></TopMenu>
           <div className={styles.bgColor}>
-            <div className={styles.profilePhoto}> </div>
+            <div className={styles.profileBackground}> </div>
             <Grid item xs={4} className={styles.profileCard}>
               <Card className={styles.profileCardPadding}>
                 <CardContent className={styles.forumCard}>
+                <Button className = {styles.messageButton} variant = "contained">Message</Button>
+
                   <Typography>Time Zone: {this.state.timeZone} </Typography>
                   <Typography>
                     Currently Playing:{" "}
@@ -653,9 +658,12 @@ class Profile extends Component {
             </Grid>
 
             <Avatar src={this.state.photo} className={styles.large} />
+
             {followE}
+
             {editProfileE}
           </div>
+          
           <div className={styles.bgColor}>
             <Typography
               className={styles.profileText}
