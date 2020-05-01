@@ -275,6 +275,15 @@ class Game extends Component {
     </div>
     </div>
   
+          <Multiselect
+            options={this.state.options}
+            displayValue="key"
+            style={this.style}
+            placeholder="Search by Tag"
+          />
+          {partyCards} */}
+        </div>
+      </div>
     );
   }
 }
