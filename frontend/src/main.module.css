@@ -11,6 +11,11 @@ body{
 
 }
 
+.profileBackground{
+    height: 250px;
+    background-image: url("newBackground.jpg");
+}
+
 .large{
     width: 15% !important;
     height: unset !important;
@@ -583,6 +588,9 @@ body{
 
 }
 
+.messageButton{
+    margin-bottom: 15px !important;
+}
 
 
 
