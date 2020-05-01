@@ -152,6 +152,9 @@ export default function AlertDialog(props) {
           </Grid>
         </DialogContent>
         <DialogActions>
+        <Button onClick = {handleClose} color = "primary">
+        Leave Party
+        </Button>
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
