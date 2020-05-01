@@ -41,6 +41,35 @@ export default function AlertDialog(props) {
     setOpen1(false);
   };
 
+  const handleLeaveParty = () => {
+    // Check if user is party leader. If is, then delete party
+    // Deleting member's currentPartyId is handled on backend
+    if (props.username === leader) {
+      axios
+        .delete(`http://localhost:3001/party/${props.username}`)
+        .then((json) => {
+          console.log(json.data);
+          if (json.data.success) {
+            window.location.reload(false);
+          }
+        });
+    } else {
+      // axios call remove member
+      axios
+        .put(
+          `http://localhost:3000/party/removePartyMember/${props.partyID}`,
+          {
+            username: props.username,
+          }
+        )
+        .then((json) => {
+          if (json.data.success) {
+            window.location.reload(false);
+          }
+        });
+    }
+  };
+
   useEffect(() => {
     if (!props.partyID || props.username === "Guest") return;
     axios
@@ -152,7 +181,7 @@ export default function AlertDialog(props) {
           </Grid>
         </DialogContent>
         <DialogActions>
-        <Button onClick = {handleClose} color = "primary">
+        <Button onClick={handleLeaveParty} color = "primary">
         Leave Party
         </Button>
           <Button onClick={handleClose} color="primary">

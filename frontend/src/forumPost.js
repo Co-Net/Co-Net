@@ -400,9 +400,20 @@ class ForumPost extends Component {
       .delete(`http://localhost:3001/forum/${this.props.match.params.postID}`)
       .then((json) => {
         if (json.data.success) {
-          console.log("Post Deleted");
-          this.setState({ editing: false });
-          this.props.history.push("/Forum");
+          axios
+            .put(
+              `http://localhost:3001/users/removePost/${this.state.currentUser}`,
+              {
+                postID: this.props.match.params.postID,
+              }
+            )
+            .then((json) => {
+              if (json.data.success) {
+                console.log("Post Deleted");
+                this.setState({ editing: false });
+                this.props.history.push("/Forum");
+              }
+            });
         }
       });
   }
@@ -492,9 +503,7 @@ class ForumPost extends Component {
         >
           <EditIcon></EditIcon>
         </Button>
-      ) : (
-        null
-      );
+      ) : null;
 
     // If already upvoted and click upvote, clear '+' vote
     // If already downvoted and click upvote, clear '-' vote AND upvote
@@ -643,7 +652,11 @@ class ForumPost extends Component {
                         marginBottom: 20,
                       }}
                     />
-                    <Typography id="body" variant="body1" className={styles.forumBody}>
+                    <Typography
+                      id="body"
+                      variant="body1"
+                      className={styles.forumBody}
+                    >
                       {body}
                     </Typography>
                     <Typography className={styles.commentNumber}>

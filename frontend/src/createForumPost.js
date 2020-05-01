@@ -119,7 +119,7 @@ class CreateForumPost extends Component {
             })
             .then((json2) => {
               if (json2.data.success)
-                this.props.history.push(`/forum/${json.data.forumPostObj._id}`);
+                this.props.history.push(`/forumPost/${json.data.forumPostObj._id}`);
             });
         } else alert("Something went wrong. Please try again");
       });
