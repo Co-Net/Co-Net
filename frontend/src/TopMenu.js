@@ -168,8 +168,8 @@ export default function PrimarySearchAppBar(props) {
               });
           }
         });
-    } else if (event === "myaccount") history.push("myaccount");
-    else if (event === "messages") history.push("messages");
+    } else if (event === "myaccount") history.push("/myaccount");
+    else if (event === "messages") history.push("/messages");
   };
 
   const handleMobileMenuOpen = (event) => {
