@@ -1,3 +1,4 @@
+// Command: npm run testies -- ./tests/signup_test
 var assert = require("assert").strict;
 var webdriver = require("selenium-webdriver");
 

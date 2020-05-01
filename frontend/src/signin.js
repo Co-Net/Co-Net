@@ -108,7 +108,7 @@ export default function ServerModal(props) {
               </Grid>
               <Grid item xs={12}></Grid>
             </Grid>
-            <form className={classes.form} noValidate>
+            <form id="signinForm" className={classes.form} noValidate>
               <Grid container spacing={4}>
                 <Grid item xs={12}>
                   <TextField
@@ -144,6 +144,7 @@ export default function ServerModal(props) {
                     fullWidth
                     variant="contained"
                     color="primary"
+                    id="signinButton"
                     className={classes.submit}
                     onClick={(e) => onSignIn(e, history, password, email)}
                   >

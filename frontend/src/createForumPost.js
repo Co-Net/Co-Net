@@ -260,7 +260,7 @@ class CreateForumPost extends Component {
             </Grid>
           </Grid>
           <TextField
-            id="outlined-full-width"
+            id="title"
             label="Title"
             placeholder="Enter a post title"
             onChange={this.handleTitleEdit}
@@ -292,7 +292,7 @@ class CreateForumPost extends Component {
           </div>
           <div style={{ marginRight: 20 }}>
             <TextField
-              id="outlined-multiline-static"
+              id="postbody"
               label="What's your post about?"
               multiline
               rows="10"
@@ -314,6 +314,7 @@ class CreateForumPost extends Component {
 
               <Button
                 onClick={this.handlePostCreate}
+                id="createPostButton"
                 className={mainStyles.postButton}
                 color="primary"
                 variant="contained"

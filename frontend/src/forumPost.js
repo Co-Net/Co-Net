@@ -484,6 +484,7 @@ class ForumPost extends Component {
     const editButton =
       author === currentUser ? (
         <Button
+          id="editpostButton"
           onClick={() => this.setState({ editing: true, oldBody: body })}
           className={styles.editPostButton}
           color="secondary"
@@ -492,7 +493,7 @@ class ForumPost extends Component {
           <EditIcon></EditIcon>
         </Button>
       ) : (
-        ""
+        null
       );
 
     // If already upvoted and click upvote, clear '+' vote
@@ -574,7 +575,7 @@ class ForumPost extends Component {
                 <Grid container spacing={1}>
                   <Grid item xs={2}>
                     <Avatar src={avatar} className={styles.avatarForum} />
-                    <div className={styles.postStats}>
+                    <div id="forumPost" className={styles.postStats}>
                       <div>
                         <Typography
                           className={styles.statsText}
@@ -642,7 +643,7 @@ class ForumPost extends Component {
                         marginBottom: 20,
                       }}
                     />
-                    <Typography variant="body1" className={styles.forumBody}>
+                    <Typography id="body" variant="body1" className={styles.forumBody}>
                       {body}
                     </Typography>
                     <Typography className={styles.commentNumber}>

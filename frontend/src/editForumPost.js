@@ -225,6 +225,7 @@ class EditForumPost extends Component {
               </Button>
               <Button
                 onClick={this.props.onDelete}
+                id="deletepostButton"
                 className={mainStyles.cancelButton}
                 color="secondary"
                 variant="contained"

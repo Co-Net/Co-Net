@@ -82,6 +82,7 @@ class TagsBoxContainer extends React.Component {
 
                     <li className="ais-TagsBox-inputTag">
                         <input type="text"
+                               id="tagsbox"
                                ref={this.inputRef}
                                value={inputValue}
                                disabled={inputDisabled}

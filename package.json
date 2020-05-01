@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm start\"",
-    "testies": "mocha test"
+    "testies": "mocha"
   },
   "keywords": [],
   "author": "",
