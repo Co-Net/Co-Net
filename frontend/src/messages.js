@@ -164,7 +164,12 @@ class editForumPost extends Component {
                 Messages
               </Typography>
             </Grid>
+            <Grid item xs = {6}>
+            <Button onclick = {() => this.props.history.push("/createmessage")}
+            color = 'secondary' className = {mainStyles.composeMessage} variant = "contained">Compose</Button>
+            </Grid>
           </Grid>
+
           <MessageBox
             avatar={this.state.avatar}
             threads={this.state.threads}
