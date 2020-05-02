@@ -191,7 +191,7 @@ export default function AlertDialog(props) {
           <Button onClick={handleCancel} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleDone} color="primary" autoFocus>
+          <Button id="createPartyDone" onClick={handleDone} color="primary" autoFocus>
             Done
           </Button>
         </DialogActions>

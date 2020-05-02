@@ -209,7 +209,7 @@ export default function PrimarySearchAppBar(props) {
       </MenuItem>
       <MenuItem onClick={() => handleMenuClose("messages")}>Messages</MenuItem>
 
-      <MenuItem onClick={() => handleMenuClose("logout")}>Logout</MenuItem>
+      <MenuItem id="logout" onClick={() => handleMenuClose("logout")}>Logout</MenuItem>
     </Menu>
   );
 
@@ -425,7 +425,7 @@ export default function PrimarySearchAppBar(props) {
             /> */}
           </div>
 
-          <IconButton color="inherit">
+          <IconButton id="partyButton" color="inherit">
             {isInParty ? (
               <PartyActive
                 username={username}
@@ -446,6 +446,7 @@ export default function PrimarySearchAppBar(props) {
               aria-haspopup="true"
               onClick={handleProfileMenuOpen}
               color="inherit"
+              id="usermenu"
             >
               <Typography className="userName">{username}</Typography>
               <AccountCircle />
