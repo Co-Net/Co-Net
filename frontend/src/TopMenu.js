@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import AppBar from "@material-ui/core/AppBar";
 import Typography from "@material-ui/core/Typography";
@@ -23,12 +23,19 @@ import PartyButton from "./Party";
 import PartyActive from "./PartyActive";
 import socketIOClient from "socket.io-client";
 import algoliasearch from "algoliasearch/lite";
-import {
-  InstantSearch,
-  Hits,
-  connectSearchBox,
-  connectStateResults,
-} from "react-instantsearch-dom";
+import Tags from "./lib/Tags";
+import "./tags.css";
+import { InstantSearch, Index } from "react-instantsearch-dom";
+
+const TagSelectedComponent = ({ hit }) => (
+  <Fragment>
+    <code>{hit.username}</code>
+  </Fragment>
+);
+
+const TagSuggestionComponent = ({ hit }) => (
+  <Fragment>{hit.username}</Fragment>
+);
 
 const searchClient = algoliasearch(
   "T7MES4D4M7",
@@ -51,10 +58,10 @@ const useStyles = makeStyles((theme) => ({
   search: {
     position: "relative",
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.black, 0.15),
-    "&:hover": {
-      backgroundColor: fade(theme.palette.common.black, 0.25),
-    },
+    // backgroundColor: fade(theme.palette.common.black, 0.15),
+    // "&:hover": {
+    //   backgroundColor: fade(theme.palette.common.black, 0.25),
+    // },
     marginRight: theme.spacing(2),
     marginLeft: 0,
     width: "100%",
@@ -97,32 +104,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SearchBox = ({ currentRefinement, refine, onSubmit }) => {
-  return (
-    <InputBase
-      placeholder="Search…"
-      classes={{
-        root: useStyles().inputRoot,
-        input: useStyles().inputInput,
-      }}
-      inputProps={{ "aria-label": "search" }}
-      value={currentRefinement}
-      onChange={(event) => {
-        // console.log(currentRefinement);
-        refine(event.currentTarget.value);
-      }}
-      onKeyPress={(event) => {
-        if (event.key === "Enter") {
-          onSubmit(currentRefinement);
-          event.preventDefault();
-        }
-      }}
-    />
-  );
-};
-
-const CustomSearchBox = connectSearchBox(SearchBox);
-
 export default function PrimarySearchAppBar(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -136,11 +117,21 @@ export default function PrimarySearchAppBar(props) {
   const [isInParty, setIsInParty] = useState(false);
   const [partyID, setPartyID] = useState("");
 
-  const handleSubmit = (submission) => {
-    console.log(`Submit ${submission}`);
-  };
+  const client = algoliasearch(
+    "T7MES4D4M7",
+    "3fc5bf346a8a53b2ef1c596cf747cb02"
+  );
 
   const { history } = props;
+
+  const onAddTag = (hit) => {
+    return hit;
+  };
+
+  const onTagsUpdated = (actualTags, previousTags) => {
+    console.log(actualTags);
+    history.push(`/profile/${actualTags[0].username}`)
+  };
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -391,12 +382,23 @@ export default function PrimarySearchAppBar(props) {
           </IconButton>
 
           <div className={classes.search}>
-            <div className={classes.searchIcon}>
+            {/* <div className={classes.searchIcon}>
               <SearchIcon />
-            </div>
-            <InstantSearch searchClient={searchClient} indexName="co-net_users">
-              <CustomSearchBox defaultRefinement={""} onSubmit={handleSubmit} />
-              {/* <Hits hitComponent={Hit} /> */}
+            </div> */}
+            <InstantSearch searchClient={client} indexName="co-net_users">
+              <Index indexName="co-net_users">
+                <Tags
+                  search={true}
+                  selectedTagComponent={TagSelectedComponent}
+                  suggestedTagComponent={TagSuggestionComponent}
+                  onAddTag={onAddTag}
+                  onUpdate={onTagsUpdated}
+                  limitedTo={1}
+                  translations={{
+                    placeholder: "Search"
+                  }}
+                />
+              </Index>
             </InstantSearch>
             {/* <InputBase
               placeholder="Search…"
