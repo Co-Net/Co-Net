@@ -430,7 +430,9 @@ router.put('/updateGames/:username', function (req, res) {
             // If library doesn't contain game already, add to library
             if (library.length === 0) {
                 library.push(game);
-            } else if (library.some(x => x.gameID !== game.gameID)) {
+            } else if (library.some(x => x.gameID === game.gameID)) {
+                return;
+            } else {
                 library.push(game);
             }
         });

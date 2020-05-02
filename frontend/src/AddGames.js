@@ -60,7 +60,7 @@ class AddGames extends Component {
     });
     // Then save to user
     axios
-      .put(`http://localhost:3000/users/updateGames/${this.props.username}`, {
+      .put(`http://localhost:3001/users/updateGames/${this.props.username}`, {
         gameList: gameSaves,
       })
       .then((json) => {
