@@ -295,17 +295,32 @@ export default function PrimarySearchAppBar(props) {
           </IconButton>
 
           <div className={classes.search}>
-            <div className={classes.searchIcon}>
+            {/* <div className={classes.searchIcon}>
               <SearchIcon />
-            </div>
-            <InputBase
+            </div> */}
+            <InstantSearch searchClient={client} indexName="co-net_users">
+              <Index indexName="co-net_users">
+                <Tags
+                  search={true}
+                  selectedTagComponent={TagSelectedComponent}
+                  suggestedTagComponent={TagSuggestionComponent}
+                  onAddTag={onAddTag}
+                  onUpdate={onTagsUpdated}
+                  limitedTo={1}
+                  translations={{
+                    placeholder: "Search"
+                  }}
+                />
+              </Index>
+            </InstantSearch>
+            {/* <InputBase
               placeholder="Search…"
               classes={{
                 root: classes.inputRoot,
                 input: classes.inputInput,
               }}
               inputProps={{ "aria-label": "search" }}
-            />
+            /> */}
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
