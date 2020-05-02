@@ -508,6 +508,7 @@ class Profile extends Component {
     var setTagsE;
     var feedbackE;
     var followE;
+    var messageE;
 
     if (ownProfile) {
       // Allow edit
@@ -628,6 +629,8 @@ class Profile extends Component {
             {this.state.followText}
           </Button>
         );
+
+        // Show Message
     }
 
       if (!this.state.editing) {
