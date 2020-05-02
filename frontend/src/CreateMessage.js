@@ -54,7 +54,7 @@ export const TagSuggestionComponent = ({ hit }) => (
   <Fragment>{hit.name}</Fragment>
 );
 
-class CreateForumPost extends Component {
+class CreateMessage extends Component {
   constructor(props) {
     super(props);
     this.handleBodyEdit = this.handleBodyEdit.bind(this);
@@ -119,7 +119,7 @@ class CreateForumPost extends Component {
             })
             .then((json2) => {
               if (json2.data.success)
-                this.props.history.push(`/forumPost/${json.data.forumPostObj._id}`);
+                this.props.history.push(`/forum/${json.data.forumPostObj._id}`);
             });
         } else alert("Something went wrong. Please try again");
       });
@@ -255,14 +255,14 @@ class CreateForumPost extends Component {
                 variant="h4"
                 component="h2"
               >
-                Create Forum Post
+                Compose Message
               </Typography>
             </Grid>
           </Grid>
           <TextField
             id="title"
-            label="Title"
-            placeholder="Enter a post title"
+            label="User"
+            placeholder="Enter a user to message"
             onChange={this.handleTitleEdit}
             required={true}
             value={title}
@@ -273,28 +273,11 @@ class CreateForumPost extends Component {
             className={mainStyles.titleInput}
             variant="outlined"
           />
-          <div className = {styles.multiselectGame}>
-            <InstantSearch searchClient={client} indexName="co-net_games">
-              <Index indexName="co-net_games">
-                <Tags
-                  selectedTagComponent={TagSelectedComponent}
-                  suggestedTagComponent={TagSuggestionComponent}
-                  onAddTag={onAddTag}
-                  onUpdate={onTagsUpdated}
-                  limitTo={1}
-                  className = {styles.multiselectGame}
-                  translations={{
-                    placeholder: "Game Name",
-                    noResult: "Game not found.",
-                  }}
-                />
-              </Index>
-            </InstantSearch>
-          </div>
+          
           <div style={{ marginRight: 20 }}>
             <TextField
               id="postbody"
-              label="What's your post about?"
+              label="What's your message?"
               multiline
               rows="10"
               placeholder="Enter some details..."
@@ -320,7 +303,7 @@ class CreateForumPost extends Component {
                 color="primary"
                 variant="contained"
               >
-                <CheckIcon style={{ marginRight: 6 }}></CheckIcon>Create Post
+                <CheckIcon style={{ marginRight: 6 }}></CheckIcon>Send Message
               </Button>
             </div>
           </div>
@@ -330,4 +313,4 @@ class CreateForumPost extends Component {
   }
 }
 
-export default CreateForumPost;
+export default CreateMessage;
