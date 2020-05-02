@@ -23,9 +23,14 @@ export const TagSelectedComponent = ({ hit }) => (
   </Fragment>
 );
 
-export const TagSuggestionComponent = ({ hit }) => (
-  <Fragment>{hit.name}</Fragment>
-);
+export const TagSuggestionComponent = ({ hit, exists }) =>
+  exists ? (
+    <Fragment>
+      <strike>{hit.name}</strike>
+    </Fragment>
+  ) : (
+    <Fragment>{hit.name}</Fragment>
+  );
 
 class AddGames extends Component {
   constructor(props) {
@@ -131,6 +136,7 @@ class AddGames extends Component {
                     suggestedTagComponent={TagSuggestionComponent}
                     onAddTag={onAddTag}
                     onUpdate={onTagsUpdated}
+                    library={this.props.library}
                     translations={{
                       placeholder: "Game Name",
                       noResult: "Game not found.",

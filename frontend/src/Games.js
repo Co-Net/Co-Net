@@ -32,6 +32,7 @@ import AddGames from "./AddGames";
 
 export default function Games(props) {
   const [gameLibrary, setGameLibrary] = useState([]);
+  const [rawLibrary, setRawLibrary] = useState([]);
   const [gameAdded, setGameAdded] = useState(false);
 
   useEffect(() => {
@@ -40,6 +41,7 @@ export default function Games(props) {
     axios.get(`http://localhost:3001/users/${props.username}`).then((json) => {
       if (json.data.games) {
         const library = json.data.games;
+        setRawLibrary(library);
         var gameCards = [];
         // Create a game card component for each game in the library
         let promArr = library.map(async function (eGame) {
@@ -138,7 +140,7 @@ export default function Games(props) {
           {props.title}
         </Typography>
         {props.isCurrentUser ? (
-          <AddGames onGameAdd={() => setGameAdded(true)} username={props.username}></AddGames>
+          <AddGames library={rawLibrary} onGameAdd={() => setGameAdded(true)} username={props.username}></AddGames>
         ) : null}
       </Grid>
       <Grid container spacing={3}>

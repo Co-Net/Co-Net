@@ -40,6 +40,8 @@ class SuggestedTagsContainer extends React.Component {
       suggestedTagComponent: SuggestedTagComponent,
       noResultComponent: NoResultComponent,
       friends,
+      library,
+      selectedGames
     } = this.props;
 
     if (!isOpened) {
@@ -59,7 +61,7 @@ class SuggestedTagsContainer extends React.Component {
                   className={`ais-SuggestedTagsBox-tag ${
                     hoveredTagIndex === hitIdx ? "hovered" : ""
                   }`}
-                  onClick={() => onAddTag(hit)}
+                  onClick={() => onAddTag(hit, false)}
                 >
                   <SuggestedTagComponent hit={hit} />
                 </li>
@@ -75,7 +77,36 @@ class SuggestedTagsContainer extends React.Component {
             {!hits.length && typeof NoResultComponent !== "undefined" && (
               <li
                 className="ais-SuggestedTagsBox-tag hovered"
-                onClick={() => onAddTag(currentRefinement)}
+                onClick={() => onAddTag(currentRefinement, false)}
+              >
+                <NoResultComponent query={currentRefinement} />
+              </li>
+            )}
+          </ul>
+        </div>
+      );
+    } else if (library) {
+      // Add Games section
+      return (
+        <div className="ais-SuggestedTagsBox">
+          <ul className="ais-SuggestedTagsBox-list">
+            {hits.map((hit, hitIdx) => (
+              <li
+                key={hit.objectID}
+                ref={(instance) => (this.resultsRefs[hitIdx] = instance)}
+                className={`ais-SuggestedTagsBox-tag ${
+                  hoveredTagIndex === hitIdx ? "hovered" : ""
+                }`}
+                onClick={() => library.some(x => x.gameID === hit._id) || selectedGames.some(x => x === hit._id) ? null : onAddTag(hit, true)}
+              >
+                <SuggestedTagComponent exists={library.some(x => x.gameID === hit._id) || selectedGames.some(x => x === hit._id)} hit={hit} />
+              </li>
+            ))}
+
+            {!hits.length && typeof NoResultComponent !== "undefined" && (
+              <li
+                className="ais-SuggestedTagsBox-tag hovered"
+                onClick={() => onAddTag(currentRefinement, true)}
               >
                 <NoResultComponent query={currentRefinement} />
               </li>
@@ -94,7 +125,7 @@ class SuggestedTagsContainer extends React.Component {
                 className={`ais-SuggestedTagsBox-tag ${
                   hoveredTagIndex === hitIdx ? "hovered" : ""
                 }`}
-                onClick={() => onAddTag(hit)}
+                onClick={() => onAddTag(hit, false)}
               >
                 <SuggestedTagComponent hit={hit} />
               </li>
@@ -103,7 +134,7 @@ class SuggestedTagsContainer extends React.Component {
             {!hits.length && typeof NoResultComponent !== "undefined" && (
               <li
                 className="ais-SuggestedTagsBox-tag hovered"
-                onClick={() => onAddTag(currentRefinement)}
+                onClick={() => onAddTag(currentRefinement, false)}
               >
                 <NoResultComponent query={currentRefinement} />
               </li>
