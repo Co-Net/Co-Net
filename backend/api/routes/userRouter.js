@@ -711,7 +711,7 @@ router.put('/removeAllReputation/:username', function (req, res) {
     });
 })
 
-//remove player reputation 
+// remove player reputation 
 router.put('/removeReputation/:username', function (req, res) {
     var queryUsername = req.params.username;
     var body = req.body;
@@ -741,57 +741,59 @@ router.put('/removeReputation/:username', function (req, res) {
     });
 })
 
-//add a message thread id to a user
-router.put('/addMessageThreadID/:username', function (req, res) {
-    var queryUsername = req.params.username;
-    var body = req.body;
-    var messageThreadID = body.messageThreadID;
-    var messageIDobj = {
-        "threadID": messageThreadID
-    };
-    UserModel.findOneAndUpdate({
-        username: queryUsername
-    }, {
-        $push: {
-            allMessageThreads: messageIDobj
-        }
-    }, function (err) {
-        if (err) return res.json({
-            success: false,
-            error: err
-        });
-        return res.json({
-            success: true,
-            user: body
-        });
-    });
-})
+// add a message thread id to a user 
+// DEPRECATED - process handled in create thread
+// router.put('/addMessageThreadID/:username', function (req, res) {
+//     var queryUsername = req.params.username;
+//     var body = req.body;
+//     var messageThreadID = body.messageThreadID;
+//     var messageIDobj = {
+//         "threadID": messageThreadID
+//     };
+//     UserModel.findOneAndUpdate({
+//         username: queryUsername
+//     }, {
+//         $push: {
+//             allMessageThreads: messageIDobj
+//         }
+//     }, function (err) {
+//         if (err) return res.json({
+//             success: false,
+//             error: err
+//         });
+//         return res.json({
+//             success: true,
+//             user: body
+//         });
+//     });
+// })
 
-//remove a messsage thread from user
-router.put('/removeThreadID/:username', function (req, res) {
-    var queryUsername = req.params.username;
-    var body = req.body;
-    var messageThreadID = body.messageThreadID;
-    var messageIDobj = {
-        "threadID": messageThreadID
-    };
-    UserModel.findOneAndUpdate({
-        username: queryUsername
-    }, {
-        $pull: {
-            allMessageThreads: messageIDobj
-        }
-    }, function (err) {
-        if (err) return res.json({
-            success: false,
-            error: err
-        });
-        return res.json({
-            success: true,
-            user: body
-        });
-    });
-})
+// remove a messsage thread from user
+// UNUSED
+// router.put('/removeThreadID/:username', function (req, res) {
+//     var queryUsername = req.params.username;
+//     var body = req.body;
+//     var messageThreadID = body.messageThreadID;
+//     var messageIDobj = {
+//         "threadID": messageThreadID
+//     };
+//     UserModel.findOneAndUpdate({
+//         username: queryUsername
+//     }, {
+//         $pull: {
+//             allMessageThreads: messageIDobj
+//         }
+//     }, function (err) {
+//         if (err) return res.json({
+//             success: false,
+//             error: err
+//         });
+//         return res.json({
+//             success: true,
+//             user: body
+//         });
+//     });
+// })
 
 // Get User's Voted Posts and find post with id
 router.get('/votedPosts/:username', function (req, res) {

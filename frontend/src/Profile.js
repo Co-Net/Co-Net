@@ -66,7 +66,7 @@ class Profile extends Component {
       game: "",
       gameID: "",
       error: false,
-      isInParty: false
+      isInParty: false,
     };
   }
 
@@ -116,7 +116,7 @@ class Profile extends Component {
             followList: json.data.friends,
             activityList: json.data.forumPosts,
             isInParty: json.data.currentPartyId != "",
-            allActiveGames: json.data.games
+            allActiveGames: json.data.games,
           });
           this.analyzeRep(json.data.playerRep);
           if (json.data.currentPartyId) {
@@ -124,7 +124,10 @@ class Profile extends Component {
               .get(`http://localhost:3001/party/id/${json.data.currentPartyId}`)
               .then((json) => {
                 if (json.data.success) {
-                  this.setState({ game: json.data.party.game, gameID: json.data.party.gameID });
+                  this.setState({
+                    game: json.data.party.game,
+                    gameID: json.data.party.gameID,
+                  });
                 }
               });
           }
@@ -144,7 +147,7 @@ class Profile extends Component {
               status: json.data.status,
               followList: json.data.friends,
               activityList: json.data.forumPosts,
-              allActiveGames: json.data.games
+              allActiveGames: json.data.games,
             });
             if (
               this.state.currentFollowList.some(
@@ -162,7 +165,10 @@ class Profile extends Component {
                 )
                 .then((json) => {
                   if (json.data.success) {
-                    this.setState({ game: json.data.party.game, gameID: json.data.party.gameID });
+                    this.setState({
+                      game: json.data.party.game,
+                      gameID: json.data.party.gameID,
+                    });
                   }
                 });
             }
@@ -375,12 +381,17 @@ class Profile extends Component {
 
   handleStatusChange(e) {
     var setStatus = e.target.value;
-    if (this.state.status === e.target.value || (this.state.status === 'In-Game' && e.target.value != 'Invisible')) return;
-    if (!this.state.isInParty && e.target.value === 'In-Game') return;
-    if (this.state.status === 'Invisible' && this.state.isInParty) setStatus = "In-Game"
+    if (
+      this.state.status === e.target.value ||
+      (this.state.status === "In-Game" && e.target.value != "Invisible")
+    )
+      return;
+    if (!this.state.isInParty && e.target.value === "In-Game") return;
+    if (this.state.status === "Invisible" && this.state.isInParty)
+      setStatus = "In-Game";
     axios
       .put(`http://localhost:3001/users/${this.state.currentUser}`, {
-        status: setStatus
+        status: setStatus,
       })
       .then((json) => {
         console.log("Status set to: " + json.data.user.status);
@@ -471,7 +482,7 @@ class Profile extends Component {
       game,
       gameID,
       username,
-      currentUser
+      currentUser,
     } = this.state;
 
     // Active, In-Game, Offline, Away
@@ -523,8 +534,6 @@ class Profile extends Component {
           Edit Profile
         </Button>
       );
-    
-
 
       // Allow edit
       setStatusE = (
@@ -605,7 +614,7 @@ class Profile extends Component {
       );
 
       // Show Follow Button
-      followE =
+      followE = 
         this.state.followText === "Follow" ? (
           <Button
             onClick={() => this.handleFollow()}
@@ -630,10 +639,15 @@ class Profile extends Component {
           </Button>
         );
 
-        // Show Message
+      // Show Message Button
+      messageE = (
+        <Button onClick={() => this.props.history.push('/createmessage')} className={styles.messageButton} variant="contained">
+          Message
+        </Button>
+      );
     }
 
-      if (!this.state.editing) {
+    if (!this.state.editing) {
       return (
         <div>
           <TopMenu history={this.props.history}></TopMenu>
@@ -642,7 +656,7 @@ class Profile extends Component {
             <Grid item xs={4} className={styles.profileCard}>
               <Card className={styles.profileCardPadding}>
                 <CardContent className={styles.forumCard}>
-                <Button className = {styles.messageButton} variant = "contained">Message</Button>
+                  {messageE}
 
                   <Typography>Time Zone: {this.state.timeZone} </Typography>
                   <Typography>
@@ -651,7 +665,11 @@ class Profile extends Component {
                       className={styles.gameName}
                       style={{ color: "#3f51b5", display: "inline" }}
                     >
-                      {status === 'Invisible' && currentUser !== username ? "None" : <Link href={`/game/${gameID}`}>{game}</Link> }
+                      {status === "Invisible" && currentUser !== username ? (
+                        "None"
+                      ) : (
+                        <Link href={`/game/${gameID}`}>{game}</Link>
+                      )}
                     </Typography>
                   </Typography>
                   <Typography>Current Status: </Typography>
@@ -666,7 +684,7 @@ class Profile extends Component {
 
             {editProfileE}
           </div>
-          
+
           <div className={styles.bgColor}>
             <Typography
               className={styles.profileText}

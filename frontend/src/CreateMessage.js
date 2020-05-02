@@ -46,26 +46,26 @@ import { InstantSearch, Index } from "react-instantsearch-dom";
 
 export const TagSelectedComponent = ({ hit }) => (
   <Fragment>
-    <code>{hit.name}</code>
+    <code>{hit.username}</code>
   </Fragment>
 );
 
 export const TagSuggestionComponent = ({ hit }) => (
-  <Fragment>{hit.name}</Fragment>
+  <Fragment>{hit.username}</Fragment>
 );
 
 class CreateMessage extends Component {
   constructor(props) {
     super(props);
     this.handleBodyEdit = this.handleBodyEdit.bind(this);
-    this.handleTitleEdit = this.handleTitleEdit.bind(this);
-    this.handlePostCreate = this.handlePostCreate.bind(this);
+    this.handleMessageCreate = this.handleMessageCreate.bind(this);
+    this.handleMessageSend = this.handleMessageSend.bind(this);
 
     this.state = {
       username: "",
-      title: "",
+      recipient: "",
       body: "",
-      game: "",
+      friends: [],
     };
   }
 
@@ -75,53 +75,71 @@ class CreateMessage extends Component {
       .get("http://localhost:3001/user/currentuser", { withCredentials: true })
       .then((json) => {
         if (json.data.username === "Guest") this.props.history.push("/Forum");
-        this.setState({ username: json.data.username });
+        this.setState({
+          username: json.data.username,
+          friends: json.data.friends,
+        });
       });
-  }
-
-  handleTitleEdit(e) {
-    this.setState({ title: e.target.value });
   }
 
   handleBodyEdit(e) {
     this.setState({ body: e.target.value });
   }
 
-  handlePostCreate() {
-    // Validate fields
-    if (!this.state.game || !this.state.body || !this.state.title) {
-      alert("Please fill in required fields");
-      return;
-    }
-    // Get the app ID
-    const url = this.state.game.url;
-    var appID = url.search("/app/");
-    if (appID !== -1) {
-      var begin = url.substring(appID + 5);
-      var end = begin.indexOf("/");
-      appID = begin.substring(0, end);
-    }
-    // Create Post
+  handleMessageSend(threadID) {
+    // Add message to thread
     axios
-      .post("http://localhost:3001/forum/createPostOrReply", {
-        username: this.state.username,
-        body: this.state.body,
-        game: this.state.game.name,
-        gameID: this.state.game._id,
-        appID: appID,
-        title: this.state.title,
-      })
+      .put(
+        `http://localhost:3001/messageThread/addMessageToThread/${threadID}`,
+        {
+          sentBy: this.state.username,
+          message: this.state.body,
+        }
+      )
       .then((json) => {
         if (json.data.success) {
+          console.log("Message sent");
+          this.props.history.push("/messages");
+        }
+      });
+  }
+
+  handleMessageCreate() {
+    // Validate fields
+    if (!this.state.body || !this.state.recipient) {
+      alert("Please fill out required fields");
+      return;
+    }
+    // Create Message
+    // If user already had a conversation with recipient, than only add the new message to sharedMessages
+    axios
+      .get(`http://localhost:3001/messageThread/${this.state.username}`)
+      .then((json) => {
+        const thread = json.data.find(
+          (t) =>
+            t["username1"] === this.state.recipient ||
+            t["username2"] === this.state.recipient
+        );
+        if (thread) {
+          this.handleMessageSend(thread._id);
+          return;
+        } else {
+          // If new message thread, then create
           axios
-            .put(`http://localhost:3001/users/addPost/${this.state.username}`, {
-              postID: json.data.forumPostObj._id,
+            .post("http://localhost:3001/messageThread/create", {
+              username1: this.state.username,
+              username2: this.state.recipient,
+              message: this.state.body,
+              sentBy: this.state.username,
             })
-            .then((json2) => {
-              if (json2.data.success)
-                this.props.history.push(`/forum/${json.data.forumPostObj._id}`);
+            .then((json) => {
+              if (json.data.success) {
+                console.log('Message created');
+                console.log(json.data);
+                this.props.history.push("/messages");
+              } else alert("Something went wrong. Please try again");
             });
-        } else alert("Something went wrong. Please try again");
+        }
       });
   }
 
@@ -136,7 +154,8 @@ class CreateMessage extends Component {
     };
 
     const onTagsUpdated = (actualTags, previousTags) => {
-      this.setState({ game: actualTags[0] });
+      if (actualTags.length == 0) this.setState({ recipient: "" });
+      else this.setState({ recipient: actualTags[0].username });
     };
 
     const theme = createMuiTheme({
@@ -192,18 +211,6 @@ class CreateMessage extends Component {
       marginLeft: 8,
     };
 
-    // const state = {
-    //   options:[
-    //     { name: "League", },
-    //     { name: "Minecraft", },
-    //     { name: "Valorant", },
-    //     { name: "CSGO", },
-    //     { name: "Mario Kart", },
-    //     { name: "Animal Crossing", },
-    //     { name: "Tic Tac Toe", }
-    //   ],
-    // };
-
     const style = {
       multiselectContainer: {
         textAlign: "center",
@@ -241,7 +248,7 @@ class CreateMessage extends Component {
       },
     };
 
-    const { body, title } = this.state;
+    const { body } = this.state;
 
     return (
       <div>
@@ -259,7 +266,7 @@ class CreateMessage extends Component {
               </Typography>
             </Grid>
           </Grid>
-          <TextField
+          {/* <TextField
             id="title"
             label="User"
             placeholder="Enter a user to message"
@@ -272,9 +279,24 @@ class CreateMessage extends Component {
             }}
             className={mainStyles.titleInput}
             variant="outlined"
-          />
-          
+          /> */}
           <div style={{ marginRight: 20 }}>
+            <InstantSearch searchClient={client} indexName="co-net_users">
+              <Index indexName="co-net_users">
+                <Tags
+                  selectedTagComponent={TagSelectedComponent}
+                  suggestedTagComponent={TagSuggestionComponent}
+                  friends={this.state.friends}
+                  onAddTag={onAddTag}
+                  onUpdate={onTagsUpdated}
+                  limitedTo={1}
+                  translations={{
+                    placeholder: "Username",
+                    noResult: "User not found.",
+                  }}
+                />
+              </Index>
+            </InstantSearch>
             <TextField
               id="postbody"
               label="What's your message?"
@@ -282,14 +304,14 @@ class CreateMessage extends Component {
               rows="10"
               placeholder="Enter some details..."
               variant="outlined"
-              className={mainStyles.bodyInput}
+              style={{ marginLeft: "0px", marginTop: "4px", width: "100%" }}
               required={true}
               value={body}
               onChange={this.handleBodyEdit}
             ></TextField>
             <div className={mainStyles.buttonMargins}>
               <Button
-                onClick={() => this.props.history.push("/Forum")}
+                onClick={() => this.props.history.push("/Feed")}
                 className={mainStyles.cancelButton}
                 variant="contained"
               >
@@ -297,8 +319,8 @@ class CreateMessage extends Component {
               </Button>
 
               <Button
-                onClick={this.handlePostCreate}
-                id="createPostButton"
+                onClick={this.handleMessageCreate}
+                id="createMessageButton"
                 className={mainStyles.postButton}
                 color="primary"
                 variant="contained"

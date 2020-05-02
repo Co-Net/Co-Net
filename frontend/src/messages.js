@@ -165,7 +165,7 @@ class editForumPost extends Component {
               </Typography>
             </Grid>
             <Grid item xs = {6}>
-            <Button onclick = {() => this.props.history.push("/createmessage")}
+            <Button onClick = {() => this.props.history.push("/createmessage")}
             color = 'secondary' className = {mainStyles.composeMessage} variant = "contained">Compose</Button>
             </Grid>
           </Grid>

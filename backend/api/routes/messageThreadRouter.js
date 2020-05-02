@@ -50,10 +50,12 @@ router.post('/create', function (req, res) {
     let messageThread = new MessageThreadModel();
     const {
         username1,
-        username2
+        username2,
+        sentBy,
+        message
     } = req.body;
 
-    if (!username1 || !username2) {
+    if (!username1 || !username2 || !message || !sentBy) {
         return res.json({
             created: false,
             error: 'INVALID INPUTS'
@@ -114,11 +116,30 @@ router.post('/create', function (req, res) {
                         success: false,
                         error: err
                     });
-                    return res.json({
-                        success: true,
-                        user1: doc,
-                        user2: doc2,
-                        thread: messageThread
+                    // Add the composed message to sharedMessages
+                    var messageObj = {
+                        "message": message,
+                        "read": false,
+                        "timeSent": new Date(),
+                        "sentBy": sentBy
+                    };
+                    MessageThreadModel.findOneAndUpdate({
+                        _id: messageThreadID
+                    }, {
+                        $push: {
+                            sharedMessages: messageObj
+                        }
+                    }, {new: true}, function (err, doc3) {
+                        if (err) return res.json({
+                            success: false,
+                            error: err
+                        });
+                        return res.json({
+                            success: true,
+                            user1: doc,
+                            user2: doc2,
+                            thread: doc3
+                        });
                     });
                 });
             });
@@ -146,12 +167,17 @@ router.put('/addMessageToThread/:id', function (req, res) {
     var body = req.body;
     var message = body.message;
     var sentBy = body.sentBy;
+    if (!message || !sentBy) {
+        return res.json({
+            success: false,
+            message: "MISSING INPUTS"
+        });
+    }
     var messageObj = {
         "message": message,
         "read": false,
         "timeSent": new Date(),
         "sentBy": sentBy
-
     };
     MessageThreadModel.findOneAndUpdate({
         _id: queryID

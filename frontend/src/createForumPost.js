@@ -281,7 +281,7 @@ class CreateForumPost extends Component {
                   suggestedTagComponent={TagSuggestionComponent}
                   onAddTag={onAddTag}
                   onUpdate={onTagsUpdated}
-                  limitTo={1}
+                  limitedTo={1}
                   className = {styles.multiselectGame}
                   translations={{
                     placeholder: "Game Name",

@@ -66,7 +66,6 @@ class TagsBoxContainer extends React.Component {
     render() {
         const { inputValue, inputDisabled } = this.state;
         const { tags, currentRefinement, onRemoveTag, selectedTagComponent: SelectedTagComponent, translations } = this.props;
-
         return (
             <div
                 onClick={() => this.inputRef.current.focus()}

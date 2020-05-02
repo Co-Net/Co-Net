@@ -71,7 +71,7 @@ class forumComment extends Component {
   }
 
   handleMessageSend() {
-    // Add message to both users
+    // Add message to thread
     axios
       .put(
         `http://localhost:3001/messageThread/addMessageToThread/${this.props.threadID}`,
