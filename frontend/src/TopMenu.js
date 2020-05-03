@@ -39,11 +39,6 @@ const TagSuggestionComponent = ({ hit }) => (
   <Fragment>{hit.username}</Fragment>
 );
 
-const searchClient = algoliasearch(
-  "T7MES4D4M7",
-  "3fc5bf346a8a53b2ef1c596cf747cb02"
-);
-
 const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,
