@@ -82,7 +82,7 @@ export default function VerticalTabs(props) {
     var tabs = [];
     var index = 0;
     props.threads.forEach((thread) => {
-      tabs.push(<Tab key={index} label={thread.username2} {...a11yProps(index++)} />);
+      tabs.push(<Tab key={index} label={props.currentUser === thread.username1 ? thread.username2 : thread.username1} {...a11yProps(index++)} />);
     });
     var threadCmp = (
       <TabPanel className={styles.tabPanel} value={value} index={value}>
