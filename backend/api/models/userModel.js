@@ -64,7 +64,7 @@ const UserSchema = new Schema({
     },
     timeZone: {
         type: String,
-        default: 'America/Los Angeles'
+        default: 'America/Los_Angeles'
     },
     status:{
         type: String,

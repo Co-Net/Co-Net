@@ -91,6 +91,7 @@ class AddGames extends Component {
 
     const onTagsUpdated = (actualTags, previousTags) => {
       selectedGames = actualTags;
+      // console.log(selectedGames);
     };
 
     const style = {

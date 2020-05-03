@@ -7,6 +7,7 @@
     "@material-ui/icons": "^4.5.1",
     "algoliasearch": "^4.2.0",
     "axios": "^0.18.0",
+    "fuzzball": "^1.3.0",
     "material-ui": "^1.0.0-beta.47",
     "multiselect-react-dropdown": "^1.4.8",
     "react": "^16.13.1",
