@@ -78,6 +78,7 @@ class Profile extends Component {
         .then((json) => {
           if (!json.data) {
             this.setState({ error: true });
+            return;
           }
         });
     }
@@ -135,6 +136,10 @@ class Profile extends Component {
           // If not own profile, get the other user's data
           route = `http://localhost:3001/users/${this.props.match.params.username}`;
           axios.get(route).then((json) => {
+            if (!json.data) {
+              this.setState({ error: true });
+              return;
+            }
             this.setState({
               username: json.data.username,
               bio: json.data.bio,
