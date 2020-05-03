@@ -85,7 +85,7 @@ export default function ServerModal(props) {
         >
           <div
             className={classes.paper}
-            style={{ padding: 45, marginTop: 167 }}
+            style={{marginTop: 167 }}
           >
             <p id="server-modal-description">
               <Typography align="center" id="server-modal-title">
