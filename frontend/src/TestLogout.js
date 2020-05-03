@@ -53,6 +53,19 @@ class TestLogout extends Component {
 
 function suggestGame() {
   // DATA ANALYSIS
+  const tags1 = ["FPS", "Casual", "Multiplayer"];
+  const tags2 = ["Pixel", "Fun", "Casual", "Fps"];
+  const tags3 = ["Music", "Realistic", "Beautiful"];
+  const tags4 = ["Casual", "FPS", "Pixel", "Multiplayer"];
+
+  let score1 = fuzz.token_set_ratio(tags1.join(" "), tags2.join(" "));
+  let score2 = fuzz.token_set_ratio(tags1.join(" "), tags3.join(" "));
+  let score3 = fuzz.token_set_ratio(tags1.join(" "), tags4.join(" "));
+  let score4 = fuzz.token_set_ratio(tags2.join(" "), tags4.join(" "));
+  console.log(`Score 1: ${score1}`);
+  console.log(`Score 2: ${score2}`);
+  console.log(`Score 3: ${score3}`);
+  console.log(`Score 4: ${score4}`);
 }
 
 function loginUser() {

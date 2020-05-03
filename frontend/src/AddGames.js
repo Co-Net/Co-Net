@@ -53,14 +53,18 @@ class AddGames extends Component {
     // Go through game arr and create obj with correct fields based on UsersGamesSchema
     // Save it to gameSaves
     gameArr.forEach((game) => {
+      var cleanTags = game.gameTags.substring(1, game.gameTags.length - 1).split(",");
+      var cleanerTags = [];
+      cleanTags.forEach((tag) => {
+        cleanerTags.push(tag.substring(1, tag.length - 1));
+      });
       const gameObj = {
         name: game.name,
         url: game.url,
-        gameTags: game.gameTags
-          .substring(1, game.gameTags.length - 1)
-          .split(","),
+        gameTags: cleanerTags,
         gameID: game._id,
       };
+      console.log(gameObj);
       gameSaves.push(gameObj);
     });
     // Then save to user
