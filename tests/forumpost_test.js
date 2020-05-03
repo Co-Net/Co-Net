@@ -11,7 +11,9 @@ const serverUri = `http://localhost:3000/signin`;
 // Chrome Browser Config
 var browser = new webdriver.Builder()
   .usingServer()
-  .withCapabilities({ browserName: "chrome" })
+  .withCapabilities({
+    browserName: "chrome"
+  })
   .build();
 
 // Start Tests
@@ -22,7 +24,9 @@ describe("Forum Page", function () {
       browser.get(serverUri);
       browser.wait(until.elementLocated(By.id("signinForm")), 1000).then(() => {
         browser
-          .findElement({ id: "signinForm" })
+          .findElement({
+            id: "signinForm"
+          })
           .then(() => resolve())
           .catch((err) => reject(err));
       });
@@ -34,11 +38,19 @@ describe("Forum Page", function () {
   // password
   it("Should login", function () {
     return new Promise((resolve, reject) => {
-      browser.findElement({ id: "email" }).sendKeys("leoboi@gmail.com");
-      browser.findElement({ id: "password" }).sendKeys("password");
-      browser.findElement({ id: "signinButton" }).click();
+      browser.findElement({
+        id: "email"
+      }).sendKeys("leoboi@gmail.com");
+      browser.findElement({
+        id: "password"
+      }).sendKeys("password");
+      browser.findElement({
+        id: "signinButton"
+      }).click();
       browser
-        .wait(until.elementLocated({ id: "TopMenu" }), 1000)
+        .wait(until.elementLocated({
+          id: "TopMenu"
+        }), 1000)
         .then(() => resolve())
         .catch((err) => reject(err));
     });
@@ -49,7 +61,9 @@ describe("Forum Page", function () {
     return new Promise((resolve, reject) => {
       browser.navigate().to("http://localhost:3000/forum");
       browser
-        .wait(until.elementLocated({ id: "Forum" }), 1000)
+        .wait(until.elementLocated({
+          id: "Forum"
+        }), 1000)
         .then(() => resolve())
         .catch((err) => reject(err));
     });
@@ -58,9 +72,13 @@ describe("Forum Page", function () {
   // Check navigate to Create Forum Post
   it("Should navigate to createForumPost", function () {
     return new Promise((resolve, reject) => {
-      browser.findElement({ id: "createForumPost" }).click();
+      browser.findElement({
+        id: "createForumPost"
+      }).click();
       browser
-        .wait(until.elementLocated({ id: "createPostButton" }), 1000)
+        .wait(until.elementLocated({
+          id: "createPostButton"
+        }), 1000)
         .then(() => resolve())
         .catch((err) => reject(err));
     });
@@ -69,16 +87,22 @@ describe("Forum Page", function () {
   // Check create post with required fields
   it("Should create a forum post", function () {
     return new Promise((resolve, reject) => {
-      browser.findElement({ id: "title" }).sendKeys("Test Post");
-      browser.findElement({ id: "tagsbox" }).sendKeys("limbo");
-      browser.findElement({ id: "tagsbox" }).sendKeys(Key.ARROW_DOWN);
-      browser.findElement({ id: "tagsbox" }).sendKeys(Key.ENTER);
+      browser.findElement({
+        id: "title"
+      }).sendKeys("Test Post");
+      browser.findElement(By.xpath("//body/div[@id='root']/div/div/div/div/div/ul/li/input[1]")).sendKeys("limbo");
+      browser.findElement(By.xpath("//body/div[@id='root']/div/div/div/div/div/ul/li/input[1]")).sendKeys(Key.ARROW_DOWN);
+      browser.findElement(By.xpath("//body/div[@id='root']/div/div/div/div/div/ul/li/input[1]")).sendKeys(Key.ENTER);
       browser
-        .findElement({ id: "postbody" })
+        .findElement({
+          id: "postbody"
+        })
         .sendKeys("This post should not exist");
-      browser.findElement({ id: "createPostButton" }).click();
+      browser.findElement({
+        id: "createPostButton"
+      }).click();
       browser
-        .wait(until.elementLocated({ id: "post0" }), 2000)
+        .wait(until.elementLocated(By.xpath("//body/div/div/div/div/div[2]")), 2000)
         .then(() => resolve())
         .catch((err) => reject(err));
     });
@@ -88,19 +112,16 @@ describe("Forum Page", function () {
   it("Should open a forum post", function () {
     return new Promise((resolve, reject) => {
       browser
-        .findElement(By.xpath("//a[contains(text(),'Test Post')]"))
-        .click();
-      browser
         .wait(
           until.elementLocated(
             By.xpath(
-              "//button[@id='editpostButton']//span[@class='MuiButton-label']//*[local-name()='svg']"
+              "//p[@id='body']"
             )
           ),
-          1000
+          2000
         )
         .then(() => resolve())
-        .catch((err) => reject(err));
+        .catch((err) => reject(err))
     });
   });
 
