@@ -156,15 +156,10 @@ export default function AlertDialog(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancel} color="primary">
-            Cancel
+            Refresh Recommendation
           </Button>
-          <Button
-            id="createPartyDone"
-            onClick={handleDone}
-            color="primary"
-            autoFocus
-          >
-            Done
+          <Button id="createPartyDone" onClick={handleDone} color="primary" autoFocus>
+            Got it
           </Button>
         </DialogActions>
       </Dialog>
