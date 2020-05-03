@@ -14,21 +14,27 @@ import Typography from "@material-ui/core/Typography";
 import Slider from "@material-ui/core/Slider";
 import axios from "axios";
 import InfoIcon from "@material-ui/icons/Info";
-import leaguePhoto from "./leaguePhoto.jpg";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Brightness1Icon from "@material-ui/icons/Brightness1";
 import * as fuzz from "fuzzball";
 
-export default function AlertDialog(props) {
+export default function AlertDialog() {
   const [open1, setOpen1] = React.useState(false);
-  const [games, setGames] = React.useState([]);
   const [suggestedGame, setSuggestedGame] = React.useState("");
+  const [timeElapsed, setTimeElapsed] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
+  const [startTime, setStartTime] = React.useState("");
+  const [games, setGames] = React.useState([]);
+  // var games = [];
+
+  useEffect(() => {
+    if (games.length != 0 && loading) handlePickGame();
+  }, [games]);
 
   const handleClickOpenUp = () => {
     setOpen1(true);
-    handleSuggestGame();
+    if (!suggestedGame) handleSuggestGame();
   };
 
   const handleClose = () => {
@@ -39,11 +45,10 @@ export default function AlertDialog(props) {
     handleClose();
   };
 
-  const handleCancel = () => {
-    handleClose();
-  };
-
   const handleSuggestGame = () => {
+    console.log("suggesting");
+    // Start Analysis time
+    setStartTime(new Date());
     axios
       .get(`http://localhost:3001/user/currentuser`, { withCredentials: true })
       .then((json) => {
@@ -55,6 +60,7 @@ export default function AlertDialog(props) {
 
         if (json.data.games.length < 3) {
           alert("You must have at least 3 games in your library.");
+          handleClose();
           return;
         }
         var userGameTags = [];
@@ -62,9 +68,8 @@ export default function AlertDialog(props) {
           // For each game in their library, collect each game tags and accumulate them
           userGameTags = userGameTags.concat(game.gameTags);
         });
-        console.log(userGameTags);
         // Perform Data Analysis
-        axios.get(`http://localhost:3001/games`).then((json) => {
+        axios.get(`http://localhost:3001/games/`).then((json) => {
           if (json.data.success) {
             var highScoringGames = [];
             json.data.gameObj.forEach((game) => {
@@ -72,52 +77,113 @@ export default function AlertDialog(props) {
                 userGameTags.join(" "),
                 game.gameTags.join(" ")
               );
-              if (score >= 70) highScoringGames.push(game);
+              if (score >= 90) {
+                highScoringGames.push(game);
+              }
             });
+            // games = highScoringGames;
             setGames(highScoringGames);
-            handlePickGame();
-            setLoading(false);
           }
         });
       });
   };
 
   const handlePickGame = () => {
-    const gameList = games;
+    console.log("picking");
+    let gameList = games;
+    if (gameList.length == 0) {
+      const cmp = (
+        <Grid item xs={8}>
+          <Typography
+            className={styles.gametitle}
+            style={{
+              color: "black",
+              marginTop: 5,
+            }}
+          >
+            {
+              "Sorry, there are no more games to suggest. Add more games to your library for better analysis."
+            }
+          </Typography>
+        </Grid>
+      );
+      setSuggestedGame(cmp);
+      setTimeElapsed(Math.round(timeDiff));
+      setLoading(false);
+      return;
+    }
     // Randomly choose a game, then remove it so it doesn't get chosen again
-    const randomElement = gameList[Math.floor(Math.random() * gameList.length)];
-    setGames(gameList.filter((x) => x.name !== randomElement.name));
-    console.log(randomElement);
-    // const cmp = (
-    //   <Grid item xs={8}>
-    //     <img className="photos" src={leaguePhoto} />
-    //     <Typography
-    //       className={styles.gametitle}
-    //       style={{
-    //         color: "black",
-    //         marginTop: 20,
-    //         marginLeft: 8,
-    //       }}
-    //     >
-    //       <Link>Terraria</Link>
-    //     </Typography>
-    //     <div style={{ display: "inline-flex" }}>
-    //       <Brightness1Icon
-    //         style={{ color: "#26AD00", marginTop: "4" }}
-    //       ></Brightness1Icon>
-    //       <Typography
-    //         style={{
-    //           color: "#535353",
-    //           marginTop: 5,
-    //           marginLeft: 8,
-    //         }}
-    //       >
-    //         2 playing now
-    //       </Typography>
-    //     </div>
-    //   </Grid>
-    // );
-    // setSuggestedGame(randomElement);
+    let randIndex = Math.floor(Math.random() * gameList.length);
+    // const randomElement = gameList[Math.floor(Math.random() * gameList.length)];
+    let selectedGame = gameList.splice(randIndex, 1)[0];
+    // Get Game Fields
+    const title = selectedGame.name;
+    const url = selectedGame.url;
+    const gameID = selectedGame._id;
+    let image =
+      "https://www.hutchinsonutilities.com/wp-content/themes/Hutchinson/images/404.jpg";
+    var appID = url.search("/app/");
+    if (appID !== -1) {
+      var begin = url.substring(appID + 5);
+      var end = begin.indexOf("/");
+      appID = begin.substring(0, end);
+      // Base: steamcdn-a.akamaihd.net/steam/apps/{app_id}/header.jpg
+      image = `https://steamcdn-a.akamaihd.net/steam/apps/${appID}/header.jpg`;
+    }
+    // Get num of players playing
+    var numOfPlayersPlaying = 0;
+    axios.get(`http://localhost:3001/party/game/${gameID}`).then((json) => {
+      if (json.data.parties.length > 0) {
+        json.data.parties.forEach((party) => {
+          numOfPlayersPlaying += party.partyMembers.length + 1;
+        });
+      }
+    });
+    const cmp = (
+      <Grid item xs={8}>
+        <img className="photos" src={image} />
+        <Typography
+          className={styles.gametitle}
+          style={{
+            color: "black",
+            marginTop: 5,
+          }}
+        >
+          <Link href={`/game/${gameID}`}>{title}</Link>
+        </Typography>
+        <div style={{ display: "inline-flex" }}>
+          <Brightness1Icon
+            style={{ color: "#26AD00", marginTop: "4" }}
+          ></Brightness1Icon>
+          <Typography
+            style={{
+              color: "#535353",
+              marginTop: 5,
+              marginLeft: 8,
+            }}
+          >
+            {numOfPlayersPlaying}{" "}
+            {numOfPlayersPlaying != 1 ? "players" : "player"} playing now
+          </Typography>
+        </div>
+      </Grid>
+    );
+    setSuggestedGame(cmp);
+
+    // If analyzing
+    if (loading) {
+      // End Analysis time
+      var endTime = new Date();
+      var timeDiff = endTime - startTime; //in ms
+      // strip the ms
+      timeDiff /= 1000;
+      // get seconds
+      setTimeElapsed(Math.round(timeDiff));
+      setLoading(false);
+    } else {
+      setTimeElapsed(null);
+    }
+    setGames(gameList);
   };
 
   const style = {
@@ -158,47 +224,28 @@ export default function AlertDialog(props) {
           {"Recommended Game for You:"}
         </DialogTitle>
         {loading ? (
-          "Looking for a fun game for you..."
+          <DialogContent>
+            <div>
+              <Grid>{"Looking for a fun game for you..."}</Grid>
+            </div>
+          </DialogContent>
         ) : (
           <div>
-            <DialogContent>
+            <DialogContent style={{ paddingTop: "0px" }}>
               <div>
-                <Grid contained>
+                <Grid>
                   <Grid item xs={2}></Grid>
-                  <Grid item xs={8}>
-                    <img className="photos" src={leaguePhoto} />
-                    <Typography
-                      className={styles.gametitle}
-                      style={{
-                        color: "black",
-                        marginTop: 20,
-                        marginLeft: 8,
-                      }}
-                    >
-                      <Link>Terraria</Link>
-                    </Typography>
-                    <div style={{ display: "inline-flex" }}>
-                      <Brightness1Icon
-                        style={{ color: "#26AD00", marginTop: "4" }}
-                      ></Brightness1Icon>
-                      <Typography
-                        style={{
-                          color: "#535353",
-                          marginTop: 5,
-                          marginLeft: 8,
-                        }}
-                      >
-                        2 playing now
-                      </Typography>
-                    </div>
-                  </Grid>
+                  {suggestedGame}
                   <Grid item xs={2}></Grid>
+                  {timeElapsed ? (
+                    <em>{`Analysis Time: ${timeElapsed} seconds`}</em>
+                  ) : null}
                 </Grid>
               </div>
             </DialogContent>
             <DialogActions>
               <Button onClick={handlePickGame} color="primary">
-                {suggestedGame}
+                Refresh Recommendation
               </Button>
               <Button
                 id="createPartyDone"

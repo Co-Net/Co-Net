@@ -117,7 +117,6 @@ app.use(
   secureRouter
 );
 app.use("/auth", steamRouter);
-app.use("/gameTags", gameTagRouter);
 app.use("/messageThread", messageThreadRouter);
 app.use("/party", partyRouter);
 // launch our backend into a port
