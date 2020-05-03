@@ -163,7 +163,7 @@ export default function ServerModal(props) {
         className={classes.modal}
         container={() => rootRef.current}
       >
-        <div className={classes.paper} style={{ padding: 45, marginTop: 200 }}>
+        <div className={classes.paper} style={{marginTop: 200 }}>
           <p id="server-modal-description">
             <Typography align="center" id="server-modal-title">
               <img src={logo} alt="Logo" style={{ width: "100px" }} />

@@ -16,7 +16,6 @@ import GridListTile from "@material-ui/core/GridListTile";
 import GridListTileBar from "@material-ui/core/GridListTileBar";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import IconButton from "@material-ui/core/IconButton";
-import InfoIcon from "@material-ui/icons/Info";
 import TopMenu from "./TopMenu";
 import axios from "axios";
 import { createMuiTheme } from "@material-ui/core/styles";
@@ -27,6 +26,8 @@ import FilterListIcon from "@material-ui/icons/FilterList";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import mainStyles from "./main.module.css";
+import InfoIcon from '@material-ui/icons/Info';
+import Recommended from './Recommended';
 
 class Feed extends Component {
   constructor(props) {
@@ -201,7 +202,7 @@ class Feed extends Component {
         <TopMenu history={this.props.history}></TopMenu>
         <div className="content">
           <Grid container spacing={3}>
-            <Grid item xs={6}>
+            <Grid item xs={4}>
               <Typography
                 style={titleStyle}
                 align="Left"
@@ -211,7 +212,10 @@ class Feed extends Component {
                 Browse Games
               </Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs = {5}>
+            <Recommended></Recommended>
+            </Grid>
+            <Grid item xs={3}>
               <div style={{}}>
                 <Button
                   size="large"

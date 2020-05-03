@@ -267,10 +267,13 @@ body{
 
 .bgdImage{
     background-image: url("background.jpeg");
-
-    background-color: #0755ca;
-    height: 100vh;
-    flex-grow: 1;
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+      
+    /* Preserve aspet ratio */
+    min-width: 100%;
+    min-height: 100%;
 
 
 }
@@ -597,6 +600,19 @@ body{
     margin-top: 24px !important;
     margin-right: 20% !important;
 
+}
+
+.searchWidth{
+    width: 400px !important;
+}
+
+.lowerCase{
+    text-transform: none !important;
+    margin-top: 28px !important;
+}
+
+.dialogBoxLarge{
+    height: 480px !important;
 }
 
 

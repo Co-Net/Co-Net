@@ -108,27 +108,18 @@ export default function ServerModal(props) {
                 <Grid container spacing={4}>
                   <Grid item xs={12}>
                     <Button
-                      type="submit"
-                      fullWidth
-                      variant="contained"
-                      color="primary"
-                      className={classes.submit}
-                      onClick={(e) => onSteamLogin(e)}
-                    >
-                      Sign in with Steam
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Button
-                      type="button"
-                      fullWidth
-                      variant="contained"
-                      color="primary first"
-                      className={classes.submit}
-                      onClick={() => history.push("/signup")}
+                    type="button"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}
+                    onClick={() => history.push("/signup")}
                     >
                       Sign up with Email
                     </Button>
+                  </Grid>
+                  <Grid item xs={12}>
+                  
                   </Grid>
                 </Grid>
                 <Grid container spacing={10}>

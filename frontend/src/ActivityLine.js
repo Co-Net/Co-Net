@@ -167,7 +167,7 @@ class friend extends Component {
                     href={`/forumPost/${this.state.parent}`}
                     activeClassName="active"
                   >
-                    thread:
+                    post:
                   </Link>
                   <Typography className={styles.commentThreadText}>
                     {this.state.body}
