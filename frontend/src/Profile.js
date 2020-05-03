@@ -620,7 +620,7 @@ class Profile extends Component {
       );
 
       // Show Follow Button
-      followE = 
+      followE =
         this.state.followText === "Follow" ? (
           <Button
             onClick={() => this.handleFollow()}
@@ -647,7 +647,11 @@ class Profile extends Component {
 
       // Show Message Button
       messageE = (
-        <Button onClick={() => this.props.history.push('/createmessage')} className={styles.messageButton} variant="contained">
+        <Button
+          onClick={() => this.props.history.push("/createmessage")}
+          className={styles.messageButton}
+          variant="contained"
+        >
           Message
         </Button>
       );
