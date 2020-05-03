@@ -599,6 +599,19 @@ body{
 
 }
 
+.searchWidth{
+    width: 400px !important;
+}
+
+.lowerCase{
+    text-transform: none !important;
+    margin-top: 28px !important;
+}
+
+.dialogBoxLarge{
+    height: 480px !important;
+}
+
 
 
 

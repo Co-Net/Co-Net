@@ -26,6 +26,8 @@ import algoliasearch from "algoliasearch/lite";
 import Tags from "./lib/Tags";
 import "./tags.css";
 import { InstantSearch, Index } from "react-instantsearch-dom";
+import styles from "./main.module.css";
+
 
 const TagSelectedComponent = ({ hit }) => (
   <Fragment>
@@ -64,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
     // },
     marginRight: theme.spacing(2),
     marginLeft: 0,
-    width: "100%",
+    width: "400px !important",
     [theme.breakpoints.up("sm")]: {
       marginLeft: theme.spacing(3),
       width: "auto",
@@ -298,7 +300,7 @@ export default function PrimarySearchAppBar(props) {
             {/* <div className={classes.searchIcon}>
               <SearchIcon />
             </div> */}
-            <InstantSearch searchClient={client} indexName="co-net_users">
+            <InstantSearch className = {styles.searchWidth} searchClient={client} indexName="co-net_users">
               <Index indexName="co-net_users">
                 <Tags
                   search={true}
