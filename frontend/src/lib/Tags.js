@@ -48,13 +48,19 @@ class Tags extends React.Component {
     });
   };
 
-  removeTag = (hitObjectID) => {
+  removeTag = (hit, isGames) => {
     const { tags } = this.state;
     const { onUpdate } = this.props;
 
+    // Remove game
+    if (isGames) {
+      var updated = this.state.selectedGames.filter(id => id !== hit._id)
+      this.setState({ selectedGames: updated });
+    }
+
     const updatedTags = [...tags];
     const indexToRemove = updatedTags.findIndex(
-      (tag) => tag.objectID === hitObjectID
+      (tag) => tag.objectID === hit.objectID
     );
     updatedTags.splice(indexToRemove, 1);
 

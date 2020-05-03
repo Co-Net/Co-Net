@@ -116,6 +116,7 @@ export default function PrimarySearchAppBar(props) {
   const [isGuest, setIsGuest] = useState(false);
   const [isInParty, setIsInParty] = useState(false);
   const [partyID, setPartyID] = useState("");
+  const [render, setRender] = useState(false);
 
   const client = algoliasearch(
     "T7MES4D4M7",
@@ -129,8 +130,9 @@ export default function PrimarySearchAppBar(props) {
   };
 
   const onTagsUpdated = (actualTags, previousTags) => {
-    console.log(actualTags);
-    history.push(`/profile/${actualTags[0].username}`)
+    if (actualTags.length == 0) return;
+    history.push(`/profile/${actualTags[0].username}`);
+    window.location.reload(false);
   };
 
   const handleProfileMenuOpen = (event) => {
@@ -168,6 +170,7 @@ export default function PrimarySearchAppBar(props) {
   };
 
   useEffect(() => {
+    // console.log(render);
     axios
       .get("http://localhost:3001/user/currentuser", { withCredentials: true })
       .then((json) => {

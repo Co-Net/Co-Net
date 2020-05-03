@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { Multiselect } from "multiselect-react-dropdown";
+import * as fuzz from 'fuzzball';
 
 class TestLogout extends Component {
   constructor(props) {
@@ -33,6 +34,9 @@ class TestLogout extends Component {
           displayValue="key"
           selectedValues={selectedValues}
         />
+        <button type="button" onClick={suggestGame}>
+          Suggest a Game
+        </button>
         <button type="button" onClick={getCurrentUser}>
           Get Current User
         </button>
@@ -45,6 +49,10 @@ class TestLogout extends Component {
       </div>
     );
   }
+}
+
+function suggestGame() {
+  // DATA ANALYSIS
 }
 
 function loginUser() {

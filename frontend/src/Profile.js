@@ -149,6 +149,7 @@ class Profile extends Component {
               activityList: json.data.forumPosts,
               allActiveGames: json.data.games,
             });
+            this.analyzeRep(json.data.playerRep);
             if (
               this.state.currentFollowList.some(
                 (user) => user.username === this.state.username
