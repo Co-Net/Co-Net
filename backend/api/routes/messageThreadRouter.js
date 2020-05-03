@@ -14,23 +14,23 @@ router.get('/:username', function (req, res) {
     MessageThreadModel.find({
         username1: queryUsername
     }, function (err, obj) {
+        var combinedThreads = [];
         if (err) return res.json({
             success: false,
             error: err
         });
-        if (obj.length == 0) {
-            MessageThreadModel.find({
-                username2: queryUsername
-            }, function (err, obj) {
-                if (err) return res.json({
-                    success: false,
-                    error: err
-                });
-                return res.send(obj);
+        combinedThreads = combinedThreads.concat(obj);
+        MessageThreadModel.find({
+            username2: queryUsername
+        }, function (err, obj2) {
+            if (err) return res.json({
+                success: false,
+                error: err
             });
-        } else {
-            return res.send(obj);
-        }
+            combinedThreads = combinedThreads.concat(obj2);
+            return res.send(combinedThreads);
+        });
+
     });
 })
 
@@ -129,7 +129,9 @@ router.post('/create', function (req, res) {
                         $push: {
                             sharedMessages: messageObj
                         }
-                    }, {new: true}, function (err, doc3) {
+                    }, {
+                        new: true
+                    }, function (err, doc3) {
                         if (err) return res.json({
                             success: false,
                             error: err
