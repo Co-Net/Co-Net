@@ -10,6 +10,7 @@ import bgd from "./background.jpeg";
 import axios from "axios";
 import styles from "./App.css";
 import TextField from "@material-ui/core/TextField";
+import mainStyles from "./main.module.css";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,9 +24,8 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
     alignItems: "center",
     justifyContent: "center",
-    backgroundImage: "url(" + bgd + ")",
-    backgroundSize: "cover",
-    overflow: "hidden",
+
+
   },
   paper: {
     width: 400,
@@ -37,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 200,
     marginRight: 400,
     marginTop: 100,
+    overflow: 'visible',
   },
   error: {
     backgroundColor: "#FFCCCC",
@@ -152,7 +153,7 @@ export default function ServerModal(props) {
     });
 
   return (
-    <div className={classes.root} ref={rootRef}>
+    <div className={mainStyles.bgdImage} ref={rootRef}>
       <Modal
         disablePortal
         disableEnforceFocus
@@ -166,20 +167,9 @@ export default function ServerModal(props) {
         <div className={classes.paper} style={{marginTop: 200 }}>
           <p id="server-modal-description">
             <Typography align="center" id="server-modal-title">
-              <img src={logo} alt="Logo" style={{ width: "100px" }} />
             </Typography>
             <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Typography
-                  component="h2"
-                  fontsize={18}
-                  align="center"
-                  id="server-modal-title"
-                >
-                  Connecting Gamers Worldwide.{" "}
-                  <p id="errorMessage" className={classes.error}></p>
-                </Typography>
-              </Grid>
+             
               <Grid item xs={12}></Grid>
             </Grid>
             <form className={classes.form} noValidate>
