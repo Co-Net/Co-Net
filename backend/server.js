@@ -81,7 +81,6 @@ const gameRouter = require("./api/routes/gameRouter");
 const forumRouter = require("./api/routes/forumPostRouter");
 const secureRouter = require("./api/routes/secureRouter");
 const steamRouter = require("./api/routes/steamRouter");
-const gameTagRouter = require("./api/routes/gameTagRouter");
 const messageThreadRouter = require("./api/routes/messageThreadRouter");
 const partyRouter = require("./api/routes/partyRouter");
 // this is our MongoDB database
