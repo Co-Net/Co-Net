@@ -203,7 +203,9 @@ router.put('/:username', function (req, res) {
     var body = req.body;
     UserModel.findOneAndUpdate({
         username: queryUsername
-    }, body, { new: true }, function (err, doc) {
+    }, body, {
+        new: true
+    }, function (err, doc) {
         if (err) {
             if (err.code == 11000) {
                 return res.json({
@@ -416,7 +418,7 @@ router.put('/updateGames/:username', function (req, res) {
             message: "MISSING GAME LIST"
         });
     }
-    const games = body.gameList;        // Array of games to insert into user game library
+    const games = body.gameList; // Array of games to insert into user game library
     UserModel.findOne({
         username: queryUsername
     }, function (err, obj) {
@@ -598,7 +600,9 @@ router.put('/removePost/:username', function (req, res) {
         $pull: {
             forumPosts: postobj
         }
-    }, { new: true }, function (err, doc) {
+    }, {
+        new: true
+    }, function (err, doc) {
         if (err) return res.json({
             success: false,
             error: err
