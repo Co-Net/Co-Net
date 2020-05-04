@@ -125,12 +125,12 @@ export default function ScrollableTabsButtonForce(props) {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <Multiselect
+        {/* <Multiselect
           options={state.options}
           displayValue="key"
           style={style}
           placeholder="Search by Tag"
-        />
+        /> */}
         {members.length > 0 ? members : "No players playing"}
       </TabPanel>
       <TabPanel value={value} index={1}>
