@@ -193,7 +193,7 @@ class EditForumPost extends Component {
             className={mainStyles.titleInput}
             variant="outlined"
           />
-          <Multiselect
+          {/* <Multiselect
           options={state.options}
           displayValue="key"
           style={style}
@@ -201,7 +201,7 @@ class EditForumPost extends Component {
           placeholder = "Choose Game"
           selectionLimit = {1}
 
-        />  
+        />   */}
 
           <div style={{ marginRight: 20 }}>
             <TextField
