@@ -21,3 +21,8 @@ In parent folder run commands:
   
 To start the program in parent folder run command:  
   * npm start  
+  
+  
+Credentials for test user:
+  * username: conetthreeboi
+  * password: password
