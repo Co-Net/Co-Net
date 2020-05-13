@@ -1,6 +1,8 @@
 # Co-Net
 A centralized online hub for connecting gamers
 
+
+## Instructions
 Clone the master repository  
   
 Once in the parent folder (Co-Net) go to backend folder (cd backend)  
@@ -20,9 +22,11 @@ In parent folder run commands:
   * npm update  
   
 To start the program in parent folder run command:  
-  * npm start  
-  
-  
+  * npm start   
+ 
 Credentials for test user:
   * username: conetthreeboi
   * password: password
+
+## Note
+The app will not work without certain credentials. The credentials are private due to security purposes. At the moment, the credentials are only available to the developers and mentor.
